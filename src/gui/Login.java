@@ -15,7 +15,7 @@ import java.awt.event.*;
 
 public class Login extends JDialog implements ActionListener
 {
-	// MvbOracleConnection represents a connection to an Oracle database
+	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 
 	// user is allowed 3 login attempts
