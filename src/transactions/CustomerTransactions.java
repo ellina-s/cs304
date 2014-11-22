@@ -30,6 +30,7 @@ public class CustomerTransactions{
 	 * will be asked to register by providing their personal information,
 	 * including their name, their address, phone number,  an id and a password.  
 	 * If the id is already in the system, they will be asked to provide another one. 
+	 * @return True if successfully registered a new customer, false otherwise.
 	 */
 	public boolean registerCustomer(int cid, String password, String name, String address, String phone){
 
@@ -54,12 +55,6 @@ public class CustomerTransactions{
 				return false;
 			}
 
-			// display column names;
-			//for (int i = 0; i < numCols; i++){
-			// get column name and print it
-			//System.out.printf("%s\n", rsmd.getColumnName(i+1));    
-			//}
-
 			// Check for existing cid values
 			while(rs.next())
 			{
@@ -68,6 +63,7 @@ public class CustomerTransactions{
 
 				if(cid == existing_cid){
 					System.out.println("cid " + cid + " is already in the system. Please, provide a different cid.");
+					stmt.close();
 					return false;
 				}
 			}
@@ -78,7 +74,7 @@ public class CustomerTransactions{
 			boolean status = c.insertCustomer(cid, password, name, address, phone);
 
 			if(status == true){
-				System.out.println("Customer registered.");
+				System.out.println("Customer with cid " + cid +" registered.");
 				return true;
 			}
 			else{
@@ -116,14 +112,23 @@ public class CustomerTransactions{
 	 */
 
 
-	public boolean purchaseOnline(){
+	/**
+	 * Skeleton method for online purchases.
+	 */
+	public void purchaseOnline(){
 
 		// STEP 1.
 		// In the gui, ask: "Are you a new or returning customer?" New -> Register, Returning -> Check customer password and ID.
 
-		return false;
+		
 	}
 
+	/**
+	 * Authenticates a customer.
+	 * @param cid - customer id
+	 * @param password - customer password
+	 * @return True if successfully authenticated, false otherwise.
+	 */
 	public boolean authenticateCustomer(int cid, String password){
 
 		Statement  stmt;
@@ -148,24 +153,15 @@ public class CustomerTransactions{
 				return false;
 			}
 
-			// display column names;
-			//for (int i = 0; i < numCols; i++){
-				// get column name and print it
-			//	System.out.printf("%-15.15s", rsmd.getColumnName(i+1));    
-			//}
-			//System.out.println(" ");
-
 			while(rs.next())
 			{
 				existing_cid = rs.getInt("cid");
-				System.out.printf("Existing %-15.15s  ", existing_cid);
+				//System.out.printf("Existing %-15.15s  ", existing_cid);
 
 				existing_password = rs.getString("password");
-				System.out.printf("Ehisting %-15.15s\n", existing_password);
+				//System.out.printf("Ehisting %-15.15s\n", existing_password);
 
 				if(cid == existing_cid && password.equals(existing_password) ){
-					System.out.println("cid " + cid + " is in the system.");
-					System.out.println("password " + password + " is in the system.");
 					System.out.println("Customer authenticated successfully.");
 					stmt.close();
 					return true;
