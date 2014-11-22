@@ -1,24 +1,25 @@
 package tablestests;
 
-import static org.junit.Assert.*;
-import com.mysql.jdbc.Connection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
-import tables.Item;
+
+import tables.Customer;
+
+import com.mysql.jdbc.Connection;
+
 import connection.DatabaseConnection;
 
+public class CustomerTest {
 
-/**
- * Tests for the ITEM table basic operations.
- */
-
-public class itemTest{
 	
 	private Connection con;
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	
 	@Test
-	public void itemInsertTest(){
+	public void CustomerInsertTest(){
 
 		// given
 		// Connect to the database
@@ -30,15 +31,16 @@ public class itemTest{
 		}
 
 		con = (Connection) ams.getConnection();
-		Item item = new Item(con);
+		Customer c = new Customer(con);
 		// when
-		boolean status = item.insertItem(105, "Glow", "dvd", "drama", "ubc", 2014, 40, 10000);
+		boolean status = c.insertCustomer(105, "arjan", "ad", "ubc", "604 - 9394");
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
-		
+		c.showCustomer();
+		c.deleteCustomer(105);
+		c.showCustomer();
 	}
-	
 }

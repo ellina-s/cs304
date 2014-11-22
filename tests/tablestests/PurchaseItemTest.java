@@ -1,24 +1,27 @@
 package tablestests;
 
-import static org.junit.Assert.*;
-import com.mysql.jdbc.Connection;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
-import tables.Item;
+
+import tables.Customer;
+import tables.PurchaseItem;
+
+import com.mysql.jdbc.Connection;
+
 import connection.DatabaseConnection;
 
+public class PurchaseItemTest {
 
-/**
- * Tests for the ITEM table basic operations.
- */
-
-public class itemTest{
-	
 	private Connection con;
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	
+	
+	//Need to insert an Item and a Purchase due to Foreign Key Constraints.
 	@Test
-	public void itemInsertTest(){
+	public void CustomerInsertTest(){
 
 		// given
 		// Connect to the database
@@ -30,15 +33,17 @@ public class itemTest{
 		}
 
 		con = (Connection) ams.getConnection();
-		Item item = new Item(con);
+		PurchaseItem c = new PurchaseItem(con);
 		// when
-		boolean status = item.insertItem(105, "Glow", "dvd", "drama", "ubc", 2014, 40, 10000);
+		boolean status = c.insertPurchaseItem(1, 2, 3);
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
-		
+		c.showPurchaseItem();
+		c.deletePurchaseItem(1, 3);
+		c.showPurchaseItem();
 	}
 	
 }
