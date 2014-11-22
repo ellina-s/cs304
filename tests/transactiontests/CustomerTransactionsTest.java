@@ -21,6 +21,7 @@ public class CustomerTransactionsTest{
 	/**
 	 * Tests registering a new customer.
 	 */
+	/*
 	@Test
 	public void registerNewCustomerTest(){
 
@@ -44,6 +45,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(true, status);
 	}
+	*/
 
 
 	/**
@@ -51,6 +53,7 @@ public class CustomerTransactionsTest{
 	 * Input: A customer that is already in the Customer table.
 	 * Expected output: Customer was not registered.
 	 */
+	/*
 	@Test
 	public void registerExistingCustomerTest(){
 
@@ -74,6 +77,82 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(false, status);
 	}
+	*/
+
+	/**
+	 * Tests authenticating an existing customer.
+	 * Input: Valid cid and password.
+	 * Expected output: Customer is successfully authenticated.
+	 */
+	@Test
+	public void successfulAuthenticationTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		/*
+		Existing 105              Existing arjan          
+		Existing 550              Existing pass50         
+		Existing 551              Existing pass51         
+		Existing 552              Existing pass52         
+		Existing 553              Existing pass553        
+		Existing 554              Existing pass553=4      
+		Existing 555              Existing pass555
+		*/
+	
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.authenticateCustomer(555, "pass555");
+		// then
+		if(status == false){
+			fail();
+		}
+		assertEquals(true, status);
+	}
+	
+	/**
+	 * Tests authenticating a customer given invalid cid.
+	 * Input: Invalid cid and a valid password.
+	 * Expected output: Customer is not authenticated.
+	 */
+	@Test
+	public void invalidCidAuthenticationTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		/*
+		Existing 105              Existing arjan          
+		Existing 550              Existing pass50         
+		Existing 551              Existing pass51         
+		Existing 552              Existing pass52         
+		Existing 553              Existing pass553        
+		Existing 554              Existing pass553=4      
+		Existing 555              Existing pass555
+		*/
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.authenticateCustomer(599, "pass555");
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
 
 
 }

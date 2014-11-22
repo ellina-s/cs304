@@ -56,15 +56,15 @@ public class CustomerTransactions{
 
 			// display column names;
 			//for (int i = 0; i < numCols; i++){
-				// get column name and print it
-				//System.out.printf("%s\n", rsmd.getColumnName(i+1));    
+			// get column name and print it
+			//System.out.printf("%s\n", rsmd.getColumnName(i+1));    
 			//}
 
 			// Check for existing cid values
 			while(rs.next())
 			{
 				existing_cid = rs.getInt("cid");
-				//System.out.printf("Exhisting %-15.15s\n", existing_cid);
+				//System.out.printf("Existing %-15.15s\n", existing_cid);
 
 				if(cid == existing_cid){
 					System.out.println("cid " + cid + " is already in the system. Please, provide a different cid.");
@@ -72,7 +72,7 @@ public class CustomerTransactions{
 				}
 			}
 			stmt.close();
-			
+
 			// Add a customer, since the given cid is not in the system.
 			Customer c = new Customer(connection);
 			boolean status = c.insertCustomer(cid, password, name, address, phone);
@@ -90,6 +90,95 @@ public class CustomerTransactions{
 			System.out.println("Customer Registration Error: " + e.getMessage());
 			return false;
 		}	
+	}
+
+
+	/*
+	 * Online Purchase.
+	 * 1) To buy online, customers have to identify themselves  by typing their customer id and password.
+	 * Customers who access the store online for the first time have to register first.
+	 * 2) To shop at the site, registered customers will be given a virtual shopping basket
+	 * and asked to specify the  item they want to buy.
+	 * The customer will describe the item by providing the category, or the title,
+	 * or the leading singer (or all of them),  and the quantity.
+	 * 3) If the information is not enough to define a single item,
+	 * the system will display all the items that match the input and ask the customer to select one.
+	 * 4) When an item is selected, it will be added to the customer shopping cart.
+	 * Each time an item is selected the system has to make sure that there is enough quantity in the store to complete the purchase.
+	 * Otherwise the system will ask the customer to accept the existing quantity.
+	 * The customer can repeat the same process for any number of items.
+	 * 5) When the customer is ready to check-out, the system will produce a bill with the items and the total amount.
+	 * 6) The client has to provide a credit card number and expiry date to complete the transaction.
+	 * 7) After that,  the system will create a purchase for the store
+	 * 8) and inform the customer about the number of days it will take to receive the goods.
+	 * This number is estimated by the number of outstanding orders and the maximum number of orders that can be delivered in a day
+	 * (which is fixed; you need to decide on this). 
+	 */
+
+
+	public boolean purchaseOnline(){
+
+		// STEP 1.
+		// In the gui, ask: "Are you a new or returning customer?" New -> Register, Returning -> Check customer password and ID.
+
+		return false;
+	}
+
+	public boolean authenticateCustomer(int cid, String password){
+
+		Statement  stmt;
+		ResultSet  rs;
+		int existing_cid;
+		String existing_password;
+
+		try
+		{
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT cid, password FROM Customer");
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			if(numCols != 2){
+				System.err.println("Customer Registration Error: Failed to retrive exactly two columns.");
+				stmt.close();
+				return false;
+			}
+
+			// display column names;
+			//for (int i = 0; i < numCols; i++){
+				// get column name and print it
+			//	System.out.printf("%-15.15s", rsmd.getColumnName(i+1));    
+			//}
+			//System.out.println(" ");
+
+			while(rs.next())
+			{
+				existing_cid = rs.getInt("cid");
+				System.out.printf("Existing %-15.15s  ", existing_cid);
+
+				existing_password = rs.getString("password");
+				System.out.printf("Ehisting %-15.15s\n", existing_password);
+
+				if(cid == existing_cid && password.equals(existing_password) ){
+					System.out.println("cid " + cid + " is in the system.");
+					System.out.println("password " + password + " is in the system.");
+					System.out.println("Customer authenticated successfully.");
+					stmt.close();
+					return true;
+				}
+			}
+			stmt.close();
+			System.out.println("Invalid customer id or password. Please, try again.");
+			return false;
+
+		} catch (SQLException e) {	
+			System.out.println("Customer Authentication Error: " + e.getMessage());
+			return false;
+		}
 	}
 
 }
