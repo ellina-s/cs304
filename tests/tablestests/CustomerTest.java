@@ -40,6 +40,7 @@ public class CustomerTest {
 		}
 		assertEquals(true, status);
 		c.showCustomer();
+		c.deleteCustomer(102);
 		c.deleteCustomer(105);
 		c.showCustomer();
 	}

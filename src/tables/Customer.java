@@ -241,7 +241,7 @@ public class Customer{
 		      System.out.printf("%-15.15s", address);
 		      
 		      phone = rs.getString("phone");
-		      System.out.printf("%-15.15s", phone);
+		      System.out.printf("%-15.15s\n", phone);
 		  }
 	 
 		  // close the statement; 
