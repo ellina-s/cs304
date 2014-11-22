@@ -41,4 +41,29 @@ public class hasSongTest{
 		assertEquals(true, status);
 	}
 
+	/**
+	 * Tests deleting a tuple from the HasSong table.
+	 */
+	
+	@Test
+	public void deleteHasSong(){
+		// given
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		HasSong hasSong = new HasSong(con);
+		// when
+		boolean status = hasSong.deleteHasSong(100);
+		// then
+		if(status == false){
+			fail();
+		}
+		assertEquals(true, status);
+	}
+	
+
 }

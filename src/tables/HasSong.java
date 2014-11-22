@@ -51,4 +51,38 @@ public class HasSong{
 		}
 	}
 	
+	/**
+	 * Deletes a tuple from HASSONG.
+	 * Requires a upc of an existing item.
+	 */
+	public boolean deleteHasSong(int upc){
+		try {
+			PreparedStatement ps = con.prepareStatement("DELETE FROM HasSong WHERE upc = ?");
+			ps.setInt(1, upc);
+			int rowCount = ps.executeUpdate();
+			if(rowCount == 0) {
+				System.out.println("HasSong for item # " + upc + " does not exist.");
+				ps.close();
+				return false;
+			}
+			con.commit();
+			System.out.println("HasSong for item # " + upc + " deleted successfully.");
+			ps.close();
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("HasSong Deletion Error: " + e.getMessage());
+			try {
+				con.rollback();
+				return false;
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("HasSong Deletion Rollback Error:: " + ex2.getMessage());
+				System.exit(-1);
+				return false;
+			}
+		}
+	}
+	
 }
