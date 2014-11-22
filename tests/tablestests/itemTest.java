@@ -29,6 +29,7 @@ public class itemTest{
 	public void itemInsertTest(){
 
 		// given
+		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
 			System.out.println("You entered valid credentials.");
 		}
