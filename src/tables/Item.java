@@ -147,7 +147,7 @@ public class Item{
 				
 			}
 			System.out.println("-----------------------------------------------------");
-
+			stmt.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -15,7 +15,7 @@ public class leadSingerTest{
 	private Connection con;
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
-	private final static int ITEM_UPC = 105;
+	private final static int ITEM_UPC = 104;
 
 	/*
 	 * Tests insertion of a tuple in the LEADSINGER table.
@@ -34,14 +34,14 @@ public class leadSingerTest{
 		LeadSinger leadSinger = new LeadSinger(con);
 
 		// when
-		boolean status = leadSinger.insertLeadSinger(ITEM_UPC, "Sinatra");
+		boolean status = leadSinger.insertLeadSinger(103, "Smashing Pumpkins");
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
 	}
-	
+
 
 	/*
 	 * Tests deleting a tuple from LeadSinger.
@@ -58,14 +58,33 @@ public class leadSingerTest{
 		}
 		con = (Connection) ams.getConnection();
 		LeadSinger leadSinger = new LeadSinger(con);
-		
+
 		// when
-		boolean status = leadSinger.deleteLeadSinger(105);
+		boolean status = leadSinger.deleteLeadSinger(ITEM_UPC);
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
+	}
+
+	/*
+	 * Tests displaying all tuples from LEADSINGER.
+	 */
+	@Test
+	public void displayLeadSingers(){
+		// given
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		//when
+		con = (Connection) ams.getConnection();
+		LeadSinger leadSinger = new LeadSinger(con);
+		//then
+		leadSinger.displayAllLeadSingers();
 	}
 
 }
