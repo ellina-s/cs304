@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.mysql.jdbc.Connection;
 
@@ -241,7 +242,7 @@ public class Customer{
 		      System.out.printf("%-15.15s", address);
 		      
 		      phone = rs.getString("phone");
-		      System.out.printf("%-15.15s", phone);
+		      System.out.printf("%-15.15s\n", phone);
 		  }
 	 
 		  // close the statement; 
@@ -253,5 +254,87 @@ public class Customer{
 		    System.out.println("Message: " + ex.getMessage());
 		}	
 	}
+	
+	 
+	 public String[][] getCustomer() {
+		ArrayList<ArrayList<String>> table = null; 
+		
+		int cid;
+		String password;
+		String name;
+		String address;
+		String phone;
+	    	
+	    Statement  stmt;
+	    ResultSet  rs;
+		   
+		try
+		{
+		  stmt = con.createStatement();
+
+		  rs = stmt.executeQuery("SELECT * FROM Customer");
+
+		  // get info on ResultSet
+		  ResultSetMetaData rsmd = rs.getMetaData();
+		  
+		  // get number of columns
+		  int numCols = rsmd.getColumnCount();
+		  table = new ArrayList<ArrayList<String>> (numCols);
+		  
+		  // display column names;
+		  for (int i = 0; i < numCols; i++)
+		  {
+		      // get column name and print it
+			  table.add(new ArrayList<String> ());
+			  table.get(i).add(rsmd.getColumnName(i + 1));
+		  }
+
+		  while(rs.next())
+		  {
+		      // for display purposes get everything from database 
+		      // as a string
+
+		      // simplified output formatting; truncation may occur
+
+		      cid = rs.getInt("cid");
+		      table.get(0).add(Integer.toString(cid));
+		      
+		      password = rs.getString("password");
+		      table.get(1).add(password);
+
+		      name = rs.getString("name");
+		      table.get(2).add(name);
+		      
+		      address = rs.getString("address");
+		      table.get(3).add(address);
+		      
+		      phone = rs.getString("phone");
+		      table.get(4).add(phone);
+		  }
+	 
+		  // close the statement; 
+		  // the ResultSet will also be closed
+		  stmt.close();
+		}
+		catch (SQLException ex)
+		{
+		    System.out.println("Message: " + ex.getMessage());
+		}
+		
+		if(table != null) {
+			String[][] result = new String[table.get(0).size()][table.size()];
+			for(int i = 0; i < table.get(0).size(); i++) {
+				for(int j = 0; j < table.size(); j++) {
+					result[i][j] = table.get(j).get(i);
+				}
+			}
+			
+			return result;
+		}
+		else {
+			return null;
+		}		
+	}
+	 
 	
 }

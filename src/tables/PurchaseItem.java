@@ -226,7 +226,7 @@ public class PurchaseItem{
 		      System.out.printf("%-15.15s", upc);
 
 		      quantity = rs.getInt("quantity");
-		      System.out.printf("%-15.15s", quantity);
+		      System.out.printf("%-15.15s\n", quantity);
 		  }
 	 
 		  // close the statement; 
