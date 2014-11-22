@@ -13,7 +13,7 @@ import java.awt.event.*;
  * Reference: http://www.cs.ubc.ca/~laks/cpsc304/Swing/jdbc_swing.html
  */
 
-public class Login extends JDialog implements ActionListener
+public class Login extends JPanel implements ActionListener
 {
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
@@ -22,71 +22,70 @@ public class Login extends JDialog implements ActionListener
 	private int loginAttempts = 0;
 
 	// components of the login window
+	private JFrame mainFrame;
 	private JTextField usernameField = new JTextField(10);
 	private JPasswordField passwordField = new JPasswordField(10);	   
 	private JLabel usernameLabel = new JLabel("Enter username:  ");
 	private JLabel passwordLabel = new JLabel("Enter password:  ");
 	private JButton loginButton = new JButton("Log In");
-	private JFrame mainFrame; // ***
-
+	private JButton exitButton = new JButton("Exit");
 
 	/*
 	 * Default constructor. The login window is constructed here.
 	 */
-	public Login()
-	{
-		//super(parent, "User Login", true);
-		//setResizable(false);
-
-		mainFrame = new JFrame("User Login"); // ***
-
+	public Login(JFrame mainFrame_) {
+		mainFrame = mainFrame_;
 		passwordField.setEchoChar('*');
-
-		// content pane for the login window
-		JPanel loginPane = new JPanel();
-		mainFrame.setContentPane(loginPane); // ***
-
-
-		/*
-		 * layout components using the GridBag layout manager
-		 */ 
 
 		GridBagLayout gb = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		loginPane.setLayout(gb);
-		loginPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		setLayout(gb);
+		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
 		// place the username label 
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.insets = new Insets(10, 10, 5, 0);
 		gb.setConstraints(usernameLabel, c);
-		loginPane.add(usernameLabel);
+		add(usernameLabel);
 
 		// place the text field for the username 
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(10, 0, 5, 10);
 		gb.setConstraints(usernameField, c);
-		loginPane.add(usernameField);
+		add(usernameField);
 
 		// place password label
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.insets = new Insets(0, 10, 10, 0);
 		gb.setConstraints(passwordLabel, c);
-		loginPane.add(passwordLabel);
+		add(passwordLabel);
 
 		// place the password field 
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(0, 0, 10, 10);
 		gb.setConstraints(passwordField, c);
-		loginPane.add(passwordField);
+		add(passwordField);
 
 		// place the login button
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		c.insets = new Insets(10, 5, 5, 5);
+		c.anchor = GridBagConstraints.CENTER;
+		gb.setConstraints(loginButton, c);
+		add(loginButton);
+		
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(10, 10, 5, 10);
 		c.anchor = GridBagConstraints.CENTER;
-		gb.setConstraints(loginButton, c);
-		loginPane.add(loginButton);
+		gb.setConstraints(exitButton, c);
+		add(exitButton);
+		
+		exitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}		
+		});
 
 		// end of layout
 
@@ -96,61 +95,22 @@ public class Login extends JDialog implements ActionListener
 		passwordField.addActionListener(this);
 		loginButton.addActionListener(this);
 
-		// anonymous inner class for closing the window
-		addWindowListener(new WindowAdapter() 
-		{
-			public void windowClosing(WindowEvent e) 
-			{ 
-				System.exit(0); 
-			}
-		});
-
-
-		// size the window to obtain a best fit for the components
-		mainFrame.pack();
-
-		// center the frame
-		Dimension d = mainFrame.getToolkit().getScreenSize();
-		Rectangle r = mainFrame.getBounds();
-		mainFrame.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-
-		// make the window visible
-		mainFrame.setVisible(true);
-
 		// initially, place the cursor in the username text field
-		usernameField.requestFocus();	  
+		usernameField.grabFocus(); 
 	}
 
 
 	/*
 	 * event handler for password field and OK button
 	 */ 	    
-	public void actionPerformed(ActionEvent e) 
-	{
-		if (ams.connect(usernameField.getText(), 
-				String.valueOf(passwordField.getPassword())))
-		{
-			// if the username and password are valid, 
-			// get rid of the login window
-			mainFrame.dispose();
+	public void actionPerformed(ActionEvent e) {
+		if (ams.connect(usernameField.getText(), String.valueOf(passwordField.getPassword()))) {
+			
+			mainFrame.remove(this);
+			mainFrame.revalidate();
 
 			System.out.println("You entered valid credentials.");
 		}
-		else
-		{
-			loginAttempts++;
-
-			if (loginAttempts >= 3)
-			{
-				dispose();
-				System.exit(0);
-			}
-			else
-			{
-				// clear the password
-				passwordField.setText("");
-			}
-		}  
-	}     
+	}
 }
 
