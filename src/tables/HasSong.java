@@ -1,7 +1,10 @@
 package tables;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.mysql.jdbc.Connection;
 
@@ -85,4 +88,44 @@ public class HasSong{
 		}
 	}
 	
+	/**
+	 * Displays all tuples from HasSong.
+	 */
+	public void displayAllHasSong(){
+		int upc;
+		String title;
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM HASSONG");
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+			int[] formats = {10,20};
+
+			System.out.println("-----------------------------------------------------");
+			// display column names;
+			for (int i = 0; i < numCols; i++){
+				// get column name and print it
+				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+			
+			while(rs.next()){
+				upc = rs.getInt("upc");
+				title = rs.getString("title");
+				System.out.printf("%-10s%-20s\n", upc,title);
+			}
+			System.out.println("-----------------------------------------------------");
+			stmt.close();
+
+		} catch (SQLException e) {
+			System.out.println("Message: " + e.getMessage());
+		}
+
+		
+	}
 }

@@ -7,6 +7,7 @@ import com.mysql.jdbc.Connection;
 import org.junit.Test;
 
 import tables.HasSong;
+import tables.LeadSinger;
 import connection.DatabaseConnection;
 
 /**
@@ -44,7 +45,6 @@ public class hasSongTest{
 	/**
 	 * Tests deleting a tuple from the HasSong table.
 	 */
-	
 	@Test
 	public void deleteHasSong(){
 		// given
@@ -64,6 +64,25 @@ public class hasSongTest{
 		}
 		assertEquals(true, status);
 	}
-	
+
+	/**
+	 * Tests displaying all tuples from HasSong.
+	 */
+	@Test
+	public void displayHasSongTest(){
+		// given
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		// when
+		con = (Connection) ams.getConnection();
+		HasSong hasSong = new HasSong(con);
+		// then
+		hasSong.displayAllHasSong();
+	}
+
 
 }
