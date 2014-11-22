@@ -34,7 +34,7 @@ public class leadSingerTest{
 		LeadSinger leadSinger = new LeadSinger(con);
 
 		// when
-		boolean status = leadSinger.insertLeadSinger(103, "Smashing Pumpkins");
+		boolean status = leadSinger.insertLeadSinger(100, "Only you");
 		// then
 		if(status == false){
 			fail();
