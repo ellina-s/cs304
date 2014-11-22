@@ -96,14 +96,14 @@ insert into Customer values (8, 'hello8', 'Toph', '123 8th Street', '246');
 insert into Customer values (9, 'hello9', 'Sokka', '123 9th Street', '357');
 insert into Customer values (10, 'hello10', 'Zuko', '123 10th Street', '468');
 
-insert into Item values (1, 'LOK: Book 1', 'CD', 'Instrumental', 'Nick', 2012, 12.99, 15);
-insert into Item values (2, 'Transistor Soundtrack', 'CD', 'Instrumental', 'Super Giant Games', 2014, 5.99, 10);
-insert into Item values (3, 'ACDC videos', 'DVD', 'Rock', 'The Company', 2000, 7.00, 12);
-insert into Item values (4, 'My Head Is an Animal', 'CD', 'Pop', 'The Company 2', 2012, 10.00, 7);
-insert into Item values (5, 'Night Visions', 'CD', 'Rock', 'The Company', 2012, 15.00, 17);
-insert into Item values (6, 'Thriller Music Video', 'DVD', 'Pop','The Company 2', 1999, 3.00, 22);
-insert into Item values (7, 'Bastion Original Soundtrack', 'CD', 'Instrumental','Super Giant Games', 2010, 5.99, 13);
-insert into Item values (8, 'Smooth Criminal Video', 'DVD', 'Pop', 'The Company 2', 2000, 3.00, 7);
+insert into Item values (1, 'LOK: Book 1', 'cd', 'instrumental', 'Nick', 2012, 12.99, 15);
+insert into Item values (2, 'Transistor Soundtrack', 'cd', 'rap', 'Super Giant Games', 2014, 5.99, 10);
+insert into Item values (3, 'ACDC videos', 'dvd', 'rock', 'The Company', 2000, 7.00, 12);
+insert into Item values (4, 'My Head Is an Animal', 'cd', 'country', 'The Company 2', 2012, 10.00, 7);
+insert into Item values (5, 'Night Visions', 'cd', 'new age', 'The Company', 2012, 15.00, 17);
+insert into Item values (6, 'Thriller Music Video', 'dvd', 'pop','The Company 2', 1999, 3.00, 22);
+insert into Item values (7, 'Bastion Original Soundtrack', 'cd', 'classical','Super Giant Games', 2010, 5.99, 13);
+insert into Item values (8, 'Smooth Criminal Video', 'dvd', 'pop', 'The Company 2', 2000, 3.00, 7);
 
 insert into LeadSinger values (1, 'Jeremy Zuckerman');
 insert into LeadSinger values (2, 'Darren Korb');
@@ -130,15 +130,48 @@ insert into HasSong values(7, 'Mother, Im Here');
 insert into HasSong values(7, 'Setting Sail, Coming Home');
 insert into HasSong values(8, 'Smooth Criminal');
 
-insert into Purchase values (1, '01/01/14', 1, 50, '02/01/14', null, null);
-insert into Purchase values (2, '01/05/14', 1, 50, '02/05/14', '02/11/14', '02/09/14');
-insert into Purchase values (3, '01/01/14', 2, 51, '02/01/14', null, null);
-insert into Purchase values (4, '01/01/14', 2, 51, '02/01/14', null, null);
-insert into Purchase values (5, );
+insert into Purchase values (1, '01/01/14', 1, 50, '01/15/16', null, null);
+insert into Purchase values (2, '01/05/14', 1, 50, '02/05/16', '02/11/14', '02/09/14');
+insert into Purchase values (3, '01/01/14', 2, 51, '02/01/16', null, null);
+insert into Purchase values (4, '01/01/14', 2, 51, '02/01/15', null, null);
+insert into Purchase values (5, '01/03/14', 3, 52, '02/03/16', '01/10/14', '01/10/14');
+insert into Purchase values (6, '02/20/14', 4, 53, '03/20/17', '02/25/14', '02/27/14');
+insert into Purchase values (7, '04/01/14', 9, 58, '05/01/16', null, null);
+insert into Purchase values (8, '05/05/14', 5, 54, '06/05/17', '06/11/14', '06/09/14');
+insert into Purchase values (9, '06/01/14', 6, 55, '07/01/15', null, null);
+insert into Purchase values (10, '07/01/14', 8, 57, '08/01/17', null, null);
+insert into Purchase values (11, '08/03/14', 7, 56, '09/03/15', '09/10/14', '09/10/14');
+insert into Purchase values (12, '09/20/14', 1, 50, '10/20/19', '10/25/14', '10/27/14');
 
+insert into PurchaseItem values (1, 1, 1);
+insert into PurchaseItem values (1, 2, 2);
+insert into PurchaseItem values (2, 3, 10);
+insert into PurchaseItem values (2, 1, 1);
+insert into PurchaseItem values (2, 2, 2);
+insert into PurchaseItem values (3, 3, 3);
+insert into PurchaseItem values (3, 6, 1);
+insert into PurchaseItem values (4, 4, 4);
+insert into PurchaseItem values (4, 5, 1);
+insert into PurchaseItem values (5, 7, 1);
+insert into PurchaseItem values (6, 7, 1);
+insert into PurchaseItem values (7, 3, 3);
+insert into PurchaseItem values (7, 1, 3);
+insert into PurchaseItem values (8, 6, 1);
+insert into PurchaseItem values (9, 4, 4);
+insert into PurchaseItem values (10, 5, 1);
+insert into PurchaseItem values (11, 7, 1);
+insert into PurchaseItem values (12, 7, 1);
 
+insert into Returned values (1, '01/02/14', 1);
+insert into Returned values (2, '01/03/14', 1);
+insert into Returned values (3, '01/05/14', 3);
+insert into Returned values (4, '01/07/14', 12);
 
+insert into ReturnItem values (1, 1, 1);
+insert into ReturnItem values (2, 2, 1);
+insert into ReturnItem values (3, 3, 1);
+insert into ReturnItem values (3, 6, 3);
+insert into ReturnItem values (4, 7, 1);
 
-	
- show tables;
+show tables;
  
