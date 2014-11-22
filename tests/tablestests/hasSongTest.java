@@ -46,7 +46,7 @@ public class hasSongTest{
 	 * Tests deleting a tuple from the HasSong table.
 	 */
 	@Test
-	public void deleteHasSong(){
+	public void deleteHasSongTest(){
 		// given
 		if(ams.connect("root", "cs304pwd")){
 			System.out.println("You entered valid credentials.");

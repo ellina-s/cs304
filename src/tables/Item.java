@@ -35,6 +35,16 @@ public class Item{
 	 */
 	public boolean insertItem( int upc, String title, String type, String category, String company, int year, float price, int stock){
 
+		if(!type.equals("dvd") && !type.equals("cd")){
+			System.out.println("Type of Item can be cd or dvd only. Tuple rejected.");
+			return false;
+		}
+		
+		if(!category.equals("rock") && !category.equals("pop") && !category.equals("rap") && !category.equals("country") && !category.equals("classical") && !category.equals("new age") && !category.equals("instrumental")){
+			System.out.println("Category of Item can be only : rock, pop, rap, country, classical, new age, instrumental. Tuple rejected.");
+			return false;
+		}
+		
 		PreparedStatement  ps;
 
 		try {

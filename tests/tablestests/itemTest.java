@@ -41,7 +41,7 @@ public class itemTest{
 		// when
 		Random randomGenerator = new Random();
 		int random_upc = randomGenerator.nextInt(100) * 5;
-		boolean status = item.insertItem(random_upc, "RandomTestItem", "cd", "drama", "randomProduction", 2014, 10, 5);
+		boolean status = item.insertItem(random_upc, "RandomTestItem", "dvd", "country", "randomProduction", 2014, 10, 5);
 		// then
 		if(status == false){
 			fail();
@@ -66,7 +66,7 @@ public class itemTest{
 		Item item = new Item(con);
 
 		// when
-		boolean status = item.insertItem(111, "Jungle", "dvd", "documentary", "geo", 1996, 10, 40);
+		boolean status = item.insertItem(111, "Jungle", "dvd", "instrumental", "geo", 1996, 10, 40);
 		if(status == false){
 			fail();
 		}
