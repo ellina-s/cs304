@@ -1,7 +1,10 @@
 package tables;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.mysql.jdbc.Connection;
 
@@ -27,7 +30,7 @@ public class Item{
 
 
 	/**
-	 * Inserts an Item in the ITEM table.
+	 * Inserts a tuple in the ITEM table.
 	 * Returns true if successful, false otherwise.
 	 */
 	public boolean insertItem( int upc, String title, String type, String category, String company, int year, float price, int stock){
@@ -63,13 +66,98 @@ public class Item{
 			}
 		}
 	}
-	
+
 	/*
 	 * Deletes a tuple from the ITEM table.
 	 */
-	public boolean deleteItem(){
+	public boolean deleteItem(int upc){
+
+		try {
+			PreparedStatement ps = connection.prepareStatement("DELETE FROM Item WHERE upc = ?");
+			ps.setInt(1, upc);
+			int rowCount = ps.executeUpdate();
+			if(rowCount == 0) {
+				System.out.println("Item # " + upc + " does not exist.");
+				ps.close();
+				return false;
+			}
+			connection.commit();
+			System.out.println("Item # " + upc + " deleted successfully.");
+			ps.close();
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Item Deletion Error: " + e.getMessage());
+			try {
+				connection.rollback();
+				return false;
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Item Deletion Rollback Error:: " + ex2.getMessage());
+				System.exit(-1);
+				return false;
+			}
+		}
+
+	}
+
+	/*
+	 * Displays all tuples from the ITEM table.
+	 */
+	public void displayAllItems(){
+
+		int upc, year, stock;
+		float price;
+		String title, type, category, company;
+
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM item");
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+			int[] formats = {10,20,10,10,20,10,10,10};
 		
-		return false;
+			System.out.println("-----------------------------------------------------");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++){
+				// get column name and print it
+
+				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+			
+			while(rs.next()){
+				upc = rs.getInt("upc");
+				year = rs.getInt("year");
+				stock = rs.getInt("stock");
+				price = rs.getFloat("price");
+				title = rs.getString("title");
+				type = rs.getString("type");
+				category = rs.getString("category");
+				company = rs.getString("company");
+				
+				System.out.printf("%-10s%-20s%-10s%-10s%-20s%-10s%-10s%-10s\n", 
+						upc,title,type,category,company,year,price,stock);
+				
+			}
+			System.out.println("-----------------------------------------------------");
+
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+
+
+		
 	}
 
 }
