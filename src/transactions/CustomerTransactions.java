@@ -49,22 +49,22 @@ public class CustomerTransactions{
 			int numCols = rsmd.getColumnCount();
 
 			if(numCols != 1){
-				System.err.println("Did not return the expected number of columns. Expected one.");
+				System.err.println("Customer Registration Error: Failed to retrive exactly one column.");
 				stmt.close();
 				return false;
 			}
 
 			// display column names;
-			for (int i = 0; i < numCols; i++){
+			//for (int i = 0; i < numCols; i++){
 				// get column name and print it
-				System.out.printf("%s\n", rsmd.getColumnName(i+1));    
-			}
+				//System.out.printf("%s\n", rsmd.getColumnName(i+1));    
+			//}
 
 			// Check for existing cid values
 			while(rs.next())
 			{
 				existing_cid = rs.getInt("cid");
-				System.out.printf("Exhisting %-15.15s\n", existing_cid);
+				//System.out.printf("Exhisting %-15.15s\n", existing_cid);
 
 				if(cid == existing_cid){
 					System.out.println("cid " + cid + " is already in the system. Please, provide a different cid.");

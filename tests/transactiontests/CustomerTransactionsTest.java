@@ -19,10 +19,10 @@ public class CustomerTransactionsTest{
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 
 	/**
-	 * Tests registering a customer.
+	 * Tests registering a new customer.
 	 */
 	@Test
-	public void registerCustomerTest(){
+	public void registerNewCustomerTest(){
 
 		// given
 		// Connect to the database
@@ -33,17 +33,10 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		
+
 		// when
-		//Customer c = new Customer(con);
-		//c.insertCustomer(105, "arjan", "ad", "ubc", "604 - 9394");
-		//c.insertCustomer(550, "pass50", "user50", "ubc", "604 - 9390");
-		//c.insertCustomer(551, "pass51", "user52", "ubc", "604 - 9391");
-		//c.insertCustomer(552, "pass52", "user52", "ubc", "604 - 9392");
-		
 		CustomerTransactions customer = new CustomerTransactions(con);
-		// when
-		boolean status = customer.registerCustomer(554, "pass553=4", "testuser554", "Vancouver", "46872125");
+		boolean status = customer.registerCustomer(5566, "pass556", "testuser556", "North Van", "987654");
 
 		// then
 		if(status == false){
@@ -51,6 +44,37 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(true, status);
 	}
+
+
+	/**
+	 * Tests registering an existing customer.
+	 * Input: A customer that is already in the Customer table.
+	 * Expected output: Customer was not registered.
+	 */
+	@Test
+	public void registerExistingCustomerTest(){
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.registerCustomer(554, "pass553=4", "testuser554", "Vancouver", "46872125");
+
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
 
 }
 
