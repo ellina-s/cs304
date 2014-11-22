@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import connection.DatabaseConnection;
+
 /**
  * Contains main() to run the program.
  * Creates a the main gui frame and login dialog.
@@ -24,6 +26,7 @@ public class MainGui extends JFrame{
 	private static JPanel mainPanel;
 	private static Login loginUI;
 	private static ManagerPanel managerPanel;
+	private DatabaseConnection ams;
 
 	/*
 	 * Constructor.

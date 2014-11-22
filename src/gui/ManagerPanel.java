@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat.Field;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +18,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import com.mysql.jdbc.Connection;
+
+import connection.DatabaseConnection;
+import tables.Item;
+
 public class ManagerPanel extends JPanel {
 	private JFrame mainFrame;
 	private JButton dailySalesReport = new JButton("View Daily Sales Report");
@@ -24,8 +30,9 @@ public class ManagerPanel extends JPanel {
 	private JButton addItems = new JButton("Add Items");
 	private JButton processOrder = new JButton("Process Order");
 	private JTable itemTable;
+	private JTable salesReportTable;
 	private GridLayout buttonLayout = new GridLayout(4,1);
-	private String[] columnNames = {
+	private String[] itemColumnNames = {
 			"upc",
             "title",
             "type",
@@ -34,14 +41,19 @@ public class ManagerPanel extends JPanel {
             "year",
             "price",
             "stock"};
-	
+	private String[] salesReportColumnNames = {
+			"UPC",
+			"Category",
+			"Unit Price",
+			"Units",
+			"Total Value"
+	};
 
-	// Testing values
-	private String[][] data = {
-		    {"testupc", "testtitle",
-		     "testtype", "typecategory", "testcompany", "testyear","testprice","teststock"}
-		};
+	private DatabaseConnection ams = DatabaseConnection.getInstance();
+	private Connection con = (Connection) ams.getConnection();
 	
+	Item item = new Item(con);
+	private String[][] data;
 	
 	private JScrollPane tablePanel;
 	private JPanel actionPanel = new JPanel();
@@ -61,7 +73,81 @@ public class ManagerPanel extends JPanel {
 		dailySalesReport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				removeAll();
+				setLayout(new GridBagLayout());
+				GridBagConstraints c = new GridBagConstraints();
+
+				mainFrame.setSize(800, 600);
+				
+				
+				// Some test values
+				Object[][] testData = {
+					    {"2555","classical",10.50,10,105.00},
+					    {"2555","classical",5.00,5,25.00},
+					    {"3455","classical",20.00,1,20.00},
+					    {"1255","pop",20.00,5,100.00},
+					    {"5666","pop",10.00,10,100.00},
+					    {"1244","rock",2.50,20,50.00},
+					    {"8844","rock",5.00,50,250.00}
+					};
+				
+				Object[][] emptyData = {};
+				
+				
+				salesReportTable = new JTable(emptyData, salesReportColumnNames) {
+					// Disable editing of table
+			        private static final long serialVersionUID = 1L;
+			        public boolean isCellEditable(int row, int column) {                
+			                return false;               
+			        };
+			    };
+				tablePanel = new JScrollPane(salesReportTable);
+				
+				JLabel enterDate = new JLabel("Enter Date (MM/DD/YY)");
+				JTextField dateField = new JTextField("");
+				dateField.setColumns(10);
+				
+				JButton generateReportButton = new JButton("Generate Report");
+				
+				generateReportButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+						Object[][] testData = {
+							    {"2555","classical",10.50,10,105.00},
+							    {"2555","classical",5.00,5,25.00},
+							    {"3455","classical",20.00,1,20.00},
+							    {"1255","pop",20.00,5,100.00},
+							    {"5666","pop",10.00,10,100.00},
+							    {"1244","rock",2.50,20,50.00},
+							    {"8844","rock",5.00,50,250.00}
+							};
+						
+//						ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> (5);
+//						
+//						for (int i = 0; i < testData.length; i++) {
+//							if (testData[i][1] == "classical") {
+//								
+//							}
+//						}
+					}		
+				});
+				
+				generateReportButton.setFocusable(false);
+				
+				actionPanel.add(enterDate);
+				actionPanel.add(dateField);
+				actionPanel.add(generateReportButton);
+				
+				c.gridx = 0;
+				c.gridy = 0;
+				add(tablePanel,c);
+				c.gridx = 0;
+				c.gridy = 1;
+				c.ipadx = 5;
+				add(actionPanel,c);
+				
+				mainFrame.revalidate();
 			}		
 		});
 		
@@ -78,9 +164,10 @@ public class ManagerPanel extends JPanel {
 				removeAll();
 				setLayout(new GridLayout(2,1));
 				
-				mainFrame.setSize(500, 600);
+				mainFrame.setSize(800, 600);
 				
-				itemTable = new JTable(data, columnNames) {
+				data = item.getItem();
+				itemTable = new JTable(data, itemColumnNames) {
 					// Disable editing of table
 			        private static final long serialVersionUID = 1L;
 			        public boolean isCellEditable(int row, int column) {                
