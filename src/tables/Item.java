@@ -63,5 +63,13 @@ public class Item{
 			}
 		}
 	}
+	
+	/*
+	 * Deletes a tuple from the ITEM table.
+	 */
+	public boolean deleteItem(){
+		
+		return false;
+	}
 
 }

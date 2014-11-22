@@ -22,7 +22,7 @@ public class itemTest{
 
 		// given
 		// Connect to the database
-		if(ams.connect("", "")){
+		if(ams.connect("root", "cs304pwd")){
 			System.out.println("You entered valid credentials.");
 		}
 		else{
@@ -32,7 +32,7 @@ public class itemTest{
 		con = (Connection) ams.getConnection();
 		Item item = new Item(con);
 		// when
-		boolean status = item.insertItem(101, "Rain", "dvd", "drama", "ubc", 2014, 40, 10000);
+		boolean status = item.insertItem(105, "Glow", "dvd", "drama", "ubc", 2014, 40, 10000);
 		// then
 		if(status == false){
 			fail();
