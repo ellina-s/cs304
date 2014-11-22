@@ -42,6 +42,12 @@ public class CustomerTest {
 		c.showCustomer();
 		c.deleteCustomer(102);
 		c.deleteCustomer(105);
-		c.showCustomer();
+		String [][] test = c.getCustomer();
+		for(int i = 0; i < test.length; i++) {
+			for(int j = 0; j < test[i].length; j++) {
+			      System.out.printf("%-15.15s", test[i][j]);
+			}
+			System.out.println();
+		}
 	}
 }

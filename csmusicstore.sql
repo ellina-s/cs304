@@ -85,16 +85,16 @@ create table ReturnItem
     foreign key (upc) references Item(upc));
 
 	
-insert into Customer values (1, 'hello1', 'Avatar Korra', 'Republic City', '123');
-insert into Customer values (2, 'hello2', 'G. Grumpy', '123 2nd Street', '456');
-insert into Customer values (3, 'hello3', 'R. Rusty', '123 3rd Street', '789');
-insert into Customer values (4, 'hello4', 'A. Braca', '123 4th Street', '321');
-insert into Customer values (5, 'hello5', 'D. Abra', '123 5th Street', '654');
-insert into Customer values (6, 'hello6', 'S. Uper', '123 6th Street', '987');
-insert into Customer values (7, 'hello7', 'C. AliFragi', '123 7th Street', '135');
-insert into Customer values (8, 'hello8', 'L. Istic', '123 8th Street', '246');
-insert into Customer values (9, 'hello9', 'E.X. Pial', '123 9th Street', '357');
-insert into Customer values (10, 'hello10', 'I. Docious', '123 10th Street', '468');
+insert into Customer values (1, 'hello1', 'Korra', 'Republic City', '123');
+insert into Customer values (2, 'hello2', 'Mako', '123 2nd Street', '456');
+insert into Customer values (3, 'hello3', 'Asami', '123 3rd Street', '789');
+insert into Customer values (4, 'hello4', 'Bolin', '123 4th Street', '321');
+insert into Customer values (5, 'hello5', 'Tenzin', '123 5th Street', '654');
+insert into Customer values (6, 'hello6', 'Aang', '123 6th Street', '987');
+insert into Customer values (7, 'hello7', 'Katara', '123 7th Street', '135');
+insert into Customer values (8, 'hello8', 'Toph', '123 8th Street', '246');
+insert into Customer values (9, 'hello9', 'Sokka', '123 9th Street', '357');
+insert into Customer values (10, 'hello10', 'Zuko', '123 10th Street', '468');
 
 insert into Item values (1, 'LOK: Book 1', 'CD', 'Instrumental', 'Nick', 2012, 12.99, 15);
 insert into Item values (2, 'Transistor Soundtrack', 'CD', 'Instrumental', 'Super Giant Games', 2014, 5.99, 10);
@@ -130,6 +130,11 @@ insert into HasSong values(7, 'Mother, Im Here');
 insert into HasSong values(7, 'Setting Sail, Coming Home');
 insert into HasSong values(8, 'Smooth Criminal');
 
+insert into Purchase values (1, '01/01/14', 1, 50, '02/01/14', null, null);
+insert into Purchase values (2, '01/05/14', 1, 50, '02/05/14', '02/11/14', '02/09/14');
+insert into Purchase values (3, '01/01/14', 2, 51, '02/01/14', null, null);
+insert into Purchase values (4, '01/01/14', 2, 51, '02/01/14', null, null);
+insert into Purchase values (5, );
 
 
 
