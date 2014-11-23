@@ -104,6 +104,14 @@ insert into Item values (5, 'Night Visions', 'cd', 'new age', 'The Company', 201
 insert into Item values (6, 'Thriller Music Video', 'dvd', 'pop','The Company 2', 1999, 3.00, 22);
 insert into Item values (7, 'Bastion Original Soundtrack', 'cd', 'classical','Super Giant Games', 2010, 5.99, 13);
 insert into Item values (8, 'Smooth Criminal Video', 'dvd', 'pop', 'The Company 2', 2000, 3.00, 7);
+insert into Item values (9, 'The Killers', 'cd', 'instrumental', 'Nick', 2012, 11.99, 15);
+insert into Item values (10, 'Barenaked Ladies', 'cd', 'rap', 'Super Giant Games', 2014, 17.99, 10);
+insert into Item values (11, 'Milky Chance', 'dvd', 'rock', 'The Company', 2000, 10.00, 12);
+insert into Item values (12, 'American Authors', 'cd', 'country', 'The Company 2', 2012, 7.00, 7);
+insert into Item values (13, 'Billy Joel', 'cd', 'new age', 'The Company', 2012, 12.00, 17);
+insert into Item values (14, 'Journey', 'dvd', 'pop','The Company 2', 1999, 7.00, 22);
+insert into Item values (15, 'Civil Wars', 'cd', 'classical','Super Giant Games', 2010, 6.99, 13);
+insert into Item values (16, 'The Head and The Heart', 'dvd', 'pop', 'The Company 2', 2000, 5.00, 7);
 
 insert into LeadSinger values (1, 'Jeremy Zuckerman');
 insert into LeadSinger values (2, 'Darren Korb');
@@ -167,7 +175,6 @@ insert into PurchaseItem values (9, 4, 4);
 insert into PurchaseItem values (10, 5, 1);
 insert into PurchaseItem values (11, 7, 1);
 insert into PurchaseItem values (12, 7, 1);
-
 insert into PurchaseItem values (13, 8, 1);
 insert into PurchaseItem values (13, 7, 2);
 insert into PurchaseItem values (14, 3, 10);
@@ -186,6 +193,27 @@ insert into PurchaseItem values (1, 8, 4);
 insert into PurchaseItem values (1, 5, 1);
 insert into PurchaseItem values (7, 7, 1);
 insert into PurchaseItem values (10, 7, 1);
+
+
+insert into PurchaseItem values (4, 13, 1);
+insert into PurchaseItem values (5, 15, 1);
+insert into PurchaseItem values (6, 15, 1);
+insert into PurchaseItem values (7, 11, 3);
+insert into PurchaseItem values (7, 9, 3);
+insert into PurchaseItem values (8, 14, 1);
+insert into PurchaseItem values (9, 12, 4);
+insert into PurchaseItem values (10, 13, 1);
+insert into PurchaseItem values (11, 15, 1);
+insert into PurchaseItem values (12, 16, 1);
+insert into PurchaseItem values (13, 16, 1);
+insert into PurchaseItem values (13, 15, 2);
+insert into PurchaseItem values (14, 11, 10);
+insert into PurchaseItem values (14, 9, 1);
+insert into PurchaseItem values (15, 10, 2);
+insert into PurchaseItem values (15, 16, 3);
+insert into PurchaseItem values (16, 14, 1);
+insert into PurchaseItem values (16, 12, 4);
+insert into PurchaseItem values (17, 13, 1);
 
 insert into Returned values (1, '01/02/14', 1);
 insert into Returned values (2, '01/03/14', 1);
