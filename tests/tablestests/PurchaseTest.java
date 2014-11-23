@@ -35,7 +35,7 @@ public class PurchaseTest {
 		con = (Connection) ams.getConnection();
 		Purchase c = new Purchase(con);
 		// when
-		boolean status = c.insertPurchase(100, "today", 1, 50, "today", "today", "today");
+		boolean status = c.insertPurchase(100, "2014-01-01", 1, 50, "2014-01-01", "2014-01-01", "2014-01-01");
 		
 		// then
 		if(status == false){

@@ -217,7 +217,7 @@ public class Returned{
 		      retid = rs.getInt("retid");
 		      System.out.printf("%-15.15s", retid);
 		      
-		      date = rs.getString("date");
+		      date = rs.getString("returnDate");
 		      System.out.printf("%-15.15s", date);
 
 		      receiptId = rs.getInt("receiptId");
