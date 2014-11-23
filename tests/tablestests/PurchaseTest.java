@@ -5,14 +5,14 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import tables.Customer;
+import tables.Purchase;
 import tables.PurchaseItem;
 
 import com.mysql.jdbc.Connection;
 
 import connection.DatabaseConnection;
 
-public class PurchaseItemTest {
+public class PurchaseTest {
 
 	private Connection con;
 	// ams represents a connection to an MySQL database
@@ -21,7 +21,7 @@ public class PurchaseItemTest {
 	
 	//Need to insert an Item and a Purchase due to Foreign Key Constraints.
 	@Test
-	public void PurchaseItemInsertTest(){
+	public void PurchaseInsertTest(){
 
 		// given
 		// Connect to the database
@@ -33,18 +33,17 @@ public class PurchaseItemTest {
 		}
 
 		con = (Connection) ams.getConnection();
-		PurchaseItem c = new PurchaseItem(con);
+		Purchase c = new Purchase(con);
 		// when
-		boolean status = c.insertPurchaseItem(8, 2, 3);
+		boolean status = c.insertPurchase(100, "today", 1, 50, "today", "today", "today");
 		
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
-		c.showPurchaseItem();
-		c.deletePurchaseItem(8, 2);
-		c.showPurchaseItem();
+		c.showPurchase();
+		c.deletePurchase(100);
+		c.showPurchase();
 	}
-	
 }

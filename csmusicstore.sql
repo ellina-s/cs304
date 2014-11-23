@@ -82,7 +82,7 @@ create table ReturnItem
 	quantity int not null,
 	primary key (retid, upc),
 	foreign key (retid) references returned(retid),
-    foreign key (upc) references Item(upc));
+    foreign key (upc) references PurchaseItem(upc));
 
 	
 insert into Customer values (1, 'hello1', 'Korra', 'Republic City', '123');
@@ -142,6 +142,12 @@ insert into Purchase values (9, '06/01/14', 6, 55, '07/01/15', null, null);
 insert into Purchase values (10, '07/01/14', 8, 57, '08/01/17', null, null);
 insert into Purchase values (11, '08/03/14', 7, 56, '09/03/15', '09/10/14', '09/10/14');
 insert into Purchase values (12, '09/20/14', 1, 50, '10/20/19', '10/25/14', '10/27/14');
+insert into Purchase values (13, '01/01/14', 2, 51, '01/15/16', null, null);
+insert into Purchase values (14, '01/01/14', 2, 51, '01/15/16', null, null);
+insert into Purchase values (15, '01/01/14', 3, 52, '01/15/16', null, null);
+insert into Purchase values (16, '01/01/14', 3, 52, '01/15/16', null, null);
+insert into Purchase values (17, '01/01/14', 1, 50, '01/15/16', null, null);
+insert into Purchase values (18, '01/01/14', 1, 50, '01/15/16', null, null);
 
 insert into PurchaseItem values (1, 1, 1);
 insert into PurchaseItem values (1, 2, 2);
@@ -161,6 +167,25 @@ insert into PurchaseItem values (9, 4, 4);
 insert into PurchaseItem values (10, 5, 1);
 insert into PurchaseItem values (11, 7, 1);
 insert into PurchaseItem values (12, 7, 1);
+
+insert into PurchaseItem values (13, 8, 1);
+insert into PurchaseItem values (13, 7, 2);
+insert into PurchaseItem values (14, 3, 10);
+insert into PurchaseItem values (14, 1, 1);
+insert into PurchaseItem values (15, 2, 2);
+insert into PurchaseItem values (15, 8, 3);
+insert into PurchaseItem values (16, 6, 1);
+insert into PurchaseItem values (16, 4, 4);
+insert into PurchaseItem values (17, 5, 1);
+insert into PurchaseItem values (17, 7, 1);
+insert into PurchaseItem values (18, 8, 1);
+insert into PurchaseItem values (18, 3, 3);
+insert into PurchaseItem values (12, 1, 3);
+insert into PurchaseItem values (11, 6, 1);
+insert into PurchaseItem values (1, 8, 4);
+insert into PurchaseItem values (1, 5, 1);
+insert into PurchaseItem values (7, 7, 1);
+insert into PurchaseItem values (10, 7, 1);
 
 insert into Returned values (1, '01/02/14', 1);
 insert into Returned values (2, '01/03/14', 1);

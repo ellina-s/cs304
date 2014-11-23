@@ -219,7 +219,7 @@ public class ReturnItem{
 
 		      // simplified output formatting; truncation may occur
 
-		      retid = rs.getInt("receiptId");
+		      retid = rs.getInt("retid");
 		      System.out.printf("%-15.15s", retid);
 		      
 		      upc = rs.getInt("upc");
