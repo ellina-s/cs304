@@ -26,13 +26,53 @@ public class MainGui extends JFrame{
 	private static JPanel mainPanel;
 	private static Login loginUI;
 	private static ManagerPanel managerPanel;
+	private static CustomerPanel customerPanel;
 	private DatabaseConnection ams;
+	
+	static JButton clerkButton;
+	static JButton customerButton;
+	static JButton managerButton;
+	
+	
 
 	/*
 	 * Constructor.
 	 */
 	public MainGui() {
 		initGui();
+		
+		clerkButton = new JButton("Clerks");
+		customerButton = new JButton("Customers");
+		managerButton = new JButton("Managers");
+		
+		clerkButton.setFocusable(false);
+		customerButton.setFocusable(false);
+		managerButton.setFocusable(false);
+		
+		
+		customerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getContentPane().removeAll();
+				customerPanel = new CustomerPanel(mainFrame);
+				mainFrame.add(customerPanel);
+				
+				
+				mainFrame.revalidate();
+			}		
+		});
+		
+		managerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getContentPane().removeAll();
+				managerPanel = new ManagerPanel(mainFrame);
+				mainFrame.add(managerPanel);
+				
+				
+				mainFrame.revalidate();
+			}		
+		});
 	}
 
 	public static void initGui(){
@@ -51,6 +91,7 @@ public class MainGui extends JFrame{
 		
 		mainFrame.setVisible(true);
 	}
+	
 
 
 	public static void main(String[] args) {
@@ -61,32 +102,11 @@ public class MainGui extends JFrame{
 		mainFrame.add(loginUI);
 		mainFrame.setVisible(true);
 		
-		// Buttons to access the three different user interfaces
-		JButton clerkButton = new JButton("Clerks");
-		JButton customerButton = new JButton("Customers");
-		JButton managerButton = new JButton("Managers");
-		clerkButton.setFocusable(false);
-		customerButton.setFocusable(false);
-		managerButton.setFocusable(false);
-		
-		managerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainFrame.getContentPane().removeAll();
-				managerPanel = new ManagerPanel(mainFrame);
-				mainFrame.add(managerPanel);
-				
-				
-				mainFrame.revalidate();
-			}		
-		});
-		
 		mainPanel.setLayout(new GridLayout(3,1));
 		mainPanel.add(clerkButton);
 		mainPanel.add(customerButton);
 		mainPanel.add(managerButton);
 		
-		//mainFrame.add(new JLabel("Test"));
 		mainFrame.add(mainPanel);
 	
 	}
