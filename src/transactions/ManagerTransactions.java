@@ -64,8 +64,8 @@ public class ManagerTransactions{
 	    
 	    PreparedStatement ps;
 	    
-	    String statement = "SELECT I.upc, I.category, I.price, PI.quantity FROM Item I, Purchase P, PurchaseItem PI "
-				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category";
+	    String statement = "SELECT I.upc, I.category, I.price, Sum(PI.quantity) FROM Item I, Purchase P, PurchaseItem PI "
+				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc";
 	    
 		try
 		{
@@ -107,7 +107,7 @@ public class ManagerTransactions{
 		      upc = rs.getInt("upc");
 		      category = rs.getString("category");
 		      price = rs.getFloat("price");
-		      quantity = rs.getInt("quantity");
+		      quantity = rs.getInt("Sum(PI.quantity)");
 		      
 		      if(!category.equals(previous) && previous != null) {
 		    	  table.get(0).add("");
