@@ -123,7 +123,9 @@ public class ManagerPanel extends JPanel {
 							    {"8844","rock",5.00,50,250.00}
 							};
 						
-//						ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> (5);
+
+						
+//						ArrayList<ArrayList<Object>> table = new ArrayList<ArrayList<Object>> (5);
 //						
 //						for (int i = 0; i < testData.length; i++) {
 //							if (testData[i][1] == "classical") {
@@ -278,6 +280,7 @@ public class ManagerPanel extends JPanel {
 				add(actionPanel);
 				
 				mainFrame.revalidate();
+				mainFrame.repaint();
 			}		
 		});
 		

@@ -109,6 +109,7 @@ public class Login extends JPanel implements ActionListener
 			mainFrame.remove(this);
 			mainFrame.revalidate();
 
+
 			System.out.println("You entered valid credentials.");
 		}
 	}
