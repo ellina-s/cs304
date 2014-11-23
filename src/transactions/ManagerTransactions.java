@@ -20,36 +20,7 @@ public class ManagerTransactions{
 		 this.con = con;
 	 }	
 	 
-	 // Select upc, category, selling price, units
-	 // From Purchase p, PurchaseItem i
-	 // Where p.receiptId = i.receiptId AND p.day like day;
-	 // Group by Category
-	 public void dailySalesReport1(String day) {
-		 PreparedStatement ps;
-			
-			try {
-				ps = con.prepareStatement("SELECT I.upc, I.category, I.price, PI.quantity FROM Item I, Puchase P, PurchaseItem PI"
-						+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like ?");
-				ps.setString(1, day);
-				ResultSet rs = ps.executeQuery();
-				
-				
-				con.commit();
-
-				ps.close();
-			}
-			catch (SQLException ex) {
-			    System.out.println("Message: " + ex.getMessage());
-			    try {
-			    	// undo the insert
-			    	con.rollback();	
-			    }
-			    catch (SQLException ex2) {
-			    	System.out.println("Message: " + ex2.getMessage());
-			    	System.exit(-1);
-			    }
-			}
-	 }
+	
 	 
 	 public String[][] dailySalesReport(String day) {
 		ArrayList<ArrayList<String>> table = null; 
