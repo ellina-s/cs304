@@ -1,7 +1,5 @@
 package transactions;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -11,12 +9,33 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 
 public class ManagerTransactions{
-	private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
 	 private Connection con;
 	 	 
 	 public ManagerTransactions(Connection con) {
 		 this.con = con;
+	 }
+	 
+	 public String deliveredItem(int receiptId, String day) {
+		    Statement  stmt;
+		    	    
+		    String statement = "UPDATE Purchase SET deliveredDate = " + "'" + day + "'"
+					+ " WHERE receiptId = " + Integer.toString(receiptId);
+		    
+		    try
+			{
+			  stmt = con.createStatement();
+			  stmt.execute(statement);
+			  // close the statement; 
+			  // the ResultSet will also be closed
+			  stmt.close();
+			}
+			catch (SQLException ex)
+			{
+			    System.out.println("Message: " + ex.getMessage());
+			    return null;
+			}
+		    
+		   return "Delivered date updated to " + day;
 	 }
 	 
 	 
@@ -78,7 +97,7 @@ public class ManagerTransactions{
 		    ResultSet  rs;
 		    	    
 		    String statement = "SELECT I.upc, I.company, I.stock, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
-					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc "
+					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.purchaseDate = "  + "'" + day + "'" + " Group By category, upc "
 		    		+ "Order by units DESC LIMIT " + Integer.toString(n);
 		    
 			try
@@ -148,7 +167,7 @@ public class ManagerTransactions{
 	    ResultSet  rs;
 	    	    
 	    String statement = "SELECT I.upc, I.category, I.price, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
-				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc";
+				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.purchaseDate = "  + "'" + day + "'" + " Group By category, upc";
 	    
 		try
 		{
