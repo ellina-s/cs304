@@ -19,6 +19,47 @@ public class ManagerTransactions{
 		 this.con = con;
 	 }
 	 
+	 
+	 //update quantity, 
+	 public String addItems(int upc, int quantity, float price) {
+			int curr_stock = 0;
+			float curr_price = 0;
+		    	
+		    Statement  stmt;
+		    ResultSet  rs;
+		    	    
+		    String statement = "SELECT I.stock, I.price FROM Item I "
+					+ "WHERE I.upc = " + Integer.toString(upc);
+		    
+		    try
+			{
+			  stmt = con.createStatement();
+			  rs = stmt.executeQuery(statement);
+			  rs.next();
+			  curr_stock = rs.getInt("stock");
+			  curr_price = rs.getFloat("price");
+			  quantity += curr_stock;
+			  if(curr_price == price || price <= 0) {
+				  price = curr_price;
+			  }
+			  
+			  statement = "UPDATE Item SET stock = " + Integer.toString(quantity) + ", price = " + Float.toString(price)
+					  +" WHERE upc = " + Integer.toString(upc);
+			  stmt.execute(statement);
+			  // close the statement; 
+			  // the ResultSet will also be closed
+			  stmt.close();
+			}
+			catch (SQLException ex)
+			{
+			    System.out.println("Message: " + ex.getMessage());
+			    return null;
+			}
+		    
+		    return "Stock updated to " + Integer.toString(quantity);
+	 }
+	 
+	 
 	 //SELECT I.upc, I.title, I.company, I.stock, SUM(PI.quantity) units
 	 //FROM Item I, Purchase P, PurchaseItem PI
 	 //WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like '01/01/14'
@@ -94,8 +135,6 @@ public class ManagerTransactions{
 				return null;
 			}	
 	 }
-	 
-	
 	 
 	 public String[][] dailySalesReport(String day) {
 		ArrayList<ArrayList<String>> table = null; 
