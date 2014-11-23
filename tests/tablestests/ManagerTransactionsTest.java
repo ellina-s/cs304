@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import tables.Item;
 import tables.PurchaseItem;
 import transactions.ManagerTransactions;
 
@@ -16,6 +17,15 @@ public class ManagerTransactionsTest {
 	private Connection con;
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
+	
+	public void displayTable(String[][] test) {
+		for(int i = 0; i < test.length; i++) {
+			for(int j = 0; j < test[i].length; j++) {
+			      System.out.printf("%-15.15s", test[i][j]);
+			}
+			System.out.println();
+		}
+	}
 	
 	
 	//Need to insert an Item and a Purchase due to Foreign Key Constraints.
@@ -36,12 +46,7 @@ public class ManagerTransactionsTest {
 		// when
 		String[][] test = c.dailySalesReport("01/01/14");
 		// then
-		for(int i = 0; i < test.length; i++) {
-			for(int j = 0; j < test[i].length; j++) {
-			      System.out.printf("%-15.15s", test[i][j]);
-			}
-			System.out.println();
-		}
+		displayTable(test);
 	}
 	
 	@Test
@@ -59,13 +64,31 @@ public class ManagerTransactionsTest {
 		con = (Connection) ams.getConnection();
 		ManagerTransactions c = new ManagerTransactions(con);
 		// when
-		String[][] test = c.topSellingItems("01/01/14", 10);
+		String[][] test = c.topSellingItems("01/01/14", 2);
 		// then
-		for(int i = 0; i < test.length; i++) {
-			for(int j = 0; j < test[i].length; j++) {
-			      System.out.printf("%-15.15s", test[i][j]);
-			}
-			System.out.println();
-		}
+		displayTable(test);
 	}
+	
+	@Test
+	public void addItemsTest(){
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "(Ad727363)")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+
+		con = (Connection) ams.getConnection();
+		ManagerTransactions c = new ManagerTransactions(con);
+		Item i = new Item(con);
+		
+		// when
+		System.out.println(c.addItems(1, 10, (float) 17.99));
+		// then
+		i.displayAllItems();
+	}
+	
 }
