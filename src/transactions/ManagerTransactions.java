@@ -2,7 +2,6 @@ package transactions;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -18,7 +17,83 @@ public class ManagerTransactions{
 	 	 
 	 public ManagerTransactions(Connection con) {
 		 this.con = con;
-	 }	
+	 }
+	 
+	 //SELECT I.upc, I.title, I.company, I.stock, SUM(PI.quantity) units
+	 //FROM Item I, Purchase P, PurchaseItem PI
+	 //WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like '01/01/14'
+	 //Group by upc
+	 //Order by units DESC
+	 //LIMIT 5;
+	 public String[][] topSellingItems(String day, int n) {
+			ArrayList<ArrayList<String>> table = null; 
+
+			int upc;
+			String company;
+			int stock;
+			int quantity;
+		    	
+		    Statement  stmt;
+		    ResultSet  rs;
+		    	    
+		    String statement = "SELECT I.upc, I.company, I.stock, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
+					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc "
+		    		+ "Order by units DESC LIMIT " + Integer.toString(n);
+		    
+			try
+			{
+			  stmt = con.createStatement();
+			  rs = stmt.executeQuery(statement);
+
+			  // get info on ResultSet
+			  ResultSetMetaData rsmd = rs.getMetaData();
+
+			  // get number of columns
+			  int numCols = rsmd.getColumnCount();
+			  table = new ArrayList<ArrayList<String>> (numCols);
+			  
+			  // display column names;
+			  for (int i = 0; i < numCols; i++)
+			  {
+			      // get column name and print it
+				  table.add(new ArrayList<String> ());
+				  table.get(i).add(rsmd.getColumnName(i + 1));
+			  }
+			  
+			  while(rs.next())
+			  {
+			      // for display purposes get everything from database 
+			      // as a string
+
+			      // simplified output formatting; truncation may occur
+				  
+			      upc = rs.getInt("upc");
+			      company = rs.getString("company");
+			      stock = rs.getInt("stock");
+			      quantity = rs.getInt("units");
+			      
+			      table.get(0).add(Integer.toString(upc));
+			      table.get(1).add(company);
+			      table.get(2).add(Integer.toString(stock));
+			      table.get(3).add(Integer.toString(quantity));
+			  }
+			  
+			  // close the statement; 
+			  // the ResultSet will also be closed
+			  stmt.close();
+			}
+			catch (SQLException ex)
+			{
+			    System.out.println("Message: " + ex.getMessage());
+			}
+			
+			if(table != null) {
+				return dataTransform(table);
+			}
+			else {
+				return null;
+			}	
+	 }
 	 
 	
 	 
@@ -32,10 +107,8 @@ public class ManagerTransactions{
 	    	
 	    Statement  stmt;
 	    ResultSet  rs;
-	    
-	    PreparedStatement ps;
-	    
-	    String statement = "SELECT I.upc, I.category, I.price, Sum(PI.quantity) FROM Item I, Purchase P, PurchaseItem PI "
+	    	    
+	    String statement = "SELECT I.upc, I.category, I.price, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
 				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc";
 	    
 		try
@@ -78,7 +151,7 @@ public class ManagerTransactions{
 		      upc = rs.getInt("upc");
 		      category = rs.getString("category");
 		      price = rs.getFloat("price");
-		      quantity = rs.getInt("Sum(PI.quantity)");
+		      quantity = rs.getInt("units");
 		      
 		      if(!category.equals(previous) && previous != null) {
 		    	  table.get(0).add("");
@@ -129,7 +202,15 @@ public class ManagerTransactions{
 		}
 		
 		if(table != null) {
-			String[][] result = new String[table.get(0).size()][table.size()];
+			return dataTransform(table);
+		}
+		else {
+			return null;
+		}	
+	}
+	 
+	 public String[][] dataTransform(ArrayList<ArrayList<String>> table) {
+		 String[][] result = new String[table.get(0).size()][table.size()];
 			for(int i = 0; i < table.get(0).size(); i++) {
 				for(int j = 0; j < table.size(); j++) {
 					result[i][j] = table.get(j).get(i);
@@ -137,9 +218,5 @@ public class ManagerTransactions{
 			}
 			
 			return result;
-		}
-		else {
-			return null;
-		}	
-	}
+	 }
 }

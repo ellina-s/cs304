@@ -43,4 +43,29 @@ public class ManagerTransactionsTest {
 			System.out.println();
 		}
 	}
+	
+	@Test
+	public void topSellingItemsTest(){
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "(Ad727363)")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+
+		con = (Connection) ams.getConnection();
+		ManagerTransactions c = new ManagerTransactions(con);
+		// when
+		String[][] test = c.topSellingItems("01/01/14", 10);
+		// then
+		for(int i = 0; i < test.length; i++) {
+			for(int j = 0; j < test[i].length; j++) {
+			      System.out.printf("%-15.15s", test[i][j]);
+			}
+			System.out.println();
+		}
+	}
 }
