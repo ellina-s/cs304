@@ -41,6 +41,7 @@ public class MainGui extends JFrame{
 	public MainGui() {
 		initGui();
 		
+		mainFrame.setResizable(false);
 		clerkButton = new JButton("Clerks");
 		customerButton = new JButton("Customers");
 		managerButton = new JButton("Managers");
