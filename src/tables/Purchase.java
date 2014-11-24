@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.mysql.jdbc.Connection;
 
@@ -283,4 +284,101 @@ public class Purchase{
 		    System.out.println("Message: " + ex.getMessage());
 		}	
 	}
+	 
+	 //receiptId int not null,
+	//	purchaseDate DATE not null,
+	//	cid int not null,
+	//	card_num int not null,
+	//	expiryDate DATE not null,
+	//	expectedDate DATE,
+	//	deliveredDate DATE,
+	 
+	 public String[][] getPurchase() {
+			ArrayList<ArrayList<String>> table = null; 
+			
+			int receiptId;
+			String purchaseDate;
+			int cid;
+			int card_num;
+			String expiryDate;
+			String expectedDate;
+			String deliveredDate;
+		    	
+		    Statement  stmt;
+		    ResultSet  rs;
+			   
+			try
+			{
+			  stmt = con.createStatement();
+
+			  rs = stmt.executeQuery("SELECT * FROM Purchase");
+
+			  // get info on ResultSet
+			  ResultSetMetaData rsmd = rs.getMetaData();
+			  
+			  // get number of columns
+			  int numCols = rsmd.getColumnCount();
+			  table = new ArrayList<ArrayList<String>> (numCols);
+			  
+			  // display column names;
+			  for (int i = 0; i < numCols; i++)
+			  {
+			      // get column name and print it
+				  table.add(new ArrayList<String> ());
+				  table.get(i).add(rsmd.getColumnName(i + 1));
+			  }
+
+			  while(rs.next())
+			  {
+			      // for display purposes get everything from database 
+			      // as a string
+
+			      // simplified output formatting; truncation may occur
+
+			      receiptId = rs.getInt("receiptId");
+			      table.get(0).add(Integer.toString(receiptId));
+			      
+			      purchaseDate = rs.getString("purchaseDate");
+			      table.get(1).add(purchaseDate);
+
+			      cid = rs.getInt("cid");
+			      table.get(2).add(Integer.toString(cid));
+			      
+			      card_num = rs.getInt("card_num");
+			      table.get(3).add(Integer.toString(card_num));
+			      
+			      expiryDate = rs.getString("expiryDate");
+			      table.get(4).add(expiryDate);
+			      
+			      expectedDate = rs.getString("expectedDate");
+			      table.get(5).add(expectedDate);
+			      
+			      deliveredDate = rs.getString("deliveredDate");
+			      table.get(6).add(deliveredDate);
+			      
+			  }
+		 
+			  // close the statement; 
+			  // the ResultSet will also be closed
+			  stmt.close();
+			}
+			catch (SQLException ex)
+			{
+			    System.out.println("Message: " + ex.getMessage());
+			}
+			
+			if(table != null) {
+				String[][] result = new String[table.get(0).size()][table.size()];
+				for(int i = 0; i < table.get(0).size(); i++) {
+					for(int j = 0; j < table.size(); j++) {
+						result[i][j] = table.get(j).get(i);
+					}
+				}
+				
+				return result;
+			}
+			else {
+				return null;
+			}		
+		}
 }
