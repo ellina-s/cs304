@@ -192,7 +192,7 @@ public class PurchaseItem{
 		{
 		  stmt = con.createStatement();
 
-		  rs = stmt.executeQuery("SELECT * FROM PurchaseItem");
+		  rs = stmt.executeQuery("SELECT * FROM PurchaseItem ORDER BY receiptId");
 
 		  // get info on ResultSet
 		  ResultSetMetaData rsmd = rs.getMetaData();
