@@ -2,9 +2,15 @@ package transactiontests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.util.Random;
+
 import org.junit.Test;
+
 import com.mysql.jdbc.Connection;
+
 import tables.Customer;
+import tables.Item;
 import transactions.CustomerTransactions;
 import connection.DatabaseConnection;
 
@@ -90,7 +96,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(false, status);
 	}
-	
+
 
 	/**
 	 * Tests authenticating an existing customer.
@@ -108,7 +114,7 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-	
+
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		boolean status = customer.authenticateCustomer(555, "pass555");
@@ -118,7 +124,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(true, status);
 	}
-	
+
 	/**
 	 * Tests authenticating a customer given invalid cid.
 	 * Input: Invalid cid and a valid password.
@@ -145,7 +151,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(false, status);
 	}
-	
+
 	/**
 	 * Tests authenticating a customer given invalid password.
 	 * Input: Valid cid and invalid password.
@@ -172,7 +178,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(false, status);
 	}
-	
+
 	/**
 	 * Tests authenticating a customer given invalid credentials.
 	 * Input: Invalid cid and invalid password.
@@ -198,6 +204,63 @@ public class CustomerTransactionsTest{
 			fail();
 		}
 		assertEquals(false, status);
+	}
+
+
+	/*-----------------------------------------------------
+	upc       title               type      category  company             year      price     stock      
+	100       Rain                dvd       drama     ubc                 2014      40.0      10000     
+	101       Rain                dvd       drama     ubc                 2014      40.0      10000     
+	102       Shower              dvd       drama     ubc                 2014      40.0      10000     
+	103       Snow                dvd       drama     ubc                 2014      40.0      10000     
+	104       Shine               dvd       drama     ubc                 2014      40.0      10000     
+	105       Glow                dvd       drama     ubc                 2014      40.0      10000     
+	135       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	195       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	225       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	230       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
+	285       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	300       Strike              dvd       drama     weather             2014      40.0      10000     
+	335       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
+	400       RandomTestItem      dvd       new wave  randomProduction    2014      10.0      5         
+	405       RandomTestItem      cd        newWave   randomProduction    2014      10.0      5         
+	420       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	465       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	475       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
+	480       RandomTestItem      dvd       country   randomProduction    2014      10.0      5         
+	490       RandomTestItem      dvd       new age   randomProduction    2014      10.0      5         
+	12345     Story of my life    dvd       drama     nopublisher         2012      90.99     15        
+	-----------------------------------------------------*/
+
+	@Test
+	public void searchAndDisplayResults(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		//Item item = new Item(con);
+		//item.displayAllItems();
+
+		Item item = new Item(con);
+		Random randomGenerator = new Random();
+		int random_upc = randomGenerator.nextInt(100) * 5;
+		item.insertItem(random_upc, "RandomTestTr", "cd", "rock", "randomProduction", 1999, (float) 5.99, 0);
+		
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchItem("rock", "Rain");
+		// then
+		if(status == false){
+			fail();
+		}
+		assertEquals(true, status);
 	}
 
 }
