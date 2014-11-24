@@ -11,6 +11,7 @@ import com.mysql.jdbc.Connection;
 
 import tables.Customer;
 import tables.Item;
+import tables.LeadSinger;
 import transactions.CustomerTransactions;
 import connection.DatabaseConnection;
 
@@ -207,31 +208,6 @@ public class CustomerTransactionsTest{
 	}
 
 
-	/*-----------------------------------------------------
-	upc       title               type      category  company             year      price     stock      
-	100       Rain                dvd       drama     ubc                 2014      40.0      10000     
-	101       Rain                dvd       drama     ubc                 2014      40.0      10000     
-	102       Shower              dvd       drama     ubc                 2014      40.0      10000     
-	103       Snow                dvd       drama     ubc                 2014      40.0      10000     
-	104       Shine               dvd       drama     ubc                 2014      40.0      10000     
-	105       Glow                dvd       drama     ubc                 2014      40.0      10000     
-	135       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	195       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	225       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	230       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
-	285       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	300       Strike              dvd       drama     weather             2014      40.0      10000     
-	335       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
-	400       RandomTestItem      dvd       new wave  randomProduction    2014      10.0      5         
-	405       RandomTestItem      cd        newWave   randomProduction    2014      10.0      5         
-	420       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	465       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	475       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	480       RandomTestItem      dvd       country   randomProduction    2014      10.0      5         
-	490       RandomTestItem      dvd       new age   randomProduction    2014      10.0      5         
-	12345     Story of my life    dvd       drama     nopublisher         2012      90.99     15        
-	-----------------------------------------------------*/
-
 	/**
 	 * Tests searching for an item, given existing title or category and non-zero quantity.
 	 */
@@ -246,15 +222,9 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-
 		//Item item = new Item(con);
 		//item.displayAllItems();
 
-		//Item item = new Item(con);
-		//Random randomGenerator = new Random();
-		//int random_upc = randomGenerator.nextInt(100) * 5;
-		//item.insertItem(random_upc, "RandomTestTr", "cd", "rock", "randomProduction", 1999, (float) 5.99, 0);
-		
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		boolean status = customer.searchItem("newWave", "Rain", 4);
@@ -264,7 +234,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(true, status);
 	}
-	
+
 	/**
 	 * Tests searching for an item given a zero quantity.
 	 */
@@ -289,7 +259,7 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(false, status);
 	}
-	
+
 	/**
 	 * Tests searching for an item given a negative quantity.
 	 */
@@ -315,4 +285,134 @@ public class CustomerTransactionsTest{
 		assertEquals(false, status);
 	}
 
+	@Test
+	public void zeroStockTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchItem("rock", "Rain", 11);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given a valid name.
+	 */
+	@Test
+	public void successfulSearchSingerTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchSinger("Elvis");
+		// then
+		if(status == false){
+			fail();
+		}
+		assertEquals(true, status);
+	}
+
+
+	/**
+	 * Tests searching for a Singer given a null name.
+	 */
+	@Test
+	public void nullSearchSingerTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchSinger(null);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given an empty name.
+	 */
+	@Test
+	public void emptySearchSingerTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchSinger("");
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given a non-existing name.
+	 */
+	@Test
+	public void failedSearchSingerTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchSinger("Roza");
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
 }
