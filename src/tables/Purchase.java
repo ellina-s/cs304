@@ -325,7 +325,7 @@ public class Purchase{
 			  {
 			      // get column name and print it
 				  table.add(new ArrayList<String> ());
-				  table.get(i).add(rsmd.getColumnName(i + 1));
+				  //table.get(i).add(rsmd.getColumnName(i + 1));
 			  }
 
 			  while(rs.next())
