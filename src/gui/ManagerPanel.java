@@ -36,25 +36,32 @@ public class ManagerPanel extends JPanel {
 	private JButton backButtonTopSelling = new JButton("Back");
 	private JButton backButtonSalesReport = new JButton("Back");
 	private JButton generateReportButton = new JButton("Generate Report");
+	private JButton updateOrder = new JButton("Update");
 	private JTable itemTable;
 	private JTable salesReportTable;
 	private JTable topSellingTable;
+	private JTable processOrderTable;
 	private JTextField dateField = new JTextField("");
 	private JTextField topSellingField = new JTextField("");
 	private JTextField upcField = new JTextField("");
 	private JTextField priceField = new JTextField("");
 	private JTextField stockField = new JTextField("");
+	private JTextField receiptField = new JTextField("");
+	private JTextField deliveryField = new JTextField("");
 	private GridLayout buttonLayout = new GridLayout(4,1);
 	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
 	private String[] salesReportColumnNames = {"UPC","Category","Unit Price","Units","Total Value"};
 	private String[] topSellingColumnNames = {"title","company","current stock","copies sold"};
+	private String[] orderColumnNames = {"receiptId","date","cid","card_num","expiryDate","expectedDate","deliveredDate"};
 
-	private JLabel enterDate = new JLabel("Enter Date (MM/DD/YY)");
+	private JLabel enterDate = new JLabel("Enter Date (YYYY-MM-DD)");
 	private JLabel top = new JLabel("Top");
 	private JLabel sellingItems = new JLabel("Selling Items");
 	private JLabel upcLabel = new JLabel("upc");
 	private JLabel priceLabel = new JLabel("price (optional)");
 	private JLabel stockLabel = new JLabel("stock");
+	private JLabel receiptID = new JLabel("Receipt ID");
+	private JLabel deliveryDate = new JLabel("Delivery Date (YYYY-MM-DD)");
 
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	private Connection con = (Connection) ams.getConnection();
@@ -312,7 +319,48 @@ public class ManagerPanel extends JPanel {
 			processOrder.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.exit(0);
+					removeAll();
+					setLayout(new GridBagLayout());
+					GridBagConstraints c = new GridBagConstraints();
+
+					mainFrame.setSize(800, 600);
+
+					Object[][] emptyData = {};
+
+					dtm = new DefaultTableModel(emptyData,orderColumnNames);
+
+					processOrderTable = new JTable(dtm) {
+						// Disable editing of table
+						private static final long serialVersionUID = 1L;
+						public boolean isCellEditable(int row, int column) {                
+							return false;               
+						};
+					};
+					
+					tablePanel = new JScrollPane(processOrderTable);
+					
+					receiptField.setColumns(10);
+					deliveryField.setColumns(10);
+					
+					actionPanel.add(receiptID);
+					actionPanel.add(receiptField);
+					actionPanel.add(deliveryDate);
+					actionPanel.add(deliveryField);
+					actionPanel.add(updateOrder);
+					
+					c.gridx = 0;
+					c.gridy = 0;
+					add(tablePanel,c);
+					c.gridx = 0;
+					c.gridy = 1;
+					c.ipadx = 5;
+					add(actionPanel,c);
+
+					mainFrame.revalidate();
+					
+					
+					
+					
 				}		
 			});
 
@@ -510,7 +558,7 @@ public class ManagerPanel extends JPanel {
 				ManagerTransactions mt = new ManagerTransactions(con);
 				data = mt.topSellingItems(dateField.getText(), top);
 
-				if (data.length == 0) {
+				if (data == null || (data != null && data.length == 0)) {
 					JOptionPane.showMessageDialog(mainFrame,"No data found for specified date.");
 				}
 
@@ -540,6 +588,33 @@ public class ManagerPanel extends JPanel {
 				return false;
 			}
 			return false;
+		}
+		
+		private boolean receiptIDExists(String receiptID) {
+			if (data.length > 0) {
+				for (int i = 0; i < data.length; i++) {
+					if (receiptID.equals(data[i][0])) {
+						return true;
+					}
+				}
+				return false;
+			}
+			return false;
+		}
+		
+		private void updateOrder() {
+			try {
+				int receiptID = Integer.parseInt(receiptField.getText());
+				
+				ManagerTransactions mt = new ManagerTransactions(con);
+				mt.deliveredItem(receiptID, deliveryField.getText());
+				
+				
+				
+				
+			} catch (NumberFormatException exception) {
+				JOptionPane.showMessageDialog(mainFrame,"ReceiptID must be an integer.");
+			}
 		}
 		
 
