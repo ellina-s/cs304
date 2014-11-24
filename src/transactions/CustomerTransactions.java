@@ -99,14 +99,14 @@ public class CustomerTransactions{
 	 * The customer will describe the item by providing the category, or the title,
 	 * or the leading singer (or all of them),  and the quantity. --> CHECK THAT STOCK IS NOT ZERO? IF ZERO, THEN DON'T RETURN SUCH ITEM.
 	 * -- >> LATER, IN STEP 4, CHECK THAT QUANTITY THAT THE CUSTOMER REQUESTED CAN BE SATISIFIED (COMPARE WITH STOCK).
-	 * 3) If the information is not enough to define a single item,
+	 *  If the information is not enough to define a single item,
 	 * the system will display all the items that match the input and ask the customer to select one.
-	 * 4) When an item is selected, it will be added to the customer shopping cart. --- > RECORD ITEM ID?
+	 * 3) When an item is selected, it will be added to the customer shopping cart. --- > RECORD ITEM ID?
 	 * Each time an item is selected the system has to make sure that there is enough quantity in the store to complete the purchase.
 	 * Otherwise the system will ask the customer to accept the existing quantity. -- > COMPARE REQUESTED QUANTITY WITH STOCK
 	 * The customer can repeat the same process for any number of items.
-	 * 5) When the customer is ready to check-out, the system will produce a bill with the items and the total amount.
-	 * 6) The client has to provide a credit card number and expiry date to complete the transaction.
+	 * 4) When the customer is ready to check-out, the system will produce a bill with the items and the total amount.
+	 * 5) The client has to provide a credit card number and expiry date to complete the transaction.
 	 *  After that,  the system will create a purchase for the store
 	 *  and inform the customer about the number of days it will take to receive the goods.
 	 * This number is estimated by the number of outstanding orders and the maximum number of orders that can be delivered in a day
