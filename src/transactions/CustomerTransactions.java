@@ -187,18 +187,24 @@ public class CustomerTransactions{
 	 */
 	
 	/**
-	 * Searches for an item with the given category or title;
-	 * Note: parameters are case sensitive.
+	 * Searches for an item with the given category or title (case sensitive).
+	 * If stock = 0, then item is out of stock.
+	 * If quantity <= stock, then item is considered available. Otherwise, not enough.
 	 */
-	public boolean searchItem(String category, String title){
+	public boolean searchItem(String category, String title, int quantity){
 		int existing_upc;
 		int stock;
 		String existing_category;
 		String existing_title;
 
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		System.out.println("Attemting: " + statement);
+		//System.out.println("Attempting: " + statement);
 
+		if(quantity <= 0){
+			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
+			return false;
+		}
+		
 		try
 		{
 			Statement stmt = connection.createStatement();
@@ -216,7 +222,7 @@ public class CustomerTransactions{
 				return false;
 			}
 			
-			int[] formats = {15,25,15,15};
+			int[] formats = {15,15,15,15};
 			
 			System.out.println("-----------------------------------------------------");
 
@@ -245,6 +251,13 @@ public class CustomerTransactions{
 					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category + " Matching title: " + existing_title);
 					if(stock == 0){
 						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+						return false;
+					}
+					if(quantity <= stock){
+						System.out.println("Requsted quantity is available");
+					}
+					else{
+						System.out.println("Requsted quantity is not available. Available: " + stock);
 					}
 				}
 				
@@ -252,6 +265,13 @@ public class CustomerTransactions{
 					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category);
 					if(stock == 0){
 						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+						return false;
+					}
+					if(quantity <= stock){
+						System.out.println("Requsted quantity is available");
+					}
+					else{
+						System.out.println("Requsted quantity is not available. Available: " + stock);
 					}
 				}
 				
@@ -259,6 +279,13 @@ public class CustomerTransactions{
 					System.out.println("UPC: " + existing_upc  + " Matching title: " + existing_title);
 					if(stock == 0){
 						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+						return false;
+					}
+					if(quantity <= stock){
+						System.out.println("Requsted quantity is available");
+					}
+					else{
+						System.out.println("Requsted quantity is not available. Available: " + stock);
 					}
 				}
 			}
