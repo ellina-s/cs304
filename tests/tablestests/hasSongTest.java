@@ -84,5 +84,31 @@ public class hasSongTest{
 		hasSong.displayAllHasSong();
 	}
 
+	/**
+	 * Tests a 2D array returned from the HasSong table.
+	 */
+	@Test
+	public void getHasSongTest(){
+		// given
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		// when
+		con = (Connection) ams.getConnection();
+		HasSong hasSong = new HasSong(con);
+		// then
+		String [][] twoDArray = hasSong.getHasSong();
+
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+	}
 
 }

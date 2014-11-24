@@ -1,8 +1,11 @@
 package tablestests;
 
 import static org.junit.Assert.*;
+
 import com.mysql.jdbc.Connection;
+
 import org.junit.Test;
+
 import tables.LeadSinger;
 import connection.DatabaseConnection;
 
@@ -87,4 +90,31 @@ public class leadSingerTest{
 		leadSinger.displayAllLeadSingers();
 	}
 
+	/*
+	 * Tests a 2D Array returned from LeadSinger table.
+	 */
+	@Test
+	public void getLeadSingerTest(){
+		// given
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		//when
+		con = (Connection) ams.getConnection();
+		LeadSinger leadSinger = new LeadSinger(con);
+		//then
+		String [][] twoDArray = leadSinger.getLeadSinger();
+		
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+		
+	}
 }
