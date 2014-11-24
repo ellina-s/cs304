@@ -35,7 +35,8 @@ public class PurchaseItemTest {
 		con = (Connection) ams.getConnection();
 		PurchaseItem c = new PurchaseItem(con);
 		// when
-		boolean status = c.insertPurchaseItem(8, 2, 3);
+		c.deletePurchaseItem(17,2);
+		boolean status = c.insertPurchaseItem(18, 2, 3);
 		
 		// then
 		if(status == false){
@@ -43,7 +44,7 @@ public class PurchaseItemTest {
 		}
 		assertEquals(true, status);
 		c.showPurchaseItem();
-		c.deletePurchaseItem(8, 2);
+		c.deletePurchaseItem(18, 2);
 		c.showPurchaseItem();
 	}
 	

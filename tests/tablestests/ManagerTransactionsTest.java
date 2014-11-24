@@ -1,12 +1,9 @@
 package tablestests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
 
 import tables.Item;
-import tables.PurchaseItem;
+import tables.Purchase;
 import transactions.ManagerTransactions;
 
 import com.mysql.jdbc.Connection;
@@ -44,7 +41,7 @@ public class ManagerTransactionsTest {
 		con = (Connection) ams.getConnection();
 		ManagerTransactions c = new ManagerTransactions(con);
 		// when
-		String[][] test = c.dailySalesReport("01/01/14");
+		String[][] test = c.dailySalesReport("2014-01-01");
 		// then
 		displayTable(test);
 	}
@@ -64,7 +61,7 @@ public class ManagerTransactionsTest {
 		con = (Connection) ams.getConnection();
 		ManagerTransactions c = new ManagerTransactions(con);
 		// when
-		String[][] test = c.topSellingItems("01/01/14", 2);
+		String[][] test = c.topSellingItems("2014-01-01", 2);
 		// then
 		displayTable(test);
 	}
@@ -89,6 +86,28 @@ public class ManagerTransactionsTest {
 		System.out.println(c.addItems(1, 10, (float) 17.99));
 		// then
 		i.displayAllItems();
+	}
+	
+	@Test
+	public void setDeliveredDateTest(){
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "(Ad727363)")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+
+		con = (Connection) ams.getConnection();
+		ManagerTransactions c = new ManagerTransactions(con);
+		Purchase p = new Purchase(con);
+		
+		// when
+		System.out.println(c.deliveredItem(12, "2014-09-25"));
+		// then
+		p.showPurchase();
 	}
 	
 }

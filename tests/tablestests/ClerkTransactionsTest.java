@@ -1,26 +1,22 @@
 package tablestests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
 
-import tables.Returned;
+import tables.ReturnItem;
+import transactions.ClerkTransactions;
+import transactions.ManagerTransactions;
 
 import com.mysql.jdbc.Connection;
 
 import connection.DatabaseConnection;
 
-public class ReturnedTest {
-
+public class ClerkTransactionsTest {
 	private Connection con;
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	
-	
-	//Need to insert an Item and a Purchase due to Foreign Key Constraints.
 	@Test
-	public void ReturnedInsertTest(){
+	public void returnItemTest() {
 
 		// given
 		// Connect to the database
@@ -32,18 +28,24 @@ public class ReturnedTest {
 		}
 
 		con = (Connection) ams.getConnection();
-		Returned c = new Returned(con);
-		// when
-		boolean status = c.insertReturned(5, "2015-01-01", 11);
+		ClerkTransactions c = new ClerkTransactions(con);
+		ReturnItem r = new ReturnItem(con);
 		
+		// when
+		int[] upc = new int[4];
+		upc[0] = 1;
+		upc[1] = 2;
+		upc[2] = 3;
+		upc[3] = 8;
+		int[] quantity = new int[4];
+		quantity[0] = 1;
+		quantity[1] = 1;
+		quantity[2] = 1;
+		quantity[3] = 5;
+		
+		System.out.println(c.returnItem(1, upc, quantity, "2014-01-01"));
 		// then
-		if(status == false){
-			fail();
-		}
-		assertEquals(true, status);
-		c.showReturned();
-		c.deleteReturned(5);
-		c.showReturned();
+		r.showReturnItem();
 	}
 	
 }
