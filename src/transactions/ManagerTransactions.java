@@ -92,7 +92,6 @@ public class ManagerTransactions{
 	 public String[][] topSellingItems(String day, int n) {
 			ArrayList<ArrayList<String>> table = null; 
 
-			int upc;
 			String company;
 			int stock;
 			int quantity;
@@ -130,7 +129,6 @@ public class ManagerTransactions{
 
 			      // simplified output formatting; truncation may occur
 				  
-			      upc = rs.getInt("upc");
 			      company = rs.getString("company");
 			      stock = rs.getInt("stock");
 			      quantity = rs.getInt("units");
