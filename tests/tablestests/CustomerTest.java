@@ -3,9 +3,12 @@ package tablestests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import tables.Customer;
+import transactions.CustomerSubTransactions;
 
 import com.mysql.jdbc.Connection;
 
@@ -31,18 +34,21 @@ public class CustomerTest {
 		}
 
 		con = (Connection) ams.getConnection();
-		Customer c = new Customer(con);
+		CustomerSubTransactions c = new CustomerSubTransactions(con);
 		// when
-		boolean status = c.insertCustomer(105, "arjan", "ad", "ubc", "604 - 9394");
-		// then
-		if(status == false){
-			fail();
-		}
-		assertEquals(true, status);
-		c.showCustomer();
-		c.deleteCustomer(102);
-		c.deleteCustomer(105);
-		String [][] test = c.getCustomer();
+		ArrayList<Integer> upc = new ArrayList<Integer> ();
+		upc.add(1);
+		upc.add(2);
+		upc.add(3);
+		upc.add(8);
+		ArrayList<Integer> quantity = new ArrayList<Integer> ();
+		quantity.add(1);
+		quantity.add(1);
+		quantity.add(1);
+		quantity.add(5);
+		
+		
+		String [][] test = c.produceBill(upc, quantity);
 		for(int i = 0; i < test.length; i++) {
 			for(int j = 0; j < test[i].length; j++) {
 			      System.out.printf("%-15.15s", test[i][j]);
