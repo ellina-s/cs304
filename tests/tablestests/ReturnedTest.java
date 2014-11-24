@@ -34,7 +34,7 @@ public class ReturnedTest {
 		con = (Connection) ams.getConnection();
 		Returned c = new Returned(con);
 		// when
-		boolean status = c.insertReturned(5, "today", 11);
+		boolean status = c.insertReturned(5, "2015-01-01", 11);
 		
 		// then
 		if(status == false){

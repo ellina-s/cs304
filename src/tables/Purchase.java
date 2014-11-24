@@ -87,14 +87,14 @@ public class Purchase{
 			}
 		}
 	 
-	 public boolean insertPurchase(int receiptId, String date, int cid, int card_num, String expiryDate, String expectedDate, String deliveredDate) {
+	 public boolean insertPurchase(int receiptId, String purchaseDate, int cid, int card_num, String expiryDate, String expectedDate, String deliveredDate) {
 			PreparedStatement ps;
 			boolean inserted = true;
 			
 			try {
 				ps = con.prepareStatement("INSERT INTO Purchase VALUES (?,?,?,?,?,?,?)");
 				ps.setInt(1, receiptId);
-				ps.setString(2, date);
+				ps.setString(2, purchaseDate);
 				ps.setInt(3, cid);
 				ps.setInt(4, card_num);
 				ps.setString(5, expiryDate);
@@ -255,7 +255,7 @@ public class Purchase{
 		      receiptId = rs.getInt("receiptId");
 		      System.out.printf("%-15.15s", receiptId);
 		      
-		      date = rs.getString("date");
+		      date = rs.getString("purchaseDate");
 		      System.out.printf("%-15.15s", date);
 		      
 		      cid = rs.getInt("cid");

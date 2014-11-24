@@ -1,7 +1,6 @@
 package transactions;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -11,12 +10,31 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 
 public class ManagerTransactions{
-	private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
 	 private Connection con;
 	 	 
 	 public ManagerTransactions(Connection con) {
 		 this.con = con;
+	 }
+	 
+	 public String deliveredItem(int receiptId, String day) {
+		    PreparedStatement ps;
+		    
+		    try
+			{
+		    	ps = con.prepareStatement("UPDATE Purchase SET deliveredDate = ? WHERE receiptId = ?");
+				ps.setString(1, day);
+				ps.setFloat(2, receiptId);
+				ps.executeUpdate();
+				con.commit();
+				ps.close();
+			}
+			catch (SQLException ex)
+			{
+			    System.out.println("Message: " + ex.getMessage());
+			    return null;
+			}
+		    
+		   return "Delivered date updated to " + day;
 	 }
 	 
 	 
@@ -27,6 +45,7 @@ public class ManagerTransactions{
 		    	
 		    Statement  stmt;
 		    ResultSet  rs;
+		    PreparedStatement ps;
 		    	    
 		    String statement = "SELECT I.stock, I.price FROM Item I "
 					+ "WHERE I.upc = " + Integer.toString(upc);
@@ -43,9 +62,13 @@ public class ManagerTransactions{
 				  price = curr_price;
 			  }
 			  
-			  statement = "UPDATE Item SET stock = " + Integer.toString(quantity) + ", price = " + Float.toString(price)
-					  +" WHERE upc = " + Integer.toString(upc);
-			  stmt.execute(statement);
+			  ps = con.prepareStatement("UPDATE Item SET stock = ?, price = ? WHERE upc = ?");
+			  ps.setInt(1, quantity);
+			  ps.setFloat(2, price);
+			  ps.setInt(3, upc);
+			  ps.executeUpdate();
+			  con.commit();
+			  ps.close();
 			  // close the statement; 
 			  // the ResultSet will also be closed
 			  stmt.close();
@@ -69,7 +92,6 @@ public class ManagerTransactions{
 	 public String[][] topSellingItems(String day, int n) {
 			ArrayList<ArrayList<String>> table = null; 
 
-			int upc;
 			String company;
 			int stock;
 			int quantity;
@@ -78,7 +100,7 @@ public class ManagerTransactions{
 		    ResultSet  rs;
 		    	    
 		    String statement = "SELECT I.upc, I.company, I.stock, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
-					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc "
+					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.purchaseDate = "  + "'" + day + "'" + " Group By upc "
 		    		+ "Order by units DESC LIMIT " + Integer.toString(n);
 		    
 			try
@@ -91,14 +113,13 @@ public class ManagerTransactions{
 
 			  // get number of columns
 			  int numCols = rsmd.getColumnCount();
-			  table = new ArrayList<ArrayList<String>> (numCols);
+			  table = new ArrayList<ArrayList<String>> (numCols - 1);
 			  
 			  // display column names;
-			  for (int i = 0; i < numCols; i++)
+			  for (int i = 1; i < numCols; i++)
 			  {
 			      // get column name and print it
 				  table.add(new ArrayList<String> ());
-				  table.get(i).add(rsmd.getColumnName(i + 1));
 			  }
 			  
 			  while(rs.next())
@@ -108,15 +129,14 @@ public class ManagerTransactions{
 
 			      // simplified output formatting; truncation may occur
 				  
-			      upc = rs.getInt("upc");
 			      company = rs.getString("company");
 			      stock = rs.getInt("stock");
 			      quantity = rs.getInt("units");
 			      
-			      table.get(0).add(Integer.toString(upc));
-			      table.get(1).add(company);
-			      table.get(2).add(Integer.toString(stock));
-			      table.get(3).add(Integer.toString(quantity));
+			      //table.get(0).add(Integer.toString(upc));
+			      table.get(0).add(company);
+			      table.get(1).add(Integer.toString(stock));
+			      table.get(2).add(Integer.toString(quantity));
 			  }
 			  
 			  // close the statement; 
@@ -148,7 +168,7 @@ public class ManagerTransactions{
 	    ResultSet  rs;
 	    	    
 	    String statement = "SELECT I.upc, I.category, I.price, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
-				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.date like "  + "'" + day + "'" + " Group By category, upc";
+				+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.purchaseDate = "  + "'" + day + "'" + " Group By category, upc";
 	    
 		try
 		{
