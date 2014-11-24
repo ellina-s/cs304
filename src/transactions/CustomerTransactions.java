@@ -1,5 +1,6 @@
 package transactions;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -184,20 +185,95 @@ public class CustomerTransactions{
 	 * leading singer - > LeadSinger -> record cid
 	 * quantity -> compare to stock in ITEM -> check stock of the given cid
 	 */
-	public void specifyItem(String category, String title, String leadingSinger , int quantity){
+	
+	/**
+	 * Searches for an item with the given category or title;
+	 * Note: parameters are case sensitive.
+	 */
+	public boolean searchItem(String category, String title){
+		int existing_upc;
+		int stock;
+		String existing_category;
+		String existing_title;
 
+		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
+		System.out.println("Attemting: " + statement);
 
-		/*
-		SELECT id, category, location
-		FROM table
-		WHERE
-		(
-		    category LIKE '%keyword%'
-		    OR location LIKE '%keyword%'
-		)
-		*/
+		try
+		{
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(statement);
 
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
 
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			if(numCols != 4){
+				System.err.println("Item search Error: Failed to retrive exactly four columns.");
+				stmt.close();
+				return false;
+			}
+			
+			int[] formats = {15,25,15,15};
+			
+			System.out.println("-----------------------------------------------------");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++){
+				// get column name and print it
+				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				existing_upc = rs.getInt("upc");
+				System.out.printf("%-15.15s", existing_upc);
+
+				existing_category = rs.getString("category");
+				System.out.printf("%-15.15s", existing_category);
+
+				existing_title = rs.getString("title");
+				System.out.printf("%-15.15s", existing_title);
+				
+				stock = rs.getInt("stock");
+				System.out.printf("%-15.15s\n", stock);
+				
+				if(category.equals(existing_category) && title.equals(existing_title)){
+					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category + " Matching title: " + existing_title);
+					if(stock == 0){
+						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+					}
+				}
+				
+				if(category.equals(existing_category)){
+					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category);
+					if(stock == 0){
+						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+					}
+				}
+				
+				if(title.equals(existing_title)){
+					System.out.println("UPC: " + existing_upc  + " Matching title: " + existing_title);
+					if(stock == 0){
+						System.out.println("Sorry, item " + existing_upc + " is out of stock.");
+					}
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				System.out.println("Search Item Error: " + e.getMessage());
+				return false;
+			} catch(SQLException e2) {
+				System.out.println("Search Item Rollback Error: " + e2.getMessage());
+				System.exit(-1);
+				return false;
+			}
+		}
 	}
 
 }
