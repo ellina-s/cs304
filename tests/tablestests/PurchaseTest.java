@@ -37,12 +37,16 @@ public class PurchaseTest {
 		boolean status = c.insertPurchase(100, "2014-01-01", 1, 50, "2014-01-01", "2014-01-01", "2014-01-01");
 		
 		// then
-		if(status == false){
-			fail();
+		//if(status == false){
+		//	fail();
+		//}
+		//assertEquals(true, status);
+		String[][] test = c.getPurchase();
+		for(int i = 0; i < test.length; i++) {
+			for(int j = 0; j < test[i].length; j++) {
+			      System.out.printf("%-15.15s", test[i][j]);
+			}
+			System.out.println();
 		}
-		assertEquals(true, status);
-		c.showPurchase();
-		c.deletePurchase(100);
-		c.showPurchase();
 	}
 }
