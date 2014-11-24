@@ -42,19 +42,19 @@ create table Customer (
 	PRIMARY KEY(cid)
 );
    
+   
 drop table if exists Purchase;
 create table Purchase (
 	receiptId int not null,
-	date char(20) not null,
+	purchaseDate DATE not null,
 	cid int not null,
 	card_num int not null,
-	expiryDate char(20) not null,
-	expectedDate char(20),
-	deliveredDate char(20),
+	expiryDate DATE not null,
+	expectedDate DATE,
+	deliveredDate DATE,
 	Primary Key(receiptId),
-	foreign key (cid) references Customer(cid)
-	);
-
+	foreign key (cid) references Customer(cid)    
+);
 
 drop table if exists PurchaseItem;
 create table PurchaseItem
@@ -69,7 +69,7 @@ create table PurchaseItem
 drop table if exists Returned;
 create table Returned
 	(retid int not null,
-	date char(20) null,
+	returnDate DATE not null,
 	receiptId int not null,
 	primary key(retid),
     Foreign Key(receiptId) References Purchase(receiptId)
@@ -161,24 +161,24 @@ insert into HasSong values (14, 'Winter Winds');
 insert into HasSong values (15, '20 Years');
 insert into HasSong values (16, 'Homecoming Heroes');
 
-insert into Purchase values (1, '01/01/14', 1, 50, '01/15/16', null, null);
-insert into Purchase values (2, '01/05/14', 1, 50, '02/05/16', '02/11/14', '02/09/14');
-insert into Purchase values (3, '01/01/14', 2, 51, '02/01/16', null, null);
-insert into Purchase values (4, '01/01/14', 2, 51, '02/01/15', null, null);
-insert into Purchase values (5, '01/03/14', 3, 52, '02/03/16', '01/10/14', '01/10/14');
-insert into Purchase values (6, '02/20/14', 4, 53, '03/20/17', '02/25/14', '02/27/14');
-insert into Purchase values (7, '04/01/14', 9, 58, '05/01/16', null, null);
-insert into Purchase values (8, '05/05/14', 5, 54, '06/05/17', '06/11/14', '06/09/14');
-insert into Purchase values (9, '06/01/14', 6, 55, '07/01/15', null, null);
-insert into Purchase values (10, '07/01/14', 8, 57, '08/01/17', null, null);
-insert into Purchase values (11, '08/03/14', 7, 56, '09/03/15', '09/10/14', '09/10/14');
-insert into Purchase values (12, '09/20/14', 1, 50, '10/20/19', '10/25/14', '10/27/14');
-insert into Purchase values (13, '01/01/14', 2, 51, '01/15/16', null, null);
-insert into Purchase values (14, '01/01/14', 2, 51, '01/15/16', null, null);
-insert into Purchase values (15, '01/01/14', 3, 52, '01/15/16', null, null);
-insert into Purchase values (16, '01/01/14', 3, 52, '01/15/16', null, null);
-insert into Purchase values (17, '01/01/14', 1, 50, '01/15/16', null, null);
-insert into Purchase values (18, '01/01/14', 1, 50, '01/15/16', null, null);
+insert into Purchase values (1, '2014-01-01', 1, 50, '2015-01-01', null, null);
+insert into Purchase values (2, '2014-01-05', 1, 50, '2015-01-01', '2014-01-11', '2014-01-11');
+insert into Purchase values (3, '2014-01-01', 2, 51, '2015-01-01', null, null);
+insert into Purchase values (4, '2014-01-01', 2, 51, '2015-01-01', null, null);
+insert into Purchase values (5, '2014-01-03', 3, 52, '2015-01-01', '2014-01-10', '2014-01-11');
+insert into Purchase values (6, '2014-02-20', 4, 53, '2015-01-01', '2014-02-25', '2014-02-24');
+insert into Purchase values (7, '2014-04-01', 9, 58, '2015-01-01', null, null);
+insert into Purchase values (8, '2014-05-05', 5, 54, '2015-01-01', '2014-05-11', '2014-05-11');
+insert into Purchase values (9, '2014-06-01', 6, 55, '2015-01-01', null, null);
+insert into Purchase values (10, '2014-07-01', 8, 57, '2015-01-01', null, null);
+insert into Purchase values (11, '2014-08-03', 7, 56, '2015-01-01', '2014-08-10', '2014-08-12');
+insert into Purchase values (12, '2014-09-20', 1, 50, '2015-01-01', '2014-09-25', null);
+insert into Purchase values (13, '2014-01-01', 2, 51, '2015-01-01', null, null);
+insert into Purchase values (14, '2014-01-01', 2, 51, '2015-01-01', null, null);
+insert into Purchase values (15, '2014-01-01', 3, 52, '2015-01-01', null, null);
+insert into Purchase values (16, '2014-01-01', 3, 52, '2015-01-01', null, null);
+insert into Purchase values (17, '2014-01-01', 1, 50, '2015-01-01', null, null);
+insert into Purchase values (18, '2014-01-01', 1, 50, '2015-01-01', null, null);
 
 insert into PurchaseItem values (1, 1, 1);
 insert into PurchaseItem values (1, 2, 2);
@@ -236,10 +236,10 @@ insert into PurchaseItem values (16, 14, 1);
 insert into PurchaseItem values (16, 12, 4);
 insert into PurchaseItem values (17, 13, 1);
 
-insert into Returned values (1, '01/02/14', 1);
-insert into Returned values (2, '01/03/14', 1);
-insert into Returned values (3, '01/05/14', 3);
-insert into Returned values (4, '01/07/14', 12);
+insert into Returned values (1, '2014-01-02', 1);
+insert into Returned values (2, '2014-01-03', 1);
+insert into Returned values (3, '2014-01-05', 3);
+insert into Returned values (4, '2014-01-07', 12);
 
 insert into ReturnItem values (1, 1, 1);
 insert into ReturnItem values (2, 2, 1);
