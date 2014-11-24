@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import tables.Purchase;
-import tables.PurchaseItem;
 
 import com.mysql.jdbc.Connection;
 

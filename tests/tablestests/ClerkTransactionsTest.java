@@ -1,10 +1,11 @@
 package tablestests;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import tables.ReturnItem;
 import transactions.ClerkTransactions;
-import transactions.ManagerTransactions;
 
 import com.mysql.jdbc.Connection;
 
@@ -32,16 +33,16 @@ public class ClerkTransactionsTest {
 		ReturnItem r = new ReturnItem(con);
 		
 		// when
-		int[] upc = new int[4];
-		upc[0] = 1;
-		upc[1] = 2;
-		upc[2] = 3;
-		upc[3] = 8;
-		int[] quantity = new int[4];
-		quantity[0] = 1;
-		quantity[1] = 1;
-		quantity[2] = 1;
-		quantity[3] = 5;
+		ArrayList<Integer> upc = new ArrayList<Integer> ();
+		upc.add(1);
+		upc.add(2);
+		upc.add(3);
+		upc.add(8);
+		ArrayList<Integer> quantity = new ArrayList<Integer> ();
+		quantity.add(1);
+		quantity.add(1);
+		quantity.add(1);
+		quantity.add(5);
 		
 		System.out.println(c.returnItem(1, upc, quantity, "2014-01-01"));
 		// then
