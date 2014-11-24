@@ -232,8 +232,11 @@ public class CustomerTransactionsTest{
 	12345     Story of my life    dvd       drama     nopublisher         2012      90.99     15        
 	-----------------------------------------------------*/
 
+	/**
+	 * Tests searching for an item, given existing title or category and non-zero quantity.
+	 */
 	@Test
-	public void searchAndDisplayResults(){
+	public void searchItemTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -247,20 +250,69 @@ public class CustomerTransactionsTest{
 		//Item item = new Item(con);
 		//item.displayAllItems();
 
-		Item item = new Item(con);
-		Random randomGenerator = new Random();
-		int random_upc = randomGenerator.nextInt(100) * 5;
-		item.insertItem(random_upc, "RandomTestTr", "cd", "rock", "randomProduction", 1999, (float) 5.99, 0);
+		//Item item = new Item(con);
+		//Random randomGenerator = new Random();
+		//int random_upc = randomGenerator.nextInt(100) * 5;
+		//item.insertItem(random_upc, "RandomTestTr", "cd", "rock", "randomProduction", 1999, (float) 5.99, 0);
 		
-
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("rock", "Rain");
+		boolean status = customer.searchItem("newWave", "Rain", 4);
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
+	}
+	
+	/**
+	 * Tests searching for an item given a zero quantity.
+	 */
+	@Test
+	public void zeroQuantityTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchItem("newWave", "Rain", 0);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+	
+	/**
+	 * Tests searching for an item given a negative quantity.
+	 */
+	@Test
+	public void negativeQuantityTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		boolean status = customer.searchItem("newWave", "Rain", -1);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
 	}
 
 }
