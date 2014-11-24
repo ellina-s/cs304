@@ -187,7 +187,7 @@ public class Returned{
 		{
 		  stmt = con.createStatement();
 
-		  rs = stmt.executeQuery("SELECT * FROM ReturnItem");
+		  rs = stmt.executeQuery("SELECT * FROM Returned");
 
 		  // get info on ResultSet
 		  ResultSetMetaData rsmd = rs.getMetaData();
@@ -214,7 +214,7 @@ public class Returned{
 
 		      // simplified output formatting; truncation may occur
 
-		      retid = rs.getInt("receiptId");
+		      retid = rs.getInt("retid");
 		      System.out.printf("%-15.15s", retid);
 		      
 		      date = rs.getString("date");
