@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import connection.DatabaseConnection;
 
@@ -41,6 +43,7 @@ public class MainGui extends JFrame{
 	public MainGui() {
 		initGui();
 		
+		mainFrame.setResizable(false);
 		clerkButton = new JButton("Clerks");
 		customerButton = new JButton("Customers");
 		managerButton = new JButton("Managers");
@@ -95,6 +98,23 @@ public class MainGui extends JFrame{
 
 
 	public static void main(String[] args) {
+		// Uncomment this try/catch block to change the Look and Feel of the GUI.
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (UnsupportedLookAndFeelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 		new MainGui();
 
 		// create the login window
