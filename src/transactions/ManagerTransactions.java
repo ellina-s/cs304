@@ -61,6 +61,9 @@ public class ManagerTransactions{
 			  if(curr_price == price || price <= 0) {
 				  price = curr_price;
 			  }
+			  if(quantity < 0) {
+				  quantity = 0;
+			  }
 			  
 			  ps = con.prepareStatement("UPDATE Item SET stock = ?, price = ? WHERE upc = ?");
 			  ps.setInt(1, quantity);
