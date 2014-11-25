@@ -27,6 +27,7 @@ public class MainGui extends JFrame{
 	private static JFrame mainFrame;
 	private static JPanel mainPanel;
 	private static Login loginUI;
+	private static ClerkPanel clerkPanel;
 	private static ManagerPanel managerPanel;
 	private static CustomerPanel customerPanel;
 	private DatabaseConnection ams;
@@ -55,6 +56,17 @@ public class MainGui extends JFrame{
 		customerButton.setFocusable(false);
 		managerButton.setFocusable(false);
 		
+		clerkButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.getContentPane().removeAll();
+				clerkPanel = new ClerkPanel(mainFrame);
+				mainFrame.add(clerkPanel);
+				
+				
+				mainFrame.revalidate();
+			}		
+		});
 		
 		customerButton.addActionListener(new ActionListener() {
 			@Override

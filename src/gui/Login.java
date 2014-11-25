@@ -37,7 +37,7 @@ public class Login extends JDialog implements ActionListener
 		mainFrame = mainFrame_;
 		passwordField.setEchoChar('*');
 		
-		
+		setResizable(false);
 
 		GridBagLayout gb = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
