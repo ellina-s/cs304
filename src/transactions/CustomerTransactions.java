@@ -192,16 +192,21 @@ public class CustomerTransactions{
 	 *   Return UPCs of all items that have been found. Exclude duplicates.
 	 */
 
+	// TODO
+
 	public ArrayList<Integer> genericSearch(String category, String title, int quantity, String name){
 
 		ArrayList<Integer> upcs = new ArrayList<Integer>();
 		ArrayList<Integer> precise_found_upcs = new ArrayList<Integer>();
+		ArrayList<Integer> categoryOrTitleUpcs = new ArrayList<Integer>();
+		ArrayList<Integer> singers_upcs = new ArrayList<Integer>();
 
 		if(quantity <= 0){
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
 			return null;
 		}
-		
+
+
 		// STEP 1: Precise Search
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
@@ -209,28 +214,48 @@ public class CustomerTransactions{
 			System.out.println("No precise items were found.");
 		}
 		else{
+			System.out.println("Found exact item(s) with category, title, and singer name.");
 			System.out.println("----------------------- Generic Search------------------------------------");
 
 			for(int i = 0; i < precise_found_upcs.size(); i++){
 				System.out.println(precise_found_upcs.get(i));
 			}
 			System.out.println(" ");
-			
+
 			return precise_found_upcs;
 		}
-		
-		// STEP 2: Look for category or title
+
+
+		// STEP 2: Search by category or title
 		/*
 		SELECT upc, category, title, stock
 		FROM Item
 		WHERE category LIKE 'new wave' OR title LIKE 'Story of my life';
 		 */
-		
-		
-		return null;
+
+		System.out.println("Searching by category or title...");
+
+		categoryOrTitleUpcs = searchItem(category, title, quantity);
+
+		if(categoryOrTitleUpcs.size() == 0){
+			System.out.println("No items were found with category " + category + " or title " + title);
+		}
+		else{
+
+			System.out.println("Found item(s) with category or title");
+			System.out.println("----------------------- Generic Search------------------------------------");
+
+			for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
+				System.out.println(categoryOrTitleUpcs.get(i));
+			}
+			System.out.println(" ");
 
 
-
+			// Copy into upcs
+			for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
+				upcs.add(categoryOrTitleUpcs.get(i));
+			}
+		}
 
 
 		// STEP 3: Look for Singer name
@@ -239,9 +264,32 @@ public class CustomerTransactions{
 		 FROM LeadSinger
 		 WHERE name LIKE 'Pink';
 		 */
+		System.out.println("Searching by singer name...");
+		
+		singers_upcs = searchSinger(name);
+		if(singers_upcs.size() == 0){
+			System.out.println("No items were found with singer " + name);
+		}
+		else{
+
+			System.out.println("Found item(s) by singer");
+			System.out.println("----------------------- Generic Search------------------------------------");
+
+			for(int i = 0; i < singers_upcs.size(); i++){
+				System.out.println(singers_upcs.get(i));
+			}
+			System.out.println(" ");
 
 
-		// STEP 4: Combine all results (remove duplicates)
+			// Copy into upcs
+			for(int i = 0; i < singers_upcs.size(); i++){
+				upcs.add(singers_upcs.get(i));
+			}
+		}
+
+		return upcs;
+
+		// STEP 4: Remove duplicates.
 	}
 
 
@@ -321,7 +369,7 @@ public class CustomerTransactions{
 
 			}
 			return precise_upcs;
-			
+
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
@@ -337,23 +385,26 @@ public class CustomerTransactions{
 
 
 	/**
-	 * Searches for an item with the given category or title (case sensitive).
+	 * Searches for an item with the given category or title.
 	 * If stock = 0, then item is out of stock.
 	 * If quantity <= stock, then item is considered available. Otherwise, not enough.
 	 */
-	public boolean searchItem(String category, String title, int quantity){
+	public boolean searchItemHelper(String category, String title, int quantity){
 		int existing_upc;
 		int stock;
 		String existing_category;
 		String existing_title;
+		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
+
 
 		if(quantity <= 0){
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
 			return false;
 		}
 
+
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -397,44 +448,20 @@ public class CustomerTransactions{
 				stock = rs.getInt("stock");
 				System.out.printf("%-15.15s\n", stock);
 
-				if(category.equals(existing_category) && title.equals(existing_title)){
-					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category + " Matching title: " + existing_title);
-					if(stock == 0){
-						System.err.println("Sorry, item " + existing_upc + " is out of stock.");
-					}
-					if(quantity <= stock){
-						System.out.println("Requsted quantity is available");
-					}
-					else{
-						System.out.println("Requsted quantity is not available. Available: " + stock);
-					}
+				if(stock == 0){
+					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
+				}
+				if(quantity <= stock){
+					System.out.println("Requsted quantity is available");
+					upcs_list.add(existing_upc);
+				}
+				else{
+					System.out.println("Requsted quantity is not available. Available: " + stock);
+					upcs_list.add(existing_upc);
 				}
 
-				if(category.equals(existing_category)){
-					System.out.println("UPC: " + existing_upc  + " Matching category: " + existing_category);
-					if(stock == 0){
-						System.err.println("Sorry, item " + existing_upc + " is out of stock.");
-					}
-					if(quantity <= stock){
-						System.out.println("Requsted quantity is available");
-					}
-					else{
-						System.out.println("Requsted quantity is not available. Available: " + stock);
-					}
-				}
 
-				if(title.equals(existing_title)){
-					System.out.println("UPC: " + existing_upc  + " Matching title: " + existing_title);
-					if(stock == 0){
-						System.err.println("Sorry, item " + existing_upc + " is out of stock.");
-					}
-					if(quantity <= stock){
-						System.out.println("Requsted quantity is available");
-					}
-					else{
-						System.out.println("Requsted quantity is not available. Available: " + stock);
-					}
-				}
+
 			}
 			return false;
 		} catch (SQLException e) {
@@ -453,7 +480,7 @@ public class CustomerTransactions{
 	/**
 	 * Searches for a Singer in the LeadSinger table given a singer name.
 	 */
-	public boolean searchSinger(String name){
+	public boolean searchSingerHelper(String name){
 
 		int existing_upc;
 		String existing_name;
@@ -520,5 +547,168 @@ public class CustomerTransactions{
 		}
 
 	}
+
+
+	// ------------------------------------------------------//
+	// ------------------------------------------------------//
+
+	/**
+	 * Searches for an item with the given category or title.
+	 * If stock = 0, then item is out of stock.
+	 * If quantity <= stock, then item is considered available. Otherwise, not enough.
+	 */
+	public ArrayList<Integer> searchItem(String category, String title, int quantity){
+		int existing_upc;
+		int stock;
+		String existing_category;
+		String existing_title;
+		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
+
+		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
+		System.out.println("Attempting: " + statement);
+
+		try
+		{
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(statement);
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			if(numCols != 4){
+				System.err.println("Item search Error: Failed to retrive exactly four columns.");
+				stmt.close();
+				return null;
+			}
+
+			int[] formats = {15,15,15,15};
+
+			System.out.println("-----------------------------------------------------");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++){
+				// get column name and print it
+				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				existing_upc = rs.getInt("upc");
+				System.out.printf("%-15.15s", existing_upc);
+
+				existing_category = rs.getString("category");
+				System.out.printf("%-15.15s", existing_category);
+
+				existing_title = rs.getString("title");
+				System.out.printf("%-15.15s", existing_title);
+
+				stock = rs.getInt("stock");
+				System.out.printf("%-15.15s\n", stock);
+
+				if(stock == 0){
+					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
+				}
+				if(quantity <= stock){
+					System.out.println("Requsted quantity is available");
+					upcs_list.add(existing_upc);
+				}
+				else{
+					if(stock > 0){
+						System.out.println("Requsted quantity is not available. Available: " + stock);
+						upcs_list.add(existing_upc);
+					}
+				}
+			}
+
+			return upcs_list;
+
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				System.out.println("Search Item Error: " + e.getMessage());
+				return null;
+			} catch(SQLException e2) {
+				System.out.println("Search Item Rollback Error: " + e2.getMessage());
+				System.exit(-1);
+				return null;
+			}
+		}
+	}
+
+
+	/**
+	 * Searches for a Singer in the LeadSinger table given a singer name.
+	 */
+	public ArrayList<Integer> searchSinger(String name){
+
+		int existing_upc;
+		String existing_name;
+		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
+
+		if(name == "" || name == null){
+			System.err.println("Name cannot be null or empty. Please, try again.");
+			return null;
+		}
+
+		String statement = "SELECT upc, name FROM LeadSinger WHERE (name LIKE '" + name + "')";
+		System.out.println("Attempting: " + statement);
+
+		try
+		{
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(statement);
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			if(numCols != 2){
+				System.err.println("Singer search error: Failed to retrive exactly two columns.");
+				stmt.close();
+				return null;
+			}
+
+			int[] formats = {15,15};
+			// display column names;
+			for (int i = 0; i < numCols; i++){
+				// get column name and print it
+				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				existing_upc = rs.getInt("upc");
+				System.out.printf("%-15.15s", existing_upc);
+
+				existing_name = rs.getString("name");
+				System.out.printf("%-15.15s\n", existing_name);
+
+				upcs_list.add(existing_upc);
+			}
+
+			return upcs_list;
+			
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				System.out.println("Search Singer Error: " + e.getMessage());
+				return null;
+			} catch(SQLException e2) {
+				System.out.println("Search Singer Rollback Error: " + e2.getMessage());
+				System.exit(-1);
+				return null;
+			}
+		}
+
+	}
+
+
 
 }

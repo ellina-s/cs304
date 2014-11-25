@@ -213,7 +213,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for an item, given existing title or category and non-zero quantity.
 	 */
 	@Test
-	public void searchItemTest(){
+	public void searchItemHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -228,7 +228,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("new wave", "", 4);
+		boolean status = customer.searchItemHelper("drama", "RandomTestTr", 4);
 		// then
 		if(status == false){
 			fail();
@@ -240,7 +240,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for an item given a zero quantity.
 	 */
 	@Test
-	public void zeroQuantityTest(){
+	public void zeroQuantityHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -253,7 +253,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", 0);
+		boolean status = customer.searchItemHelper("newWave", "Rain", 0);
 		// then
 		if(status == true){
 			fail();
@@ -265,7 +265,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for an item given a negative quantity.
 	 */
 	@Test
-	public void negativeQuantityTest(){
+	public void negativeQuantityHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -278,7 +278,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", -1);
+		boolean status = customer.searchItemHelper("newWave", "Rain", -1);
 		// then
 		if(status == true){
 			fail();
@@ -287,7 +287,7 @@ public class CustomerTransactionsTest{
 	}
 
 	@Test
-	public void zeroStockTest(){
+	public void zeroStockHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -300,7 +300,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("rock", "Rain", 11);
+		boolean status = customer.searchItemHelper("rock", "Rain", 11);
 		// then
 		if(status == true){
 			fail();
@@ -312,7 +312,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for a Singer given a valid name.
 	 */
 	@Test
-	public void successfulSearchSingerTest(){
+	public void successfulSearchSingerHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -327,7 +327,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchSinger("Elvis");
+		boolean status = customer.searchSingerHelper("Elvis");
 		// then
 		if(status == false){
 			fail();
@@ -340,7 +340,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for a Singer given a null name.
 	 */
 	@Test
-	public void nullSearchSingerTest(){
+	public void nullSearchSingerHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -355,7 +355,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchSinger(null);
+		boolean status = customer.searchSingerHelper(null);
 		// then
 		if(status == true){
 			fail();
@@ -367,7 +367,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for a Singer given an empty name.
 	 */
 	@Test
-	public void emptySearchSingerTest(){
+	public void emptySearchSingerHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -382,7 +382,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchSinger("");
+		boolean status = customer.searchSingerHelper("");
 		// then
 		if(status == true){
 			fail();
@@ -394,7 +394,7 @@ public class CustomerTransactionsTest{
 	 * Tests searching for a Singer given a non-existing name.
 	 */
 	@Test
-	public void failedSearchSingerTest(){
+	public void failedSearchSingerHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -409,7 +409,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchSinger("Roza");
+		boolean status = customer.searchSingerHelper("Roza");
 		// then
 		if(status == true){
 			fail();
@@ -435,9 +435,47 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		//found_upcs = customer.preciseSearch("drama", "shine", 2, "Maroon5");
+		found_upcs = customer.preciseSearch("drama", "shine", 2, "Maroon5");
+
+		if(found_upcs == null){
+			fail();
+		}
 		
-		found_upcs = customer.genericSearch("drama", "shine", 5227, "Maroon5");
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	
+	@Test
+	public void genericSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** GENERIC SEARCH TEST *****");
+		
+		//System.out.println(" ");
+		//System.out.println("***** Category OR title SEARCH TEST *****");
+		
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
+		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Maroon5"); // good to test out of stock items. No precise if found,
+		//found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5"); // good to test precise items
+		//found_upcs = customer.genericSearch("pop", "jay", 160, "Dan"); // good to test no items found
 		
 		if(found_upcs == null){
 			fail();
