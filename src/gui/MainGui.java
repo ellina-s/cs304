@@ -35,6 +35,9 @@ public class MainGui extends JFrame{
 	static JButton customerButton;
 	static JButton managerButton;
 	
+	static int WIDTH = 500;
+	static int HEIGHT = 500;
+	
 	
 
 	/*
@@ -83,7 +86,7 @@ public class MainGui extends JFrame{
 		mainPanel = new JPanel();
 
 		mainFrame.setTitle("Allegro Music Store");
-		mainFrame.setSize(500, 500);
+		mainFrame.setSize(WIDTH, HEIGHT);
 
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -119,8 +122,20 @@ public class MainGui extends JFrame{
 
 		// create the login window
 		loginUI = new Login(mainFrame);
-		mainFrame.add(loginUI);
-		mainFrame.setVisible(true);
+		loginUI.addWindowListener(new WindowAdapter() { 
+		    @Override public void windowClosing(WindowEvent e) { 
+		    	System.out.println("reached");
+			      System.exit(0);
+			    }
+			  });
+		Dimension d = mainFrame.getToolkit().getScreenSize();
+		Rectangle r = mainFrame.getBounds();
+		loginUI.pack();
+		loginUI.setLocation( (d.width - r.width)/2 + WIDTH/2 - loginUI.getWidth()/2, (d.height - r.height)/2 + HEIGHT/2 - loginUI.getHeight()/2) ;
+		loginUI.setVisible(true);
+		//mainFrame.add(loginUI);
+		//mainFrame.setVisible(true);
+	
 		
 		mainPanel.setLayout(new GridLayout(3,1));
 		mainPanel.add(clerkButton);

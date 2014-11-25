@@ -13,7 +13,7 @@ import java.awt.event.*;
  * Reference: http://www.cs.ubc.ca/~laks/cpsc304/Swing/jdbc_swing.html
  */
 
-public class Login extends JPanel implements ActionListener
+public class Login extends JDialog implements ActionListener
 {
 	// ams represents a connection to an MySQL database
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
@@ -36,12 +36,14 @@ public class Login extends JPanel implements ActionListener
 	public Login(JFrame mainFrame_) {
 		mainFrame = mainFrame_;
 		passwordField.setEchoChar('*');
+		
+		
 
 		GridBagLayout gb = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
 		setLayout(gb);
-		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		//setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
 		// place the username label 
 		c.gridwidth = GridBagConstraints.RELATIVE;
@@ -111,6 +113,7 @@ public class Login extends JPanel implements ActionListener
 
 
 			System.out.println("You entered valid credentials.");
+			dispose();
 		}
 	}
 }
