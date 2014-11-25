@@ -3,6 +3,7 @@ package transactiontests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.Test;
@@ -227,7 +228,7 @@ public class CustomerTransactionsTest{
 
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", 4);
+		boolean status = customer.searchItem("new wave", "", 4);
 		// then
 		if(status == false){
 			fail();
@@ -414,5 +415,39 @@ public class CustomerTransactionsTest{
 			fail();
 		}
 		assertEquals(false, status);
+	}
+
+	@Test
+	public void preciseSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** PRECISE SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		//found_upcs = customer.preciseSearch("drama", "shine", 2, "Maroon5");
+		
+		found_upcs = customer.genericSearch("drama", "shine", 5227, "Maroon5");
+		
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
 	}
 }
