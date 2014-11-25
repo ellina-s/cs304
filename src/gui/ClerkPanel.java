@@ -5,9 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -197,8 +196,11 @@ public class ClerkPanel extends JPanel {
 			int receiptId = Integer.parseInt(receiptIDField.getText());
 			ArrayList<Integer> upcList = new ArrayList<Integer>();
 			ArrayList<Integer> quantityList = new ArrayList<Integer>();
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-			String day = dateFormat.toString();
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+			int month = Calendar.getInstance().get(Calendar.MONTH);
+			int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+			String date = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
+
 			
 			if (!upcField0.getText().equals("")) {
 				upcList.add(Integer.parseInt(upcField0.getText()));
@@ -262,7 +264,7 @@ public class ClerkPanel extends JPanel {
 				quantityList.add(Integer.parseInt(quantityField9.getText()));
 			}
 			
-			ct.returnItem(receiptId, upcList, quantityList, day);
+			ct.returnItem(receiptId, upcList, quantityList, date);
 			
 			JOptionPane.showMessageDialog(mainFrame,"Returns processed.");
 			

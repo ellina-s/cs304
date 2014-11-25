@@ -12,9 +12,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import tables.Customer;
+import transactions.CustomerTransactions;
 
 import com.mysql.jdbc.Connection;
 
@@ -25,14 +30,35 @@ public class CustomerPanel extends JPanel {
 
 	private JButton loginButton = new JButton("Login");
 	private JButton registerButton = new JButton("Register");
+	
+	private JTextField usernameField = new JTextField(10);
+	private JPasswordField passwordField = new JPasswordField(10);	   
+	private JTextField usernameLoginField = new JTextField(10);
+	private JPasswordField passwordLoginField = new JPasswordField(10);	
+	private JLabel usernameLabel = new JLabel("Enter username:  ");
+	private JLabel passwordLabel = new JLabel("Enter password:  ");
+	private JButton customerLoginButton = new JButton("Login");
 
 	private GridLayout buttonLayout = new GridLayout(2,1);
 
 
+	
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	private Connection con = (Connection) ams.getConnection();
 	private Customer customer = new Customer(con);
 	private String[][] data;
+	
+	private DefaultTableModel dtm;
+
+	private JScrollPane tablePanel;
+	private JPanel actionPanel;
+	private JTable itemTable;
+	private JLabel searchLabel = new JLabel("Search");
+	private JLabel categoryLabel = new JLabel("Category");
+	private JLabel titleLabel = new JLabel("Title");
+	private JLabel leadSingerLabel = new JLabel("Lead Singer");
+	
+	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
 
 	public CustomerPanel(JFrame mainFrame_) {
 		mainFrame = mainFrame_;
@@ -40,6 +66,119 @@ public class CustomerPanel extends JPanel {
 		loginButton.setFocusable(false);
 		registerButton.setFocusable(false);
 
+		loginButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removeAll();
+				
+				GridBagLayout gb = new GridBagLayout();
+				GridBagConstraints c = new GridBagConstraints();
+
+				setLayout(gb);
+				
+				customerLoginButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try {
+							CustomerTransactions ct = new CustomerTransactions(con);
+							int customerId = Integer.parseInt(usernameLoginField.getText());
+							String password = String.valueOf(passwordLoginField.getPassword());
+							
+							if (!ct.authenticateCustomer(customerId, password)) {
+								JOptionPane.showMessageDialog(mainFrame,"Invalid customer id or password.");
+							} else {
+								removeAll();
+								
+								mainFrame.setSize(800, 600);
+								Object[][] emptyData = {};
+								
+								dtm = new DefaultTableModel(emptyData,itemColumnNames);
+								
+								itemTable = new JTable(dtm) {
+									// Disable editing of table
+									private static final long serialVersionUID = 1L;
+									public boolean isCellEditable(int row, int column) {                
+										return false;               
+									};
+								};
+								tablePanel = new JScrollPane(itemTable);;
+								actionPanel = new JPanel();
+								
+								actionPanel.setLayout(new GridBagLayout());
+								GridBagConstraints c = new GridBagConstraints();
+								
+								c.gridx = 0;
+								c.gridy = 0;
+								actionPanel.add(searchLabel,c);
+								c.gridx = 0;
+								c.gridy = 1;
+								actionPanel.add(categoryLabel,c);
+								c.gridx = 0;
+								c.gridy = 2;
+								actionPanel.add(titleLabel,c);
+								c.gridx = 0;
+								c.gridy = 3;
+								actionPanel.add(leadSingerLabel,c);
+								
+								setLayout(new GridBagLayout());
+								c.gridx = 0;
+								c.gridy = 0;
+								add(tablePanel,c);
+								c.gridx = 0;
+								c.gridy = 1;
+								add(actionPanel,c);
+								
+								
+								mainFrame.revalidate();
+								mainFrame.repaint();
+								
+							
+							}
+						} catch (NumberFormatException nfe) {
+							JOptionPane.showMessageDialog(mainFrame,"Username must be an integer.");
+						}
+						
+						
+					}});
+				
+				
+
+				// place the username label 
+				c.gridwidth = GridBagConstraints.RELATIVE;
+				c.insets = new Insets(10, 10, 5, 0);
+				gb.setConstraints(usernameLabel, c);
+				add(usernameLabel);
+
+				// place the text field for the username 
+				c.gridwidth = GridBagConstraints.REMAINDER;
+				c.insets = new Insets(10, 0, 5, 10);
+				gb.setConstraints(usernameLoginField, c);
+				add(usernameLoginField);
+
+				// place password label
+				c.gridwidth = GridBagConstraints.RELATIVE;
+				c.insets = new Insets(0, 10, 10, 0);
+				gb.setConstraints(passwordLabel, c);
+				add(passwordLabel);
+
+				// place the password field 
+				c.gridwidth = GridBagConstraints.REMAINDER;
+				c.insets = new Insets(0, 0, 10, 10);
+				gb.setConstraints(passwordLoginField, c);
+				add(passwordLoginField);
+
+				// place the login button
+				c.gridwidth = 2;
+				c.insets = new Insets(10, 5, 5, 5);
+				c.anchor = GridBagConstraints.CENTER;
+				gb.setConstraints(customerLoginButton, c);
+				add(customerLoginButton);
+				
+				mainFrame.revalidate();
+				mainFrame.repaint();
+				
+			}});
+		
 		registerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
