@@ -415,10 +415,10 @@ public class CustomerTransactionsTest{
 
 	@Test
 	public void preciseSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** PRECISE SEARCH TEST *****");
-		
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -436,22 +436,23 @@ public class CustomerTransactionsTest{
 		if(found_upcs == null){
 			fail();
 		}
-		
+
 		System.out.println("--------------------- TEST --------------------------------------");
 		for(int i = 0; i < found_upcs.size(); i++){
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		
+
 	}
-	
+
+
 	
 	@Test
 	public void genericSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** GENERIC SEARCH TEST *****");
-		
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -464,29 +465,45 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
-		
+		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
+		String [][] twoDArray = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");;
+
+		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+
+
+		/*
 		if(found_upcs == null){
 			fail();
 		}
-		
+
 		System.out.println("--------------------- TEST --------------------------------------");
 		for(int i = 0; i < found_upcs.size(); i++){
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		
+		*/
+
 	}
 	
+
 	/**
 	 * Tests searching when no items are found.
 	 */
+	/*
 	@Test
 	public void noItemsFoundgenericSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** No items SEARCH TEST *****");
-		
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -507,16 +524,18 @@ public class CustomerTransactionsTest{
 		}
 		assertEquals(null, found_upcs);		
 	}
-	
+	 */
+
 	/**
 	 * Tests raising an error in searching by singer name.
 	 */
+	/*
 	@Test
 	public void singerErrorSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** Singer Error SEARCH TEST *****");
-	
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -530,29 +549,31 @@ public class CustomerTransactionsTest{
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		found_upcs = customer.genericSearch("drama", "RandomTestItem", 412, null);
-		
+
 		// then
 		if(found_upcs == null){
 			fail();
 		}
-		
+
 		System.out.println("--------------------- TEST --------------------------------------");
 		for(int i = 0; i < found_upcs.size(); i++){
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		
+
 	}
-	
+	 */
+
 	/**
 	 * Tests successful searching for a precise item.
 	 */
+	/*
 	@Test
 	public void preciseItemSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** Successful precise SEARCH TEST *****");
-	
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -566,30 +587,32 @@ public class CustomerTransactionsTest{
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5");
-	
+
 		// then
 		if(found_upcs == null){
 			fail();
 		}
-		
+
 		System.out.println("--------------------- TEST --------------------------------------");
 		for(int i = 0; i < found_upcs.size(); i++){
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		
+
 	}
-	
+	 */
+
 	/**
 	 * Tests searching for items that are out of stock.
 	 * Such items should not be returned.
 	 */
+
 	@Test
 	public void outOfStockSearchTest(){
-		
+
 		System.out.println(" ");
 		System.out.println("***** Out Of Stock SEARCH TEST *****");
-		
+
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -602,18 +625,34 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed");
-		
+		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed");
+
+		String [][] twoDArray = customer.genericSearch("rock", "Story of my life", 4, "Ed");
+
+		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+
+
 		// then
+		/*
 		if(found_upcs == null){
 			fail();
 		}
-		
+
 		System.out.println("--------------------- TEST --------------------------------------");
 		for(int i = 0; i < found_upcs.size(); i++){
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		
+		 */
+
 	}
+
 }

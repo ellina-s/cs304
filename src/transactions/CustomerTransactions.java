@@ -1,11 +1,14 @@
 package transactions;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import tables.Customer;
+
 import com.mysql.jdbc.Connection;
 
 /**
@@ -15,6 +18,7 @@ import com.mysql.jdbc.Connection;
 public class CustomerTransactions{
 
 	private Connection connection;
+	private final static int COL_NUM = 5;
 
 	/**
 	 * Constructor.
@@ -142,16 +146,23 @@ public class CustomerTransactions{
 		}
 	}
 
+
 	/*
-	 * SEARCH ALGORITHM
-	 * 1) If found an exact item, and
-	 * a) quantity is avalaible, then return this item.
-	 * b) quantity is not enough, then return this item and specify available quantity.
-	 * c) if out of stock, then say that item is out of stock, do not return this item, and try the next step.
-	 * 
-	 * 2) If exact item is not found, then search by (a) category, title, or (b) singer name.
-	 *   Check for their respective quantities.
-	 *   Return UPCs of all items that have been found. Exclude duplicates.
+	SEARCH ALGORITHM
+
+	Step 1. Try to find an precise item that matches the category, title, and singer name by calling preciseSearch().
+			If such item(s) is found, then return its upc. End of search.
+			If no precise item is found, then
+	Step 2. Call searchItem(category, title, quantity) to search by category or title.
+			If there are any items found with such title or category, then add them to the resulting array list.
+			If no item is found, return nothing. 
+	Step 3.  Call searchSinger(name) to search the singer by name.
+			If no singer is found, return nothing.
+			If a singer or singers are found, then return UPCs, and add them to the resulting array list.
+
+	At the end, check if the resulting array list contains no elements (aka no items or singer found), then return null.
+	Note that all these steps are done by the genericSearch() method.
+	You don't need to call searchItem(), or searchSinger(), or preciseSearch().
 	 */
 
 	// TODO
@@ -160,12 +171,19 @@ public class CustomerTransactions{
 	 * Searches for items.
 	 * @return An array list of all UPCs that have been found.
 	 */
-	public ArrayList<Integer> genericSearch(String category, String title, int quantity, String name){
+	public String[][] genericSearch(String category, String title, int quantity, String name){
 
 		ArrayList<Integer> upcs = new ArrayList<Integer>();
 		ArrayList<Integer> precise_found_upcs = new ArrayList<Integer>();
 		ArrayList<Integer> categoryOrTitleUpcs = new ArrayList<Integer>();
 		ArrayList<Integer> singers_upcs = new ArrayList<Integer>();
+
+		// *****************//
+		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> ();
+		for(int i = 0; i < COL_NUM; i++) {
+			table.add(new ArrayList<String>());
+		}
+		// *****************//
 
 		if(quantity <= 0){
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
@@ -174,6 +192,7 @@ public class CustomerTransactions{
 
 		// STEP 1: Precise Search
 
+		/*
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
 		if(precise_found_upcs == null){
@@ -195,6 +214,7 @@ public class CustomerTransactions{
 				return precise_found_upcs;
 			}
 		}
+		*/
 
 		// STEP 2: Search by category or title
 
@@ -277,8 +297,119 @@ public class CustomerTransactions{
 			return null;
 		}
 
-		return upcs;
+		
+
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
+		
+		result = populateReturnTable(upcs, table);
+		
+		return dataTransform(result);
+
+		//return upcs; // used to return ArrayList<Integer>
+		
 	}
+	
+	// TODO
+
+	private ArrayList<ArrayList<String>> populateReturnTable(ArrayList<Integer> upcs, ArrayList<ArrayList<String>> table){
+
+		//ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
+		
+		// Step 1. Retrieve the data from the Item table
+
+		int stock;
+		String title, category, name;
+		Statement stmt;
+		ResultSet rs;
+
+		String statement = "SELECT title, category, stock FROM Item Where upc = ";
+
+		try
+		{
+			stmt = connection.createStatement();
+
+			System.out.println("---------------------- POPULATING TABLE-------------------------------");
+			System.out.println("title               category       stock");
+
+			for(int i = 0; i < upcs.size(); i++) {
+
+				rs = stmt.executeQuery(statement + Integer.toString(upcs.get(i)));
+				ResultSetMetaData rsmd = rs.getMetaData();
+
+				if(rs.next()) {
+					title = rs.getString("title");
+					category = rs.getString("category");
+					stock = rs.getInt("stock");
+					table.get(0).add(Integer.toString(upcs.get(i)));
+					table.get(1).add(title);
+					table.get(2).add(category);
+					table.get(3).add(Integer.toString(stock));
+
+					System.out.printf("%-20s%-15s%-10s", 
+							title,category,stock);
+					System.out.println("  upc " + upcs.get(i));
+				}
+			}
+
+			// close the statement
+			stmt.close();
+		}
+			catch (SQLException ex){
+			System.out.println("Populate Message: " + ex.getMessage());
+		}
+		
+		// Step 2. Retrieve the data from the Singer table
+
+		String singerStatement = "SELECT name FROM LeadSinger Where upc =  ";
+		
+		try
+		{
+			stmt = connection.createStatement();
+
+			System.out.println("---------------------- POPULATING SINGERs-------------------------------");
+			System.out.println("name");
+
+			for(int i = 0; i < upcs.size(); i++) {
+
+				rs = stmt.executeQuery(singerStatement + Integer.toString(upcs.get(i)));
+				ResultSetMetaData rsmd = rs.getMetaData();
+
+				if(rs.next()) {
+					name = rs.getString("name");
+					table.get(4).add(name);
+					System.out.println("singer name: " + name + " upc " + upcs.get(i));
+				}
+				else{
+					table.get(4).add("N/A");
+					System.out.println(" * No singer found for upc: " +  upcs.get(i));
+				}
+			}
+
+			// close the statement
+			stmt.close();
+		}
+			catch (SQLException ex){
+			System.out.println("Populate Message: " + ex.getMessage());
+		}
+		return table;
+		
+		
+		
+	
+
+	}
+	
+	// TODO
+	
+	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
+		 String[][] result = new String[table.get(0).size()][table.size()];
+			for(int i = 0; i < table.get(0).size(); i++) {
+				for(int j = 0; j < table.size(); j++) {
+					result[i][j] = table.get(j).get(i);
+				}
+			}	
+			return result;
+	 }
 
 
 	/**
