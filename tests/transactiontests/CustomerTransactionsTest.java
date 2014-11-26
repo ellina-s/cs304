@@ -3,6 +3,7 @@ package transactiontests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.Test;
@@ -11,6 +12,7 @@ import com.mysql.jdbc.Connection;
 
 import tables.Customer;
 import tables.Item;
+import tables.LeadSinger;
 import transactions.CustomerTransactions;
 import connection.DatabaseConnection;
 
@@ -207,36 +209,11 @@ public class CustomerTransactionsTest{
 	}
 
 
-	/*-----------------------------------------------------
-	upc       title               type      category  company             year      price     stock      
-	100       Rain                dvd       drama     ubc                 2014      40.0      10000     
-	101       Rain                dvd       drama     ubc                 2014      40.0      10000     
-	102       Shower              dvd       drama     ubc                 2014      40.0      10000     
-	103       Snow                dvd       drama     ubc                 2014      40.0      10000     
-	104       Shine               dvd       drama     ubc                 2014      40.0      10000     
-	105       Glow                dvd       drama     ubc                 2014      40.0      10000     
-	135       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	195       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	225       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	230       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
-	285       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	300       Strike              dvd       drama     weather             2014      40.0      10000     
-	335       RandomTestItem      dvd       rock      randomProduction    2014      10.0      5         
-	400       RandomTestItem      dvd       new wave  randomProduction    2014      10.0      5         
-	405       RandomTestItem      cd        newWave   randomProduction    2014      10.0      5         
-	420       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	465       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	475       RandomTestItem      cd        drama     randomProduction    2014      10.0      5         
-	480       RandomTestItem      dvd       country   randomProduction    2014      10.0      5         
-	490       RandomTestItem      dvd       new age   randomProduction    2014      10.0      5         
-	12345     Story of my life    dvd       drama     nopublisher         2012      90.99     15        
-	-----------------------------------------------------*/
-
 	/**
 	 * Tests searching for an item, given existing title or category and non-zero quantity.
 	 */
 	@Test
-	public void searchItemTest(){
+	public void searchItemHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -247,29 +224,21 @@ public class CustomerTransactionsTest{
 		}
 		con = (Connection) ams.getConnection();
 
-		//Item item = new Item(con);
-		//item.displayAllItems();
-
-		//Item item = new Item(con);
-		//Random randomGenerator = new Random();
-		//int random_upc = randomGenerator.nextInt(100) * 5;
-		//item.insertItem(random_upc, "RandomTestTr", "cd", "rock", "randomProduction", 1999, (float) 5.99, 0);
-		
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", 4);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchItemHelper("drama", "RandomTestTr", 4);
 		// then
 		if(status == false){
 			fail();
 		}
 		assertEquals(true, status);
 	}
-	
+
 	/**
 	 * Tests searching for an item given a zero quantity.
 	 */
 	@Test
-	public void zeroQuantityTest(){
+	public void zeroQuantityHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -281,20 +250,20 @@ public class CustomerTransactionsTest{
 		con = (Connection) ams.getConnection();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", 0);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchItemHelper("newWave", "Rain", 0);
 		// then
 		if(status == true){
 			fail();
 		}
 		assertEquals(false, status);
 	}
-	
+
 	/**
 	 * Tests searching for an item given a negative quantity.
 	 */
 	@Test
-	public void negativeQuantityTest(){
+	public void negativeQuantityHelperTest(){
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -306,8 +275,8 @@ public class CustomerTransactionsTest{
 		con = (Connection) ams.getConnection();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
-		boolean status = customer.searchItem("newWave", "Rain", -1);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchItemHelper("newWave", "Rain", -1);
 		// then
 		if(status == true){
 			fail();
@@ -315,4 +284,336 @@ public class CustomerTransactionsTest{
 		assertEquals(false, status);
 	}
 
+	@Test
+	public void zeroStockHelperTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchItemHelper("rock", "Rain", 11);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given a valid name.
+	 */
+	@Test
+	public void successfulSearchSingerHelperTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+
+		// when
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchSingerHelper("Elvis");
+		// then
+		if(status == false){
+			fail();
+		}
+		assertEquals(true, status);
+	}
+
+
+	/**
+	 * Tests searching for a Singer given a null name.
+	 */
+	@Test
+	public void nullSearchSingerHelperTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchSingerHelper(null);
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given an empty name.
+	 */
+	@Test
+	public void emptySearchSingerHelperTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchSingerHelper("");
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	/**
+	 * Tests searching for a Singer given a non-existing name.
+	 */
+	@Test
+	public void failedSearchSingerHelperTest(){
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		//LeadSinger leadSinger = new LeadSinger(con);
+		//leadSinger.displayAllLeadSingers();
+
+		// when
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
+		boolean status = customer.searchSingerHelper("Roza");
+		// then
+		if(status == true){
+			fail();
+		}
+		assertEquals(false, status);
+	}
+
+	@Test
+	public void preciseSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** PRECISE SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.preciseSearch("drama", "shine", 2, "Maroon5");
+
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	
+	@Test
+	public void genericSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** GENERIC SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
+		
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests searching when no items are found.
+	 */
+	@Test
+	public void noItemsFoundgenericSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** No items SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("pop", "jay", 160, "Dan");
+
+		// then
+		if(found_upcs != null){
+			fail();
+		}
+		assertEquals(null, found_upcs);		
+	}
+	
+	/**
+	 * Tests raising an error in searching by singer name.
+	 */
+	@Test
+	public void singerErrorSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Singer Error SEARCH TEST *****");
+	
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("drama", "RandomTestItem", 412, null);
+		
+		// then
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests successful searching for a precise item.
+	 */
+	@Test
+	public void preciseItemSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Successful precise SEARCH TEST *****");
+	
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5");
+	
+		// then
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests searching for items that are out of stock.
+	 * Such items should not be returned.
+	 */
+	@Test
+	public void outOfStockSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Out Of Stock SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed");
+		
+		// then
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
 }
