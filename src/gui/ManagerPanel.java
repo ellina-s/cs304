@@ -24,6 +24,7 @@ import com.mysql.jdbc.Connection;
 
 import connection.DatabaseConnection;
 import tables.Item;
+import tables.Purchase;
 import transactions.ManagerTransactions;
 
 public class ManagerPanel extends JPanel {
@@ -48,6 +49,9 @@ public class ManagerPanel extends JPanel {
 	private JTextField stockField = new JTextField("");
 	private JTextField receiptField = new JTextField("");
 	private JTextField deliveryField = new JTextField("");
+	private JTextField yearField = new JTextField("");
+	private JTextField monthField = new JTextField("");
+	private JTextField dayField = new JTextField("");
 	private GridLayout buttonLayout = new GridLayout(4,1);
 	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
 	private String[] salesReportColumnNames = {"UPC","Category","Unit Price","Units","Total Value"};
@@ -61,7 +65,10 @@ public class ManagerPanel extends JPanel {
 	private JLabel priceLabel = new JLabel("price (optional)");
 	private JLabel stockLabel = new JLabel("stock");
 	private JLabel receiptID = new JLabel("Receipt ID");
-	private JLabel deliveryDate = new JLabel("Delivery Date (YYYY-MM-DD)");
+	private JLabel deliveryDate = new JLabel("Delivery Date:");
+	private JLabel year = new JLabel("YYYY");
+	private JLabel month = new JLabel("MM");
+	private JLabel day = new JLabel("DD");
 
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	private Connection con = (Connection) ams.getConnection();
@@ -84,6 +91,13 @@ public class ManagerPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				generateReport();
+			}
+		};
+		
+		private ActionListener processReturn = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateOrder();
 			}
 		};
 
@@ -325,9 +339,10 @@ public class ManagerPanel extends JPanel {
 
 					mainFrame.setSize(800, 600);
 
-					Object[][] emptyData = {};
+					Purchase p = new Purchase(con);
+					data = p.getPurchase();
 
-					dtm = new DefaultTableModel(emptyData,orderColumnNames);
+					dtm = new DefaultTableModel(data,orderColumnNames);
 
 					processOrderTable = new JTable(dtm) {
 						// Disable editing of table
@@ -337,17 +352,30 @@ public class ManagerPanel extends JPanel {
 						};
 					};
 					
+					receiptField.addActionListener(processReturn);
+					yearField.addActionListener(processReturn);
+					monthField.addActionListener(processReturn);
+					dayField.addActionListener(processReturn);
+					updateOrder.addActionListener(processReturn);
+
 					tablePanel = new JScrollPane(processOrderTable);
-					
+
 					receiptField.setColumns(10);
-					deliveryField.setColumns(10);
-					
+					yearField.setColumns(4);
+					monthField.setColumns(2);
+					dayField.setColumns(2);
+
 					actionPanel.add(receiptID);
 					actionPanel.add(receiptField);
 					actionPanel.add(deliveryDate);
-					actionPanel.add(deliveryField);
+					actionPanel.add(year);
+					actionPanel.add(yearField);
+					actionPanel.add(month);
+					actionPanel.add(monthField);
+					actionPanel.add(day);
+					actionPanel.add(dayField);
 					actionPanel.add(updateOrder);
-					
+
 					c.gridx = 0;
 					c.gridy = 0;
 					add(tablePanel,c);
@@ -357,10 +385,10 @@ public class ManagerPanel extends JPanel {
 					add(actionPanel,c);
 
 					mainFrame.revalidate();
-					
-					
-					
-					
+
+
+
+
 				}		
 			});
 
@@ -589,7 +617,7 @@ public class ManagerPanel extends JPanel {
 			}
 			return false;
 		}
-		
+
 		private boolean receiptIDExists(String receiptID) {
 			if (data.length > 0) {
 				for (int i = 0; i < data.length; i++) {
@@ -601,22 +629,54 @@ public class ManagerPanel extends JPanel {
 			}
 			return false;
 		}
-		
+
 		private void updateOrder() {
 			try {
 				int receiptID = Integer.parseInt(receiptField.getText());
+				int year = Integer.parseInt(yearField.getText());
+				int month = Integer.parseInt(monthField.getText());
+				int day = Integer.parseInt(dayField.getText());
 				
-				ManagerTransactions mt = new ManagerTransactions(con);
-				mt.deliveredItem(receiptID, deliveryField.getText());
-				
-				
-				
-				
+				if (!receiptIDExists(receiptField.getText())) {
+					JOptionPane.showMessageDialog(mainFrame,"receiptID not found.");
+				} 
+				else if (year < 1000 || year > 9999) {
+					JOptionPane.showMessageDialog(mainFrame,"Invalid year specified.");
+				}
+				else if (monthField.getText().length() != 2 || month < 1 || month > 12) {
+					JOptionPane.showMessageDialog(mainFrame,"Invalid month specified.");
+				}
+				else if (dayField.getText().length() != 2 || day < 1 || day > 31) {
+					JOptionPane.showMessageDialog(mainFrame,"Invalid day specified.");
+				}
+
+				else {
+
+					ManagerTransactions mt = new ManagerTransactions(con);
+					String date = yearField.getText()+"-"+monthField.getText()+"-"+dayField.getText();
+					mt.deliveredItem(receiptID,date);
+					
+					for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
+						dtm.removeRow(row);
+					}
+
+					Purchase p = new Purchase(con);
+					data = p.getPurchase();
+
+					if (data.length > 0) {
+						for (int i = 0; i < data.length; i++) {
+							dtm.addRow(data[i]);	
+						}
+					}
+
+				}
+
+
 			} catch (NumberFormatException exception) {
-				JOptionPane.showMessageDialog(mainFrame,"ReceiptID must be an integer.");
+				JOptionPane.showMessageDialog(mainFrame,"One or more fields are invalid.");
 			}
 		}
-		
+
 
 
 		private void addItems() {
@@ -637,42 +697,42 @@ public class ManagerPanel extends JPanel {
 								}
 							}
 						}
-						
+
 						ManagerTransactions mt = new ManagerTransactions(con);
 						mt.addItems(upc, stock, price);
-						
+
 						for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
 							dtm.removeRow(row);
 						}
-						
+
 						data = item.getItem();
-						
+
 						if (data.length > 0) {
 							for (int i = 0; i < data.length; i++) {
 								dtm.addRow(data[i]);	
 							}
 						}
 						JOptionPane.showMessageDialog(mainFrame,"Added items to stock.");
-						
-						
+
+
 					} else {
 						price = Float.parseFloat(priceField.getText());
-						
+
 						ManagerTransactions mt = new ManagerTransactions(con);
 						mt.addItems(upc, stock, price);
-						
+
 						for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
 							dtm.removeRow(row);
 						}
-						
+
 						data = item.getItem();
-						
+
 						if (data.length > 0) {
 							for (int i = 0; i < data.length; i++) {
 								dtm.addRow(data[i]);	
 							}
 						}
-						
+
 						JOptionPane.showMessageDialog(mainFrame,"Added items to stock.");
 					}
 				}
