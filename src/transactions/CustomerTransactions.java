@@ -178,12 +178,10 @@ public class CustomerTransactions{
 		ArrayList<Integer> categoryOrTitleUpcs = new ArrayList<Integer>();
 		ArrayList<Integer> singers_upcs = new ArrayList<Integer>();
 
-		// *****************//
 		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> ();
 		for(int i = 0; i < COL_NUM; i++) {
 			table.add(new ArrayList<String>());
 		}
-		// *****************//
 
 		if(quantity <= 0){
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
@@ -192,7 +190,6 @@ public class CustomerTransactions{
 
 		// STEP 1: Precise Search
 
-		
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
 		if(precise_found_upcs == null){
@@ -212,13 +209,11 @@ public class CustomerTransactions{
 				System.out.println(" ");
 
 				ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
-				result = populateReturnTable(precise_found_upcs, table);
+				result = populateReturnTable(precise_found_upcs, table, name);
 				return dataTransform(result);
-				
-				// return precise_found_upcs;
 			}
 		}
-		
+
 
 		// STEP 2: Search by category or title
 
@@ -263,7 +258,7 @@ public class CustomerTransactions{
 		System.out.println(" ");
 		System.out.println("Searching by singer name...");
 
-		singers_upcs = searchSinger(name);
+		singers_upcs = searchSinger(name, quantity);
 
 		if(singers_upcs == null){
 			System.out.println("Problem in searching by singer name...");
@@ -296,21 +291,13 @@ public class CustomerTransactions{
 			}
 		}
 
-		//if(upcs.size() == 0){
-			//System.out.println("Total arraylist contains no elements.");
-			//return null;
-		//}
 
-		
 
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
-		result = populateReturnTable(upcs, table);
+		result = populateReturnTable(upcs, table, name);
 		return dataTransform(result);
-
-		//return upcs; // used to return ArrayList<Integer>
-		
 	}
-	
+
 	// TODO
 
 	/**
@@ -318,10 +305,8 @@ public class CustomerTransactions{
 	 * @param upcs Array list of UPCs
 	 * @param table 2D Arraylist that will be populated with data.
 	 */
-	private ArrayList<ArrayList<String>> populateReturnTable(ArrayList<Integer> upcs, ArrayList<ArrayList<String>> table){
+	private ArrayList<ArrayList<String>> populateReturnTable(ArrayList<Integer> upcs, ArrayList<ArrayList<String>> table, String singername){
 
-		//ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
-		
 		// Step 1. Retrieve the data from the Item table
 
 		int stock;
@@ -347,10 +332,11 @@ public class CustomerTransactions{
 					title = rs.getString("title");
 					category = rs.getString("category");
 					stock = rs.getInt("stock");
+
 					table.get(0).add(Integer.toString(upcs.get(i)));
 					table.get(1).add(title);
 					table.get(2).add(category);
-					table.get(3).add(Integer.toString(stock));
+					table.get(4).add(Integer.toString(stock));
 
 					System.out.printf("%-20s%-15s%-10s", 
 							title,category,stock);
@@ -361,20 +347,19 @@ public class CustomerTransactions{
 			// close the statement
 			stmt.close();
 		}
-			catch (SQLException ex){
+		catch (SQLException ex){
 			System.out.println("Populate Message: " + ex.getMessage());
 		}
-		
+
 		// Step 2. Retrieve the data from the Singer table
 
 		String singerStatement = "SELECT name FROM LeadSinger Where upc =  ";
-		
+
 		try
 		{
 			stmt = connection.createStatement();
 
 			System.out.println("---------------------- POPULATING SINGERs-------------------------------");
-			System.out.println("name");
 
 			for(int i = 0; i < upcs.size(); i++) {
 
@@ -383,11 +368,25 @@ public class CustomerTransactions{
 
 				if(rs.next()) {
 					name = rs.getString("name");
-					table.get(4).add(name);
-					System.out.println("singer name: " + name + " upc " + upcs.get(i));
+					
+					if(singername.equals(name)){
+						table.get(3).add(name);
+						System.out.println("singer name: " + name + " upc " + upcs.get(i));
+					}
+					else{
+
+						while(rs.next()){
+							String anothername = rs.getString("name");
+							
+							if(singername.equals(anothername)){
+								table.get(3).add(anothername);
+								System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
+							}
+						}
+					}
 				}
 				else{
-					table.get(4).add("N/A");
+					table.get(3).add("N/A");
 					System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
@@ -395,35 +394,30 @@ public class CustomerTransactions{
 			// close the statement
 			stmt.close();
 		}
-			catch (SQLException ex){
+		catch (SQLException ex){
 			System.out.println("Populate Message: " + ex.getMessage());
 		}
 		return table;
-		
-		
-		
-	
-
 	}
-	
+
 	// TODO
-	
+
 	/**
 	 * Transforms a 2D array list into 2D string array.
 	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
-		 String[][] result = new String[table.get(0).size()][table.size()];
-			for(int i = 0; i < table.get(0).size(); i++) {
-				for(int j = 0; j < table.size(); j++) {
-					result[i][j] = table.get(j).get(i);
-				}
-			}	
-			return result;
-	 }
+		String[][] result = new String[table.get(0).size()][table.size()];
+		for(int i = 0; i < table.get(0).size(); i++) {
+			for(int j = 0; j < table.size(); j++) {
+				result[i][j] = table.get(j).get(i);
+			}
+		}	
+		return result;
+	}
 
 
 	// TODO
-	
+
 	/**
 	 * Searches for a precise item.
 	 * @return An array list of UPCs of the items that have been found.
@@ -492,8 +486,10 @@ public class CustomerTransactions{
 					precise_upcs.add(existing_upc);
 				}
 				else{
-					System.out.println("Requsted quantity is not available. Available: " + stock);
-					precise_upcs.add(existing_upc);
+					if(stock > 0){
+						System.out.println("Requsted quantity is not available. Available: " + stock);
+						precise_upcs.add(existing_upc);
+					}
 				}
 
 			}
@@ -604,16 +600,18 @@ public class CustomerTransactions{
 	}
 
 	// TODO
-	
-	
+
+
 	/**
 	 * Searches for a Singer in the LeadSinger table given a singer name.
 	 * @return An array list of UPCs of the tuples that have been found.
 	 */
-	public ArrayList<Integer> searchSinger(String name){
+	public ArrayList<Integer> searchSinger(String name, int quantity){
 
 		int existing_upc;
+		int stock;
 		String existing_name;
+		ArrayList<Integer> singer_upcs_list = new ArrayList<Integer>();
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		if( name == null){
@@ -644,7 +642,6 @@ public class CustomerTransactions{
 			int[] formats = {15,15};
 			// display column names;
 			for (int i = 0; i < numCols; i++){
-				// get column name and print it
 				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
 			}
 			System.out.println(" ");
@@ -657,10 +654,10 @@ public class CustomerTransactions{
 				existing_name = rs.getString("name");
 				System.out.printf("%-15.15s\n", existing_name);
 
-				upcs_list.add(existing_upc);
+				singer_upcs_list.add(existing_upc);
 			}
 
-			return upcs_list;
+			stmt.close();
 
 		} catch (SQLException e) {
 			try {
@@ -674,6 +671,43 @@ public class CustomerTransactions{
 			}
 		}
 
+		// CHECK FOR QUANTITY
+
+		String itemStatement = "SELECT stock FROM Item Where upc = ";
+
+		try
+		{
+			Statement stmt = connection.createStatement();
+			for(int i = 0; i < singer_upcs_list.size(); i++) {
+				ResultSet rs = stmt.executeQuery(itemStatement + Integer.toString(singer_upcs_list.get(i)));
+				if(rs.next()) {
+					stock = rs.getInt("stock");
+
+					if(stock == 0){
+						System.err.println("Sorry, item " + singer_upcs_list.get(i) + " is out of stock.");
+					}
+					if(quantity <= stock){
+						System.out.println("Requsted quantity is available");
+						upcs_list.add(singer_upcs_list.get(i));
+					}
+					else{
+						if(stock > 0){
+							System.out.println("Requsted quantity is not available. Available: " + stock);
+							upcs_list.add(singer_upcs_list.get(i));
+						}
+					}
+
+				}
+			}
+
+			// close the statement
+			stmt.close();
+		}
+		catch (SQLException ex){
+			System.out.println("Singer Search Message: " + ex.getMessage());
+		}
+		
+		return upcs_list;
 	}
 
 }

@@ -581,12 +581,12 @@ public class CustomerTransactionsTest{
 	/**
 	 * Tests successful searching for a precise item.
 	 */
-	/*
+	
 	@Test
 	public void preciseItemSearchTest(){
 
 		System.out.println(" ");
-		System.out.println("***** Successful precise SEARCH TEST *****");
+		System.out.println("***** Precise SEARCH TEST *****");
 
 		// given
 		// Connect to the database
@@ -601,8 +601,8 @@ public class CustomerTransactionsTest{
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 
-		String [][] twoDArray = customer.genericSearch("drama", "Shine", 2, "Maroon5");
-		//String [][] twoDArray = customer.genericSearch("", "", 50, "Maroon5");
+		//String [][] twoDArray = customer.genericSearch("drama", "Shine", 2, "Maroon5");
+		String [][] twoDArray = customer.genericSearch("", "", 50, "Pink");
 		
 
 		System.out.println(" ");
@@ -619,7 +619,7 @@ public class CustomerTransactionsTest{
 		System.out.println("******************************");
 
 	}
-	*/
+	
 	 
 
 	// TODO
@@ -629,7 +629,7 @@ public class CustomerTransactionsTest{
 	 * Such items should not be returned.
 	 */
 
-	/*
+	
 	@Test
 	public void outOfStockSearchTest(){
 
@@ -665,7 +665,7 @@ public class CustomerTransactionsTest{
 		System.out.println("******************************");
 	
 	}
-	 */
+	
 	
 	/*
 	@Test
