@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.mysql.jdbc.Connection;
 
@@ -187,7 +188,7 @@ public class ReturnItem{
 	    	
 	    Statement  stmt;
 	    ResultSet  rs;
-		   
+	    		   
 		try
 		{
 		  stmt = con.createStatement();
@@ -238,4 +239,80 @@ public class ReturnItem{
 		    System.out.println("Message: " + ex.getMessage());
 		}	
 	}
+	
+	 public String[][] getReturnItem() {
+		int retid;
+		int upc;
+		int quantity;
+		
+		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> (); 
+	    	
+	    Statement  stmt;
+	    ResultSet  rs;
+		   
+		try
+		{
+		  stmt = con.createStatement();
+
+		  rs = stmt.executeQuery("SELECT * FROM ReturnItem");
+
+		  // get info on ResultSet
+		  ResultSetMetaData rsmd = rs.getMetaData();
+
+		  // get number of columns
+		  int numCols = rsmd.getColumnCount();
+
+		  System.out.println(" ");
+		  
+		  // display column names;
+		  for (int i = 0; i < numCols; i++)
+		  {
+		      // get column name and print it
+			  table.add(new ArrayList<String>());
+		  }
+
+		  System.out.println(" ");
+
+		  while(rs.next())
+		  {
+		      // for display purposes get everything from database 
+		      // as a string
+
+		      // simplified output formatting; truncation may occur
+
+		      retid = rs.getInt("retid");
+		      table.get(0).add(Integer.toString(retid));
+		      
+		      upc = rs.getInt("upc");
+		      table.get(0).add(Integer.toString(upc));
+
+		      quantity = rs.getInt("quantity");
+		      table.get(0).add(Integer.toString(quantity));
+
+		  }
+	 
+		  // close the statement; 
+		  // the ResultSet will also be closed
+		  stmt.close();
+		}
+		catch (SQLException ex)
+		{
+		    System.out.println("Message: " + ex.getMessage());
+		}
+		
+		if(table != null) {
+			String[][] result = new String[table.get(0).size()][table.size()];
+			for(int i = 0; i < table.get(0).size(); i++) {
+				for(int j = 0; j < table.size(); j++) {
+					result[i][j] = table.get(j).get(i);
+				}
+			}
+			
+			return result;
+		}
+		else {
+			return null;
+		}
+	}
+	 
 }

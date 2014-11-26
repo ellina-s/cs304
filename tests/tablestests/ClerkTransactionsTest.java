@@ -46,7 +46,7 @@ public class ClerkTransactionsTest {
 		
 		System.out.println();
 		// then
-		String[][] test = c.returnItem(20, upc, quantity, "2014-11-26");
+		String[][] test = c.returnItem(26, upc, quantity, "2014-11-26");
 		for(int i = 0; i < test.length; i++) {
 			for(int j = 0; j < test[i].length; j++) {
 			      System.out.printf("%-15.15s", test[i][j]);
