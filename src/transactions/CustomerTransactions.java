@@ -1,6 +1,5 @@
 package transactions;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -190,6 +189,9 @@ public class CustomerTransactions{
 
 		// STEP 1: Precise Search
 
+		System.out.println(" ");
+		System.out.println("Searching for a precise item...");
+		
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
 		if(precise_found_upcs == null){
@@ -200,13 +202,13 @@ public class CustomerTransactions{
 				System.out.println("No precise items were found.");
 			}
 			else{
-				System.out.println("Found exact item(s) with category, title, and singer name.");
-				System.out.println("----------------------- Generic Search------------------------------------");
+				//System.out.println("Found exact item(s) with category, title, and singer name.");
+				//System.out.println("----------------------- Generic Search------------------------------------");
 
-				for(int i = 0; i < precise_found_upcs.size(); i++){
-					System.out.println(precise_found_upcs.get(i));
-				}
-				System.out.println(" ");
+				//for(int i = 0; i < precise_found_upcs.size(); i++){
+					//System.out.println(precise_found_upcs.get(i));
+				//}
+				//System.out.println(" ");
 
 				ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
 				result = populateReturnTable(precise_found_upcs, table, name);
@@ -231,13 +233,13 @@ public class CustomerTransactions{
 			}
 			else{
 
-				System.out.println("Found item(s) with category or title");
-				System.out.println("----------------------- Generic Search------------------------------------");
+				//System.out.println("Found item(s) with category or title");
+				//System.out.println("----------------------- Generic Search------------------------------------");
 
-				for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-					System.out.println(categoryOrTitleUpcs.get(i));
-				}
-				System.out.println(" ");
+				//for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
+					//System.out.println(categoryOrTitleUpcs.get(i));
+				//}
+				//System.out.println(" ");
 
 				// Copy into upcs
 				for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
@@ -245,9 +247,9 @@ public class CustomerTransactions{
 					if(!upcs.contains(categoryOrTitleUpcs.get(i))){
 						upcs.add(categoryOrTitleUpcs.get(i));
 					}
-					else{
-						System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
-					}
+					//else{
+						//System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
+					//}
 				}
 			}
 		}
@@ -270,13 +272,13 @@ public class CustomerTransactions{
 			}
 			else{
 
-				System.out.println("Found item(s) by singer");
-				System.out.println("----------------------- Generic Search------------------------------------");
+				//System.out.println("Found item(s) by singer");
+				//System.out.println("----------------------- Generic Search------------------------------------");
 
-				for(int i = 0; i < singers_upcs.size(); i++){
-					System.out.println(singers_upcs.get(i));
-				}
-				System.out.println(" ");
+				//for(int i = 0; i < singers_upcs.size(); i++){
+					//System.out.println(singers_upcs.get(i));
+				//}
+				//System.out.println(" ");
 
 				// Copy into upcs
 				for(int i = 0; i < singers_upcs.size(); i++){
@@ -284,9 +286,9 @@ public class CustomerTransactions{
 					if(!upcs.contains(singers_upcs.get(i))){
 						upcs.add(singers_upcs.get(i));
 					}
-					else{
-						System.out.println("Contains dulicate "  + singers_upcs.get(i));
-					}
+					//else{
+						//System.out.println("Contains dulicate "  + singers_upcs.get(i));
+					//}
 				}
 			}
 		}
@@ -320,13 +322,13 @@ public class CustomerTransactions{
 		{
 			stmt = connection.createStatement();
 
-			System.out.println("---------------------- POPULATING TABLE-------------------------------");
-			System.out.println("title               category       stock");
+			//System.out.println("---------------------- POPULATING TABLE-------------------------------");
+			//System.out.println("title               category       stock");
 
 			for(int i = 0; i < upcs.size(); i++) {
 
 				rs = stmt.executeQuery(statement + Integer.toString(upcs.get(i)));
-				ResultSetMetaData rsmd = rs.getMetaData();
+				//ResultSetMetaData rsmd = rs.getMetaData();
 
 				if(rs.next()) {
 					title = rs.getString("title");
@@ -338,9 +340,8 @@ public class CustomerTransactions{
 					table.get(2).add(category);
 					table.get(4).add(Integer.toString(stock));
 
-					System.out.printf("%-20s%-15s%-10s", 
-							title,category,stock);
-					System.out.println("  upc " + upcs.get(i));
+					//System.out.printf("%-20s%-15s%-10s", title,category,stock);
+					//System.out.println("  upc " + upcs.get(i));
 				}
 			}
 
@@ -359,19 +360,19 @@ public class CustomerTransactions{
 		{
 			stmt = connection.createStatement();
 
-			System.out.println("---------------------- POPULATING SINGERs-------------------------------");
+			//System.out.println("---------------------- POPULATING SINGERs-------------------------------");
 
 			for(int i = 0; i < upcs.size(); i++) {
 
 				rs = stmt.executeQuery(singerStatement + Integer.toString(upcs.get(i)));
-				ResultSetMetaData rsmd = rs.getMetaData();
+				//ResultSetMetaData rsmd = rs.getMetaData();
 
 				if(rs.next()) {
 					name = rs.getString("name");
 					
 					if(singername.equals(name)){
 						table.get(3).add(name);
-						System.out.println("singer name: " + name + " upc " + upcs.get(i));
+						//System.out.println("singer name: " + name + " upc " + upcs.get(i));
 					}
 					else{
 
@@ -380,14 +381,14 @@ public class CustomerTransactions{
 							
 							if(singername.equals(anothername)){
 								table.get(3).add(anothername);
-								System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
+								//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
 							}
 						}
 					}
 				}
 				else{
 					table.get(3).add("N/A");
-					System.out.println(" * No singer found for upc: " +  upcs.get(i));
+					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
 
@@ -431,7 +432,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> precise_upcs = new ArrayList<Integer>();
 
 		String statement = "SELECT I.upc, category, title, stock, S.name FROM Item I, LeadSinger S WHERE I.upc = S.upc AND (I.category LIKE '" + category + "' AND I.title LIKE '" + title +"' AND S.name LIKE '" + name +"')";
-		System.out.println("Attempting: " + statement);
+		//System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -450,44 +451,44 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			int[] formats = {15,15,15,15,15};
+			//int[] formats = {15,15,15,15,15};
 
-			System.out.println("-----------------------------------------------------");
+			//System.out.println("-----------------------------------------------------");
 
 			// display column names;
-			for (int i = 0; i < numCols; i++){
+			//for (int i = 0; i < numCols; i++){
 				// get column name and print it
-				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			}
-			System.out.println(" ");
+				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			//}
+			//System.out.println(" ");
 
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				System.out.printf("%-15.15s", existing_upc);
+				//System.out.printf("%-15.15s", existing_upc);
 
 				existing_category = rs.getString("category");
-				System.out.printf("%-15.15s", existing_category);
+				//System.out.printf("%-15.15s", existing_category);
 
 				existing_title = rs.getString("title");
-				System.out.printf("%-15.15s", existing_title);
+				//System.out.printf("%-15.15s", existing_title);
 
 				stock = rs.getInt("stock");
-				System.out.printf("%-15.15s", stock);
+				//System.out.printf("%-15.15s", stock);
 
 				existing_name = rs.getString("name");
-				System.out.printf("%-15.15s\n", existing_name);
+				//System.out.printf("%-15.15s\n", existing_name);
 
 				if(stock == 0){
 					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
 				}
 				if(quantity <= stock){
-					System.out.println("Requsted quantity is available");
+					//System.out.println("Requsted quantity is available");
 					precise_upcs.add(existing_upc);
 				}
 				else{
 					if(stock > 0){
-						System.out.println("Requsted quantity is not available. Available: " + stock);
+						//System.out.println("Requsted quantity is not available. Available: " + stock);
 						precise_upcs.add(existing_upc);
 					}
 				}
@@ -525,7 +526,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		System.out.println("Attempting: " + statement);
+		//System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -544,41 +545,41 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			int[] formats = {15,15,15,15};
+			//int[] formats = {15,15,15,15};
 
-			System.out.println("-----------------------------------------------------");
+			//System.out.println("-----------------------------------------------------");
 
 			// display column names;
-			for (int i = 0; i < numCols; i++){
+			//for (int i = 0; i < numCols; i++){
 				// get column name and print it
-				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			}
-			System.out.println(" ");
+				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			//}
+			//System.out.println(" ");
 
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				System.out.printf("%-15.15s", existing_upc);
+				//System.out.printf("%-15.15s", existing_upc);
 
 				existing_category = rs.getString("category");
-				System.out.printf("%-15.15s", existing_category);
+				//System.out.printf("%-15.15s", existing_category);
 
 				existing_title = rs.getString("title");
-				System.out.printf("%-15.15s", existing_title);
+				//System.out.printf("%-15.15s", existing_title);
 
 				stock = rs.getInt("stock");
-				System.out.printf("%-15.15s\n", stock);
+				//System.out.printf("%-15.15s\n", stock);
 
 				if(stock == 0){
 					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
 				}
 				if(quantity <= stock){
-					System.out.println("Requsted quantity is available");
+					//System.out.println("Requsted quantity is available");
 					upcs_list.add(existing_upc);
 				}
 				else{
 					if(stock > 0){
-						System.out.println("Requsted quantity is not available. Available: " + stock);
+						//System.out.println("Requsted quantity is not available. Available: " + stock);
 						upcs_list.add(existing_upc);
 					}
 				}
@@ -610,7 +611,7 @@ public class CustomerTransactions{
 
 		int existing_upc;
 		int stock;
-		String existing_name;
+		//String existing_name;
 		ArrayList<Integer> singer_upcs_list = new ArrayList<Integer>();
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
@@ -620,7 +621,7 @@ public class CustomerTransactions{
 		}
 
 		String statement = "SELECT upc, name FROM LeadSinger WHERE (name LIKE '" + name + "')";
-		System.out.println("Attempting: " + statement);
+		//System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -639,20 +640,20 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			int[] formats = {15,15};
+			//int[] formats = {15,15};
 			// display column names;
-			for (int i = 0; i < numCols; i++){
-				System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			}
-			System.out.println(" ");
+			//for (int i = 0; i < numCols; i++){
+				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			//}
+			//System.out.println(" ");
 
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				System.out.printf("%-15.15s", existing_upc);
+				//System.out.printf("%-15.15s", existing_upc);
 
-				existing_name = rs.getString("name");
-				System.out.printf("%-15.15s\n", existing_name);
+				//existing_name = rs.getString("name");
+				//System.out.printf("%-15.15s\n", existing_name);
 
 				singer_upcs_list.add(existing_upc);
 			}
@@ -687,12 +688,12 @@ public class CustomerTransactions{
 						System.err.println("Sorry, item " + singer_upcs_list.get(i) + " is out of stock.");
 					}
 					if(quantity <= stock){
-						System.out.println("Requsted quantity is available");
+						//System.out.println("Requsted quantity is available");
 						upcs_list.add(singer_upcs_list.get(i));
 					}
 					else{
 						if(stock > 0){
-							System.out.println("Requsted quantity is not available. Available: " + stock);
+							//System.out.println("Requsted quantity is not available. Available: " + stock);
 							upcs_list.add(singer_upcs_list.get(i));
 						}
 					}
