@@ -186,6 +186,11 @@ public class CustomerTransactions{
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
 			return null;
 		}
+		
+		if( name == null){
+			System.err.println("Singer name cannot be null. Please, try again.");
+			return null;
+		}
 
 		// STEP 1: Precise Search
 
@@ -292,8 +297,6 @@ public class CustomerTransactions{
 				}
 			}
 		}
-
-
 
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
 		result = populateReturnTable(upcs, table, name);
@@ -407,6 +410,10 @@ public class CustomerTransactions{
 	 * Transforms a 2D array list into 2D string array.
 	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
+		
+		//System.out.println(" *** Table 0th item size (number of UPCs): " + table.get(0).size());
+		//System.out.println(" *** Table size: " + table.size());
+		
 		String[][] result = new String[table.get(0).size()][table.size()];
 		for(int i = 0; i < table.get(0).size(); i++) {
 			for(int j = 0; j < table.size(); j++) {
@@ -616,7 +623,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		if( name == null){
-			System.err.println("Name cannot be null. Please, try again.");
+			System.err.println("Singer name cannot be null. Please, try again.");
 			return null;
 		}
 

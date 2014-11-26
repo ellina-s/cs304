@@ -2,17 +2,8 @@ package transactiontests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.junit.Test;
-
 import com.mysql.jdbc.Connection;
-
-import tables.Customer;
-import tables.Item;
-import tables.LeadSinger;
 import transactions.CustomerTransactions;
 import connection.DatabaseConnection;
 
@@ -209,210 +200,9 @@ public class CustomerTransactionsTest{
 	}
 
 
-	/**
-	 * Tests searching for an item, given existing title or category and non-zero quantity.
-	 */
-	@Test
-	public void searchItemHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
+	
 
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchItemHelper("drama", "RandomTestTr", 4);
-		// then
-		if(status == false){
-			fail();
-		}
-		assertEquals(true, status);
-	}
-
-	/**
-	 * Tests searching for an item given a zero quantity.
-	 */
-	@Test
-	public void zeroQuantityHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchItemHelper("newWave", "Rain", 0);
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
-	/**
-	 * Tests searching for an item given a negative quantity.
-	 */
-	@Test
-	public void negativeQuantityHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchItemHelper("newWave", "Rain", -1);
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
-	@Test
-	public void zeroStockHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchItemHelper("rock", "Rain", 11);
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
-	/**
-	 * Tests searching for a Singer given a valid name.
-	 */
-	@Test
-	public void successfulSearchSingerHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchSingerHelper("Elvis");
-		// then
-		if(status == false){
-			fail();
-		}
-		assertEquals(true, status);
-	}
-
-
-	/**
-	 * Tests searching for a Singer given a null name.
-	 */
-	@Test
-	public void nullSearchSingerHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-		//LeadSinger leadSinger = new LeadSinger(con);
-		//leadSinger.displayAllLeadSingers();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchSingerHelper(null);
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
-	/**
-	 * Tests searching for a Singer given an empty name.
-	 */
-	@Test
-	public void emptySearchSingerHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-		//LeadSinger leadSinger = new LeadSinger(con);
-		//leadSinger.displayAllLeadSingers();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchSingerHelper("");
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
-	/**
-	 * Tests searching for a Singer given a non-existing name.
-	 */
-	@Test
-	public void failedSearchSingerHelperTest(){
-		// given
-		// Connect to the database
-		if(ams.connect("root", "cs304pwd")){
-			System.out.println("You entered valid credentials.");
-		}
-		else{
-			System.out.println("Unable to connect.");
-		}
-		con = (Connection) ams.getConnection();
-		//LeadSinger leadSinger = new LeadSinger(con);
-		//leadSinger.displayAllLeadSingers();
-
-		// when
-		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
-		boolean status = customer.searchSingerHelper("Roza");
-		// then
-		if(status == true){
-			fail();
-		}
-		assertEquals(false, status);
-	}
-
+	/*
 	@Test
 	public void preciseSearchTest(){
 
@@ -444,11 +234,15 @@ public class CustomerTransactionsTest{
 		System.out.println(" ");
 
 	}
+	*/
 
 
 	// TODO
 	
-	/*
+	
+	/**
+	 * Tests the genericSearch() function.
+	 */
 	@Test
 	public void genericSearchTest(){
 
@@ -464,10 +258,8 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
 		String [][] twoDArray = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");;
 
 		System.out.println(" ");
@@ -479,27 +271,14 @@ public class CustomerTransactionsTest{
 			}
 			System.out.println(" ");
 		}
-
-
-		
-		if(found_upcs == null){
-			fail();
-		}
-
-		System.out.println("--------------------- TEST --------------------------------------");
-		for(int i = 0; i < found_upcs.size(); i++){
-			System.out.println(found_upcs.get(i));
-		}
-		System.out.println(" ");
-		
-
 	}
-	*/
+	
 
 	/**
 	 * Tests searching when no items are found.
+	 * Input: some non-existing parameters.
+	 * Expected output: no tuples are found.
 	 */
-	
 	@Test
 	public void noItemsFoundgenericSearchTest(){
 
@@ -515,13 +294,11 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		//found_upcs = customer.genericSearch("pop", "jay", 160, "Dan");
-
 		String [][] twoDArray = customer.genericSearch("pop", "jay", 160, "Dan");
 
+		// then
 		System.out.println(" ");
 		System.out.println("--------------------- TEST Data --------------------------------------");
 		for(int i = 0; i < twoDArray.length; i++){
@@ -532,15 +309,15 @@ public class CustomerTransactionsTest{
 			System.out.println(" ");
 		}
 		
-		System.out.println(" ");
-		System.out.println("******************************");		
+		System.out.println(" ");	
 	}
 	
 
 	/**
-	 * Tests raising an error in searching by singer name.
+	 * Tests raising an error in searching by null singer name.
+	 * Input: null singer name.
+	 * Expected output: genericSearch() should return null.
 	 */
-	/*
 	@Test
 	public void singerErrorSearchTest(){
 
@@ -556,32 +333,24 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("drama", "RandomTestItem", 412, null);
-
+		String [][] twoDArray = customer.genericSearch("drama", "RandomTestItem", 412, null);
+		
 		// then
-		if(found_upcs == null){
+		if(twoDArray != null){
 			fail();
 		}
-
-		System.out.println("--------------------- TEST --------------------------------------");
-		for(int i = 0; i < found_upcs.size(); i++){
-			System.out.println(found_upcs.get(i));
-		}
-		System.out.println(" ");
-
 	}
-	 */
-
+	
 	
 	// TODO
 	
 	/**
-	 * Tests successful searching for a precise item.
+	 * Tests searching for a precise item.
+	 * Input: "drama", "Shine", 9800, "Maroon5"
+	 * Expected output: a item that exactly satisfies the input.
 	 */
-	
 	@Test
 	public void preciseItemSearchTest(){
 
@@ -597,12 +366,11 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 
-		//String [][] twoDArray = customer.genericSearch("drama", "Shine", 2, "Maroon5");
-		String [][] twoDArray = customer.genericSearch("", "", 50, "Pink");
+		String [][] twoDArray = customer.genericSearch("drama", "Shine", 9800, "Maroon5");
+		//String [][] twoDArray = customer.genericSearch("", "", 50, "Pink");
 		
 
 		System.out.println(" ");
@@ -614,12 +382,45 @@ public class CustomerTransactionsTest{
 			}
 			System.out.println(" ");
 		}
-		
-		System.out.println(" ");
-		System.out.println("******************************");
-
 	}
 	
+	
+	/**
+	 * Tests searching for multiple items with the same singer.
+	 * Input: a singer name.
+	 * Expected output: items that have the input singer.
+	 * 					Returned items should be also not out of stock.
+	 */
+	@Test
+	public void multipleItemSearchTest(){
+
+		System.out.println(" ");
+		System.out.println("***** Precise SEARCH TEST *****");
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		String [][] twoDArray = customer.genericSearch("", "", 50, "Pink");
+		
+		// then
+		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+	}
 	 
 
 	// TODO
@@ -628,8 +429,6 @@ public class CustomerTransactionsTest{
 	 * Tests searching for items that are out of stock.
 	 * Such items should not be returned.
 	 */
-
-	
 	@Test
 	public void outOfStockSearchTest(){
 
@@ -645,12 +444,10 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
-		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-
+		// when
 		String [][] twoDArray = customer.genericSearch("rock", "Story of my life", 4, "Ed");
-
+		// then
 		System.out.println(" ");
 		System.out.println("--------------------- TEST Data --------------------------------------");
 		for(int i = 0; i < twoDArray.length; i++){
@@ -660,19 +457,18 @@ public class CustomerTransactionsTest{
 			}
 			System.out.println(" ");
 		}
-		
-		System.out.println(" ");
-		System.out.println("******************************");
-	
 	}
 	
 	
-	/*
+	/**
+	 * Tests an empty singer search string.
+	 * Expected output: items that have been found by parameters other then singer name.
+	 */
 	@Test
 	public void emptySingerStringSearchTest(){
 
 		System.out.println(" ");
-		System.out.println("***** Out Of Stock SEARCH TEST *****");
+		System.out.println("***** Empty Singer SEARCH TEST *****");
 
 		// given
 		// Connect to the database
@@ -683,7 +479,6 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		String [][] twoDArray = customer.genericSearch("rock", "Story of my life", 4, "");
@@ -697,10 +492,7 @@ public class CustomerTransactionsTest{
 			}
 			System.out.println(" ");
 		}
-		
-		System.out.println(" ");
-		System.out.println("******************************");
 	}
-	*/
+	
 
 }
