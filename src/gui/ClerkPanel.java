@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,7 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import transactions.ClerkTransactions;
 
@@ -51,6 +55,12 @@ public class ClerkPanel extends JPanel {
 	private JTextField quantityField8 = new JTextField("");
 	private JTextField quantityField9 = new JTextField("");
 	
+	private JTable returnTable;
+	private String[][] data;
+	private DefaultTableModel dtm;
+	private JScrollPane tablePanel;
+	private String[] returnColumnNames = {"upc","quantity","price","total"};
+	
 	private JButton processRefundButton = new JButton("Process Refund");
 	
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
@@ -59,12 +69,33 @@ public class ClerkPanel extends JPanel {
 	public ClerkPanel(JFrame mainFrame_) {
 		removeAll();
 		mainFrame = mainFrame_;
-		
+
 		mainFrame.setSize(800, 600);
 		processRefundButton.setFocusable(false);
 		
+		Object[][] emptyData = {};
+
+		dtm = new DefaultTableModel(emptyData,returnColumnNames);
+		
+		returnTable = new JTable(dtm) {
+			// Disable editing of table
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column) {                
+				return false;               
+			};
+		};
+		
+		tablePanel = new JScrollPane(returnTable);
+		tablePanel.setPreferredSize(new Dimension(500, 200));
+
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 4;
+		add(tablePanel,c);
 		
 		receiptIDField.setColumns(10);
 		upcField0.setColumns(10);
@@ -88,93 +119,93 @@ public class ClerkPanel extends JPanel {
 		quantityField8.setColumns(10);
 		quantityField9.setColumns(10);
 		
-		c.gridx = 0;
-		c.gridy = 0;
+		c.gridx = 1;
+		c.gridy = 1;
 		c.gridwidth = 2;
 		c.ipady = 30;
 		add(processRefunds,c);
-		c.gridx = 0;
-		c.gridy = 1;
+		c.gridx = 1;
+		c.gridy = 2;
 		c.gridwidth = 1;
 		c.ipady = 0;
 		add(receiptID,c);
-		c.gridx = 1;
-		c.gridy = 1;
+		c.gridx = 2;
+		c.gridy = 2;
 		add(receiptIDField,c);
 
 		c.ipady = 10;
-		c.gridx = 0;
-		c.gridy = 2;
-		add(upc,c);
 		c.gridx = 1;
-		c.gridy = 2;
+		c.gridy = 3;
+		add(upc,c);
+		c.gridx = 2;
+		c.gridy = 3;
 		add(quantity,c);
 
 		c.ipady = 0;
-		c.gridx = 0;
-		c.gridy = 3;
-		add(upcField0,c);
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 4;
-		add(upcField1,c);
-		c.gridx = 0;
+		add(upcField0,c);
+		c.gridx = 1;
 		c.gridy = 5;
-		add(upcField2,c);
-		c.gridx = 0;
+		add(upcField1,c);
+		c.gridx = 1;
 		c.gridy = 6;
-		add(upcField3,c);
-		c.gridx = 0;
+		add(upcField2,c);
+		c.gridx = 1;
 		c.gridy = 7;
-		add(upcField4,c);
-		c.gridx = 0;
+		add(upcField3,c);
+		c.gridx = 1;
 		c.gridy = 8;
-		add(upcField5,c);
-		c.gridx = 0;
+		add(upcField4,c);
+		c.gridx = 1;
 		c.gridy = 9;
-		add(upcField6,c);
-		c.gridx = 0;
+		add(upcField5,c);
+		c.gridx = 1;
 		c.gridy = 10;
-		add(upcField7,c);
-		c.gridx = 0;
+		add(upcField6,c);
+		c.gridx = 1;
 		c.gridy = 11;
-		add(upcField8,c);
-		c.gridx = 0;
+		add(upcField7,c);
+		c.gridx = 1;
 		c.gridy = 12;
+		add(upcField8,c);
+		c.gridx = 1;
+		c.gridy = 13;
 		add(upcField9,c);
 		
-		c.gridx = 1;
-		c.gridy = 3;
-		add(quantityField0,c);
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 4;
-		add(quantityField1,c);
-		c.gridx = 1;
+		add(quantityField0,c);
+		c.gridx = 2;
 		c.gridy = 5;
-		add(quantityField2,c);
-		c.gridx = 1;
+		add(quantityField1,c);
+		c.gridx = 2;
 		c.gridy = 6;
-		add(quantityField3,c);
-		c.gridx = 1;
+		add(quantityField2,c);
+		c.gridx = 2;
 		c.gridy = 7;
-		add(quantityField4,c);
-		c.gridx = 1;
+		add(quantityField3,c);
+		c.gridx = 2;
 		c.gridy = 8;
-		add(quantityField5,c);
-		c.gridx = 1;
+		add(quantityField4,c);
+		c.gridx = 2;
 		c.gridy = 9;
-		add(quantityField6,c);
-		c.gridx = 1;
+		add(quantityField5,c);
+		c.gridx = 2;
 		c.gridy = 10;
-		add(quantityField7,c);
-		c.gridx = 1;
+		add(quantityField6,c);
+		c.gridx = 2;
 		c.gridy = 11;
-		add(quantityField8,c);
-		c.gridx = 1;
+		add(quantityField7,c);
+		c.gridx = 2;
 		c.gridy = 12;
+		add(quantityField8,c);
+		c.gridx = 2;
+		c.gridy = 13;
 		add(quantityField9,c);
 		
-		c.gridx = 0;
-		c.gridy = 13;
+		c.gridx = 1;
+		c.gridy = 14;
 		c.gridwidth = 2;
 		c.insets = new Insets(10,10,10,10);
 		add(processRefundButton,c);
@@ -264,7 +295,18 @@ public class ClerkPanel extends JPanel {
 				quantityList.add(Integer.parseInt(quantityField9.getText()));
 			}
 			
-			ct.returnItem(receiptId, upcList, quantityList, date);
+			data = ct.returnItem(receiptId, upcList, quantityList, date);
+			
+	
+			for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
+				dtm.removeRow(row);
+			}
+			
+			if (data.length > 0) {
+				for (int i = 0; i < data.length; i++) {
+					dtm.addRow(data[i]);	
+				}
+			}
 			
 			JOptionPane.showMessageDialog(mainFrame,"Returns processed.");
 			
