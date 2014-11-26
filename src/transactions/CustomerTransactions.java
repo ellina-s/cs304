@@ -233,6 +233,7 @@ public class CustomerTransactions{
 		WHERE category LIKE 'new wave' OR title LIKE 'Story of my life';
 		 */
 
+		System.out.println(" ");
 		System.out.println("Searching by category or title...");
 
 		categoryOrTitleUpcs = searchItem(category, title, quantity);
@@ -253,7 +254,18 @@ public class CustomerTransactions{
 
 			// Copy into upcs
 			for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-				upcs.add(categoryOrTitleUpcs.get(i));
+				
+				//boolean flag = upcs.contains(categoryOrTitleUpcs.get(i));
+				//System.out.println("Contains "  + categoryOrTitleUpcs.get(i) + " " + flag);
+				
+				if(!upcs.contains(categoryOrTitleUpcs.get(i))){
+					upcs.add(categoryOrTitleUpcs.get(i));
+				}
+				else{
+					System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
+				}
+				
+				
 			}
 		}
 
@@ -264,6 +276,7 @@ public class CustomerTransactions{
 		 FROM LeadSinger
 		 WHERE name LIKE 'Pink';
 		 */
+		System.out.println(" ");
 		System.out.println("Searching by singer name...");
 
 		singers_upcs = searchSinger(name);
@@ -283,7 +296,15 @@ public class CustomerTransactions{
 
 			// Copy into upcs
 			for(int i = 0; i < singers_upcs.size(); i++){
-				upcs.add(singers_upcs.get(i));
+				
+				if(!upcs.contains(singers_upcs.get(i))){
+					upcs.add(singers_upcs.get(i));
+				}
+				else{
+					System.out.println("Contains dulicate "  + singers_upcs.get(i));
+				}
+				
+				
 			}
 		}
 
