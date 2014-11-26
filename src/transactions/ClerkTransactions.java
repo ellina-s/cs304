@@ -52,6 +52,7 @@ public class ClerkTransactions {
 		 int price = 0;
 		 float sum = 0;
 		 boolean returnedItem = false;
+		 ManagerTransactions m = new ManagerTransactions(con);
 		 
 		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> ();
 		
@@ -106,6 +107,7 @@ public class ClerkTransactions {
 							 table.get(1).add(Integer.toString(quantity.get(i)));
 							 table.get(2).add(Float.toString(price));
 							 table.get(3).add(Float.toString(price * quantity.get(i)));
+							 m.addItems(upc.get(i), quantity.get(i), -1);
 							 ps.executeUpdate();
 							 con.commit();
 							 ps.close();
