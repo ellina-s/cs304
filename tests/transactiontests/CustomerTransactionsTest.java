@@ -223,11 +223,9 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		//Item item = new Item(con);
-		//item.displayAllItems();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchItemHelper("drama", "RandomTestTr", 4);
 		// then
 		if(status == false){
@@ -252,7 +250,7 @@ public class CustomerTransactionsTest{
 		con = (Connection) ams.getConnection();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchItemHelper("newWave", "Rain", 0);
 		// then
 		if(status == true){
@@ -277,7 +275,7 @@ public class CustomerTransactionsTest{
 		con = (Connection) ams.getConnection();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchItemHelper("newWave", "Rain", -1);
 		// then
 		if(status == true){
@@ -299,7 +297,7 @@ public class CustomerTransactionsTest{
 		con = (Connection) ams.getConnection();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchItemHelper("rock", "Rain", 11);
 		// then
 		if(status == true){
@@ -322,11 +320,9 @@ public class CustomerTransactionsTest{
 			System.out.println("Unable to connect.");
 		}
 		con = (Connection) ams.getConnection();
-		//LeadSinger leadSinger = new LeadSinger(con);
-		//leadSinger.displayAllLeadSingers();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchSingerHelper("Elvis");
 		// then
 		if(status == false){
@@ -354,7 +350,7 @@ public class CustomerTransactionsTest{
 		//leadSinger.displayAllLeadSingers();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchSingerHelper(null);
 		// then
 		if(status == true){
@@ -381,7 +377,7 @@ public class CustomerTransactionsTest{
 		//leadSinger.displayAllLeadSingers();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchSingerHelper("");
 		// then
 		if(status == true){
@@ -408,7 +404,7 @@ public class CustomerTransactionsTest{
 		//leadSinger.displayAllLeadSingers();
 
 		// when
-		CustomerTransactions customer = new CustomerTransactions(con);
+		CustomerTransactionsHelper customer = new CustomerTransactionsHelper(con);
 		boolean status = customer.searchSingerHelper("Roza");
 		// then
 		if(status == true){
@@ -456,10 +452,6 @@ public class CustomerTransactionsTest{
 		System.out.println(" ");
 		System.out.println("***** GENERIC SEARCH TEST *****");
 		
-		//System.out.println(" ");
-		//System.out.println("***** Category OR title SEARCH TEST *****");
-		
-		
 		// given
 		// Connect to the database
 		if(ams.connect("root", "cs304pwd")){
@@ -472,17 +464,7 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
-		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed"); // good to test out of stock items. No precise if found,
-		
-		/*
-		100	Elvis
-		100	Only you
-		103	Smashing Pumpkins
-		104	Maroon5
-		105	Ed
-		135	Pink
-		*/
+		found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
 		
 		if(found_upcs == null){
 			fail();
@@ -620,7 +602,7 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed"); // good to test out of stock items. No precise if found,
+		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed");
 		
 		// then
 		if(found_upcs == null){
