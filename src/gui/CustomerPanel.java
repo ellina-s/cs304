@@ -53,10 +53,15 @@ public class CustomerPanel extends JPanel {
 	private JScrollPane tablePanel;
 	private JPanel actionPanel;
 	private JTable itemTable;
-	private JLabel searchLabel = new JLabel("Search");
 	private JLabel categoryLabel = new JLabel("Category");
 	private JLabel titleLabel = new JLabel("Title");
 	private JLabel leadSingerLabel = new JLabel("Lead Singer");
+	private JTextField categoryField = new JTextField("");
+	private JTextField titleField = new JTextField("");
+	private JTextField leadSingerField = new JTextField("");
+	
+	private JButton searchButton = new JButton("Search");
+	
 	
 	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
 
@@ -107,22 +112,43 @@ public class CustomerPanel extends JPanel {
 								actionPanel.setLayout(new GridBagLayout());
 								GridBagConstraints c = new GridBagConstraints();
 								
+								categoryField.setColumns(10);
+								titleField.setColumns(10);
+								leadSingerField.setColumns(10);
+								
 								c.gridx = 0;
 								c.gridy = 0;
-								actionPanel.add(searchLabel,c);
-								c.gridx = 0;
-								c.gridy = 1;
+								c.ipadx = 5;
 								actionPanel.add(categoryLabel,c);
 								c.gridx = 0;
-								c.gridy = 2;
+								c.gridy = 1;
+								c.ipadx = 5;
 								actionPanel.add(titleLabel,c);
 								c.gridx = 0;
-								c.gridy = 3;
+								c.gridy = 2;
+								c.ipadx = 5;
 								actionPanel.add(leadSingerLabel,c);
+								c.gridx = 1;
+								c.gridy = 0;
+								c.ipadx = 0;
+								actionPanel.add(categoryField,c);
+								c.gridx = 1;
+								c.gridy = 1;
+								actionPanel.add(titleField,c);
+								c.gridx = 1;
+								c.gridy = 2;
+								actionPanel.add(leadSingerField,c);
+								c.gridx = 0;
+								c.gridy = 3;
+								c.gridwidth = 2;
+								c.insets = new Insets(5,0,0,5);
+								actionPanel.add(searchButton,c);
 								
 								setLayout(new GridBagLayout());
 								c.gridx = 0;
 								c.gridy = 0;
+								c.gridwidth = 1;
+								c.insets = new Insets(0,0,0,0);
 								add(tablePanel,c);
 								c.gridx = 0;
 								c.gridy = 1;
