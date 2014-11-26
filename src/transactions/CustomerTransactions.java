@@ -114,18 +114,6 @@ public class CustomerTransactions{
 	 * (which is fixed; you need to decide on this). 
 	 */
 
-
-	/**
-	 * Skeleton method for online purchases.
-	 */
-	public void purchaseOnline(){
-
-		// STEP 1.
-		// In the gui, ask: "Are you a new or returning customer?" New -> Register, Returning -> Check customer password and ID.
-
-
-	}
-
 	/**
 	 * Authenticates a customer.
 	 * @param cid - customer id
@@ -194,6 +182,10 @@ public class CustomerTransactions{
 
 	// TODO
 
+	/**
+	 * Searches for items.
+	 * @return An array list of all UPCs that have been found.
+	 */
 	public ArrayList<Integer> genericSearch(String category, String title, int quantity, String name){
 
 		ArrayList<Integer> upcs = new ArrayList<Integer>();
@@ -206,139 +198,124 @@ public class CustomerTransactions{
 			return null;
 		}
 
-
 		// STEP 1: Precise Search
+
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
-		if(precise_found_upcs.size() == 0){
-			System.out.println("No precise items were found.");
+		if(precise_found_upcs == null){
+			System.out.println("Problem in searching a precise item...");
 		}
 		else{
-			System.out.println("Found exact item(s) with category, title, and singer name.");
-			System.out.println("----------------------- Generic Search------------------------------------");
-
-			for(int i = 0; i < precise_found_upcs.size(); i++){
-				System.out.println(precise_found_upcs.get(i));
+			if(precise_found_upcs.size() == 0){
+				System.out.println("No precise items were found.");
 			}
-			System.out.println(" ");
+			else{
+				System.out.println("Found exact item(s) with category, title, and singer name.");
+				System.out.println("----------------------- Generic Search------------------------------------");
 
-			return precise_found_upcs;
-		}
+				for(int i = 0; i < precise_found_upcs.size(); i++){
+					System.out.println(precise_found_upcs.get(i));
+				}
+				System.out.println(" ");
 
+				return precise_found_upcs;
+			}
+		} // end of okay
 
 		// STEP 2: Search by category or title
-		/*
-		SELECT upc, category, title, stock
-		FROM Item
-		WHERE category LIKE 'new wave' OR title LIKE 'Story of my life';
-		 */
 
 		System.out.println(" ");
 		System.out.println("Searching by category or title...");
 
 		categoryOrTitleUpcs = searchItem(category, title, quantity);
 
-		if(categoryOrTitleUpcs.size() == 0){
-			System.out.println("No items were found with category " + category + " or title " + title);
+		if(categoryOrTitleUpcs == null){
+			System.out.println("Problem in searching item by category or title...");
 		}
 		else{
-
-			System.out.println("Found item(s) with category or title");
-			System.out.println("----------------------- Generic Search------------------------------------");
-
-			for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-				System.out.println(categoryOrTitleUpcs.get(i));
+			if(categoryOrTitleUpcs.size() == 0){
+				System.out.println("No items were found with category " + category + " or title " + title);
 			}
-			System.out.println(" ");
+			else{
 
+				System.out.println("Found item(s) with category or title");
+				System.out.println("----------------------- Generic Search------------------------------------");
 
-			// Copy into upcs
-			for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-				
-				//boolean flag = upcs.contains(categoryOrTitleUpcs.get(i));
-				//System.out.println("Contains "  + categoryOrTitleUpcs.get(i) + " " + flag);
-				
-				if(!upcs.contains(categoryOrTitleUpcs.get(i))){
-					upcs.add(categoryOrTitleUpcs.get(i));
+				for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
+					System.out.println(categoryOrTitleUpcs.get(i));
 				}
-				else{
-					System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
+				System.out.println(" ");
+
+				// Copy into upcs
+				for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
+
+					if(!upcs.contains(categoryOrTitleUpcs.get(i))){
+						upcs.add(categoryOrTitleUpcs.get(i));
+					}
+					else{
+						System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
+					}
 				}
-				
-				
 			}
-		}
+		} // end of okay
 
 
-		// STEP 3: Look for Singer name
-		/*
-		 SELECT upc, name
-		 FROM LeadSinger
-		 WHERE name LIKE 'Pink';
-		 */
+
+		// STEP 3: Search by Singer name
+
 		System.out.println(" ");
 		System.out.println("Searching by singer name...");
 
 		singers_upcs = searchSinger(name);
-		if(singers_upcs.size() == 0){
-			System.out.println("No items were found with singer " + name);
+
+		if(singers_upcs == null){
+			System.out.println("Problem in searching by singer name...");
 		}
 		else{
 
-			System.out.println("Found item(s) by singer");
-			System.out.println("----------------------- Generic Search------------------------------------");
-
-			for(int i = 0; i < singers_upcs.size(); i++){
-				System.out.println(singers_upcs.get(i));
+			if(singers_upcs.size() == 0){
+				System.out.println("No items were found with singer " + name);
 			}
-			System.out.println(" ");
+			else{
 
+				System.out.println("Found item(s) by singer");
+				System.out.println("----------------------- Generic Search------------------------------------");
 
-			// Copy into upcs
-			for(int i = 0; i < singers_upcs.size(); i++){
-				
-				if(!upcs.contains(singers_upcs.get(i))){
-					upcs.add(singers_upcs.get(i));
+				for(int i = 0; i < singers_upcs.size(); i++){
+					System.out.println(singers_upcs.get(i));
 				}
-				else{
-					System.out.println("Contains dulicate "  + singers_upcs.get(i));
+				System.out.println(" ");
+
+				// Copy into upcs
+				for(int i = 0; i < singers_upcs.size(); i++){
+
+					if(!upcs.contains(singers_upcs.get(i))){
+						upcs.add(singers_upcs.get(i));
+					}
+					else{
+						System.out.println("Contains dulicate "  + singers_upcs.get(i));
+					}
 				}
-				
-				
 			}
-		}
 
-		// STEP 4: Remove duplicates.
+
+		} // end of OKAY
+
+
 
 		if(upcs.size() == 0){
 			System.out.println("Total arraylist contains no elements.");
 			return null;
 		}
-		
-		for(int j = 0; j < upcs.size(); j++){
 
-			if(j == upcs.size()-1){ // end index
-				if(upcs.get(j).intValue() == upcs.get(0).intValue()){ // compare with start index
-					System.out.println("Duplicates: " + upcs.get(j) + " " + upcs.get(0));
-				}
-			}
-			else{
-				if(upcs.get(j).intValue() == upcs.get(j+1).intValue()){				
-					System.out.println("Duplicates: " + upcs.get(j) + " " + upcs.get(j+1));
-				}
-			}
-		}
-		
 		System.out.println("DONE");
 		return upcs;
 	}
 
 
-	// STEP 1: Precise Search
-	/*
-			 SELECT I.upc, category, title, stock, S.name
-			 FROM Item I, LeadSinger S
-			 WHERE I.upc = S.upc AND (I.category LIKE 'drama' AND I.title LIKE 'Shine' AND S.name LIKE 'Maroon5');
+	/**
+	 * Searches for a precise item.
+	 * @return An array list of UPCs of the items that have been found.
 	 */
 	public ArrayList<Integer> preciseSearch(String category, String title, int quantity, String name){
 		int existing_upc;
@@ -597,6 +574,7 @@ public class CustomerTransactions{
 	 * Searches for an item with the given category or title.
 	 * If stock = 0, then item is out of stock.
 	 * If quantity <= stock, then item is considered available. Otherwise, not enough.
+	 * @return An array list of UPCs that have been found.
 	 */
 	public ArrayList<Integer> searchItem(String category, String title, int quantity){
 		int existing_upc;
@@ -683,6 +661,7 @@ public class CustomerTransactions{
 
 	/**
 	 * Searches for a Singer in the LeadSinger table given a singer name.
+	 * @return An array list of UPCs of the tuples that have been found.
 	 */
 	public ArrayList<Integer> searchSinger(String name){
 
@@ -749,7 +728,5 @@ public class CustomerTransactions{
 		}
 
 	}
-
-
 
 }

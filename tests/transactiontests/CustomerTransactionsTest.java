@@ -473,10 +473,7 @@ public class CustomerTransactionsTest{
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
-		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Maroon5"); // good to test out of stock items. No precise if found,
-		//found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5"); // good to test precise items
-		//found_upcs = customer.genericSearch("pop", "jay", 160, "Dan"); // good to test no items found
-		found_upcs = customer.genericSearch("drama", "RandomTestItem", 412, "Smashing Pumpkins"); // good to test 
+		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed"); // good to test out of stock items. No precise if found,
 		
 		/*
 		100	Elvis
@@ -487,6 +484,145 @@ public class CustomerTransactionsTest{
 		135	Pink
 		*/
 		
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests searching when no items are found.
+	 */
+	@Test
+	public void noItemsFoundgenericSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** No items SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("pop", "jay", 160, "Dan");
+
+		// then
+		if(found_upcs != null){
+			fail();
+		}
+		assertEquals(null, found_upcs);		
+	}
+	
+	/**
+	 * Tests raising an error in searching by singer name.
+	 */
+	@Test
+	public void singerErrorSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Singer Error SEARCH TEST *****");
+	
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("drama", "RandomTestItem", 412, null);
+		
+		// then
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests successful searching for a precise item.
+	 */
+	@Test
+	public void preciseItemSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Successful precise SEARCH TEST *****");
+	
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5");
+	
+		// then
+		if(found_upcs == null){
+			fail();
+		}
+		
+		System.out.println("--------------------- TEST --------------------------------------");
+		for(int i = 0; i < found_upcs.size(); i++){
+			System.out.println(found_upcs.get(i));
+		}
+		System.out.println(" ");
+		
+	}
+	
+	/**
+	 * Tests searching for items that are out of stock.
+	 * Such items should not be returned.
+	 */
+	@Test
+	public void outOfStockSearchTest(){
+		
+		System.out.println(" ");
+		System.out.println("***** Out Of Stock SEARCH TEST *****");
+		
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed"); // good to test out of stock items. No precise if found,
+		
+		// then
 		if(found_upcs == null){
 			fail();
 		}
