@@ -42,11 +42,17 @@ public class ClerkTransactionsTest {
 		quantity.add(1);
 		quantity.add(1);
 		quantity.add(1);
-		quantity.add(5);
+		quantity.add(-1);
 		
-		System.out.println(c.returnItem(1, upc, quantity, "2014-01-01"));
+		System.out.println();
 		// then
-		r.showReturnItem();
+		String[][] test = c.returnItem(26, upc, quantity, "2014-11-26");
+		for(int i = 0; i < test.length; i++) {
+			for(int j = 0; j < test[i].length; j++) {
+			      System.out.printf("%-15.15s", test[i][j]);
+			}
+			System.out.println();
+		}
 	}
 	
 }

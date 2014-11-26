@@ -41,7 +41,7 @@ public class ClerkTransactions {
 	 }
 	 
 
-	 public String returnItem(int receiptId, ArrayList<Integer> upc, ArrayList<Integer> quantity, String day) {
+	 public String[][] returnItem(int receiptId, ArrayList<Integer> upc, ArrayList<Integer> quantity, String day) {
 		 Statement  stmt = null;
 		 ResultSet  rs;
 		 ResultSet rs1;
@@ -52,6 +52,14 @@ public class ClerkTransactions {
 		 int price = 0;
 		 float sum = 0;
 		 boolean returnedItem = false;
+		 ManagerTransactions m = new ManagerTransactions(con);
+		 
+		ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>> ();
+		
+		for(int i = 0; i < 4; i++) {
+			table.add(new ArrayList<String>());
+		}
+
 		 
 		 boolean isReturnable = isReturnable(receiptId, day);
 		 if(isReturnable) {
@@ -77,9 +85,8 @@ public class ClerkTransactions {
 						 if(quantity.get(i) > q1 - q) {
 							 quantity.remove(i);
 							 quantity.add(i, q1 - q);
-							 //quantity[i] = q1 - q;
 						 }
-						 if(quantity.get(i) != 0) {
+						 if(quantity.get(i) > 0) {
 							 if(!returnedItem) {
 								ps = con.prepareStatement("INSERT INTO Returned VALUES (?,?,?)");
 								retId++;
@@ -96,6 +103,11 @@ public class ClerkTransactions {
 							 ps.setInt(1, retId);
 							 ps.setInt(2, upc.get(i));
 							 ps.setInt(3, quantity.get(i));
+							 table.get(0).add(Integer.toString(upc.get(i)));
+							 table.get(1).add(Integer.toString(quantity.get(i)));
+							 table.get(2).add(Float.toString(price));
+							 table.get(3).add(Float.toString(price * quantity.get(i)));
+							 m.addItems(upc.get(i), quantity.get(i), -1);
 							 ps.executeUpdate();
 							 con.commit();
 							 ps.close();
@@ -107,12 +119,26 @@ public class ClerkTransactions {
 			} catch (SQLException ex) {
 				 System.out.println("Message: " + ex.getMessage());
 			}
-			 
-			 
-			 return Float.toString(sum) + " returned to card number " + Integer.toString(card_num);
+			 if(returnedItem) {
+				 table.get(0).add("");
+				 table.get(1).add("Refunded");
+				 table.get(2).add(Integer.toString(card_num));
+				 table.get(3).add(Float.toString(sum));
+			 }
+			 else {
+				 table.get(0).add("Cannot return items");
+				 table.get(1).add("");
+				 table.get(2).add("");
+				 table.get(3).add("");
+			 }
+			 return dataTransform(table);
 		 }
 		 else {
-			 return "Item could not be returned";
+			 table.get(0).add("15 days past purchase date");
+			 table.get(1).add("");
+			 table.get(2).add("");
+			 table.get(3).add("");
+			 return dataTransform(table);
 		 }
 	 }
 	 
@@ -134,6 +160,16 @@ public class ClerkTransactions {
 		}
 
 		 return isReturnable;
+	 }
+	 
+	 public String[][] dataTransform(ArrayList<ArrayList<String>> table) {
+		 String[][] result = new String[table.get(0).size()][table.size()];
+			for(int i = 0; i < table.get(0).size(); i++) {
+				for(int j = 0; j < table.size(); j++) {
+					result[i][j] = table.get(j).get(i);
+				}
+			}	
+			return result;
 	 }
 	
 }
