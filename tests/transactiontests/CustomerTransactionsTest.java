@@ -446,7 +446,9 @@ public class CustomerTransactionsTest{
 	}
 
 
+	// TODO
 	
+	/*
 	@Test
 	public void genericSearchTest(){
 
@@ -479,7 +481,7 @@ public class CustomerTransactionsTest{
 		}
 
 
-		/*
+		
 		if(found_upcs == null){
 			fail();
 		}
@@ -489,15 +491,15 @@ public class CustomerTransactionsTest{
 			System.out.println(found_upcs.get(i));
 		}
 		System.out.println(" ");
-		*/
+		
 
 	}
-	
+	*/
 
 	/**
 	 * Tests searching when no items are found.
 	 */
-	/*
+	
 	@Test
 	public void noItemsFoundgenericSearchTest(){
 
@@ -516,15 +518,24 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("pop", "jay", 160, "Dan");
+		//found_upcs = customer.genericSearch("pop", "jay", 160, "Dan");
 
-		// then
-		if(found_upcs != null){
-			fail();
+		String [][] twoDArray = customer.genericSearch("pop", "jay", 160, "Dan");
+
+		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
 		}
-		assertEquals(null, found_upcs);		
+		
+		System.out.println(" ");
+		System.out.println("******************************");		
 	}
-	 */
+	
 
 	/**
 	 * Tests raising an error in searching by singer name.
@@ -564,6 +575,9 @@ public class CustomerTransactionsTest{
 	}
 	 */
 
+	
+	// TODO
+	
 	/**
 	 * Tests successful searching for a precise item.
 	 */
@@ -586,27 +600,36 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5");
 
-		// then
-		if(found_upcs == null){
-			fail();
-		}
+		String [][] twoDArray = customer.genericSearch("drama", "Shine", 2, "Maroon5");
+		//String [][] twoDArray = customer.genericSearch("", "", 50, "Maroon5");
+		
 
-		System.out.println("--------------------- TEST --------------------------------------");
-		for(int i = 0; i < found_upcs.size(); i++){
-			System.out.println(found_upcs.get(i));
-		}
 		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+		
+		System.out.println(" ");
+		System.out.println("******************************");
 
 	}
-	 */
+	*/
+	 
 
+	// TODO
+	
 	/**
 	 * Tests searching for items that are out of stock.
 	 * Such items should not be returned.
 	 */
 
+	/*
 	@Test
 	public void outOfStockSearchTest(){
 
@@ -625,7 +648,6 @@ public class CustomerTransactionsTest{
 		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
-		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Ed");
 
 		String [][] twoDArray = customer.genericSearch("rock", "Story of my life", 4, "Ed");
 
@@ -638,21 +660,47 @@ public class CustomerTransactionsTest{
 			}
 			System.out.println(" ");
 		}
-
-
-		// then
-		/*
-		if(found_upcs == null){
-			fail();
-		}
-
-		System.out.println("--------------------- TEST --------------------------------------");
-		for(int i = 0; i < found_upcs.size(); i++){
-			System.out.println(found_upcs.get(i));
-		}
+		
 		System.out.println(" ");
-		 */
-
+		System.out.println("******************************");
+	
 	}
+	 */
+	
+	/*
+	@Test
+	public void emptySingerStringSearchTest(){
+
+		System.out.println(" ");
+		System.out.println("***** Out Of Stock SEARCH TEST *****");
+
+		// given
+		// Connect to the database
+		if(ams.connect("root", "cs304pwd")){
+			System.out.println("You entered valid credentials.");
+		}
+		else{
+			System.out.println("Unable to connect.");
+		}
+		con = (Connection) ams.getConnection();
+		ArrayList<Integer> found_upcs = new ArrayList<Integer>();
+		// when
+		CustomerTransactions customer = new CustomerTransactions(con);
+		String [][] twoDArray = customer.genericSearch("rock", "Story of my life", 4, "");
+
+		System.out.println(" ");
+		System.out.println("--------------------- TEST Data --------------------------------------");
+		for(int i = 0; i < twoDArray.length; i++){
+			int subArrayLength = twoDArray[i].length;		
+			for(int j = 0; j < subArrayLength; j++){
+				System.out.print(twoDArray[i][j] + " ");
+			}
+			System.out.println(" ");
+		}
+		
+		System.out.println(" ");
+		System.out.println("******************************");
+	}
+	*/
 
 }

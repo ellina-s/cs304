@@ -192,7 +192,7 @@ public class CustomerTransactions{
 
 		// STEP 1: Precise Search
 
-		/*
+		
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
 		if(precise_found_upcs == null){
@@ -211,10 +211,14 @@ public class CustomerTransactions{
 				}
 				System.out.println(" ");
 
-				return precise_found_upcs;
+				ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
+				result = populateReturnTable(precise_found_upcs, table);
+				return dataTransform(result);
+				
+				// return precise_found_upcs;
 			}
 		}
-		*/
+		
 
 		// STEP 2: Search by category or title
 
@@ -292,17 +296,15 @@ public class CustomerTransactions{
 			}
 		}
 
-		if(upcs.size() == 0){
-			System.out.println("Total arraylist contains no elements.");
-			return null;
-		}
+		//if(upcs.size() == 0){
+			//System.out.println("Total arraylist contains no elements.");
+			//return null;
+		//}
 
 		
 
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
-		
 		result = populateReturnTable(upcs, table);
-		
 		return dataTransform(result);
 
 		//return upcs; // used to return ArrayList<Integer>
@@ -311,6 +313,11 @@ public class CustomerTransactions{
 	
 	// TODO
 
+	/**
+	 * Populates a 2D array list with all the data that is to be displayed in GUI.
+	 * @param upcs Array list of UPCs
+	 * @param table 2D Arraylist that will be populated with data.
+	 */
 	private ArrayList<ArrayList<String>> populateReturnTable(ArrayList<Integer> upcs, ArrayList<ArrayList<String>> table){
 
 		//ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
@@ -401,6 +408,9 @@ public class CustomerTransactions{
 	
 	// TODO
 	
+	/**
+	 * Transforms a 2D array list into 2D string array.
+	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
 		 String[][] result = new String[table.get(0).size()][table.size()];
 			for(int i = 0; i < table.get(0).size(); i++) {
@@ -412,6 +422,8 @@ public class CustomerTransactions{
 	 }
 
 
+	// TODO
+	
 	/**
 	 * Searches for a precise item.
 	 * @return An array list of UPCs of the items that have been found.
@@ -501,6 +513,7 @@ public class CustomerTransactions{
 	}
 
 
+	// TODO
 
 	/**
 	 * Searches for an item with the given category or title.
@@ -590,7 +603,9 @@ public class CustomerTransactions{
 		}
 	}
 
-
+	// TODO
+	
+	
 	/**
 	 * Searches for a Singer in the LeadSinger table given a singer name.
 	 * @return An array list of UPCs of the tuples that have been found.
@@ -601,8 +616,8 @@ public class CustomerTransactions{
 		String existing_name;
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
-		if(name == "" || name == null){
-			System.err.println("Name cannot be null or empty. Please, try again.");
+		if( name == null){
+			System.err.println("Name cannot be null. Please, try again.");
 			return null;
 		}
 
