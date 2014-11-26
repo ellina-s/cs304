@@ -6,6 +6,11 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -56,11 +61,18 @@ public class CustomerPanel extends JPanel {
 	private JLabel categoryLabel = new JLabel("Category");
 	private JLabel titleLabel = new JLabel("Title");
 	private JLabel leadSingerLabel = new JLabel("Lead Singer");
+	private JLabel quantityLabel = new JLabel("Quantity");
 	private JTextField categoryField = new JTextField("");
 	private JTextField titleField = new JTextField("");
 	private JTextField leadSingerField = new JTextField("");
+	private JTextField quantityField = new JTextField("");
 	
 	private JButton searchButton = new JButton("Search");
+	private JButton checkoutButton = new JButton("Checkout");
+	
+	private Hashtable upcQuantityTable = new Hashtable();
+	private ArrayList<Integer> upcList = new ArrayList<Integer>();
+	private ArrayList<Integer> quantityList = new ArrayList<Integer>();
 	
 	
 	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
@@ -99,6 +111,9 @@ public class CustomerPanel extends JPanel {
 								
 								dtm = new DefaultTableModel(emptyData,itemColumnNames);
 								
+								
+								
+								
 								itemTable = new JTable(dtm) {
 									// Disable editing of table
 									private static final long serialVersionUID = 1L;
@@ -106,6 +121,62 @@ public class CustomerPanel extends JPanel {
 										return false;               
 									};
 								};
+								
+								itemTable.addMouseListener(new MouseListener(){
+
+									@Override
+									public void mouseClicked(
+											MouseEvent e) {
+										// TODO Auto-generated method stub
+										if (e.getClickCount() == 2) {
+										      JTable target = (JTable)e.getSource();
+										      int row = target.getSelectedRow();
+										      String upc = (String) target.getModel().getValueAt(row, 0);
+										      
+										      if (upcQuantityTable.containsKey(upc)) {
+										    	  int newQuantity = (int) upcQuantityTable.get(upc);
+										    	  //int newQuantity = Integer.parseInt(quantity);
+										    	  newQuantity++;
+										    	  upcQuantityTable.put(upc, newQuantity);
+										      } else {
+										    	  upcQuantityTable.put(upc, 1);
+										      }
+										      
+										      
+										      //System.out.println(upcQuantityTable.values());
+										      JOptionPane.showMessageDialog(mainFrame,"Added to cart.");
+										   }
+										
+									}
+
+									@Override
+									public void mouseEntered(
+											MouseEvent e) {
+										// TODO Auto-generated method stub
+										
+									}
+
+									@Override
+									public void mouseExited(
+											MouseEvent e) {
+										// TODO Auto-generated method stub
+										
+									}
+
+									@Override
+									public void mousePressed(
+											MouseEvent e) {
+										// TODO Auto-generated method stub
+										
+									}
+
+									@Override
+									public void mouseReleased(
+											MouseEvent e) {
+										// TODO Auto-generated method stub
+										
+									}});
+								
 								tablePanel = new JScrollPane(itemTable);;
 								actionPanel = new JPanel();
 								
@@ -115,6 +186,62 @@ public class CustomerPanel extends JPanel {
 								categoryField.setColumns(10);
 								titleField.setColumns(10);
 								leadSingerField.setColumns(10);
+								quantityField.setColumns(10);
+								
+								searchButton.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										
+										try {
+											String category = categoryField.getText();
+											String title = titleField.getText();
+											int quantity = Integer.parseInt(quantityField.getText());
+											String name = leadSingerField.getText();
+											
+											CustomerTransactions ct = new CustomerTransactions(con);
+											ArrayList<Integer> searchResults = ct.genericSearch(category,title,quantity,name);
+											
+											
+											for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
+												dtm.removeRow(row);
+											}
+
+//												Object[] item = {"1","test","test","test","test","test","test","test"};
+//												dtm.addRow(item);
+//												Object[] item2 = {"2","test","test","test","test","test","test","test"};
+//												dtm.addRow(item2);
+//												Object[] item3 = {"3","test","test","test","test","test","test","test"};
+//												dtm.addRow(item3);
+//												Object[] item4 = {"4","test","test","test","test","test","test","test"};
+//												dtm.addRow(item4);
+
+											
+											
+										} catch (NumberFormatException e) {
+											JOptionPane.showMessageDialog(mainFrame,"Quantity must be an integer.");
+										}
+										
+										
+										
+										
+									}});
+								
+								checkoutButton.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										for (Object key : upcQuantityTable.keySet()) {
+											String upc = (String) key;
+											upcList.add(Integer.parseInt(upc));
+											quantityList.add((int)upcQuantityTable.get(key));
+										}
+										
+										//System.out.println(upcList);
+										//System.out.println(quantityList);
+										
+									}
+									
+								});
+								
 								
 								c.gridx = 0;
 								c.gridy = 0;
@@ -128,6 +255,10 @@ public class CustomerPanel extends JPanel {
 								c.gridy = 2;
 								c.ipadx = 5;
 								actionPanel.add(leadSingerLabel,c);
+								c.gridx = 0;
+								c.gridy = 3;
+								c.ipadx = 5;
+								actionPanel.add(quantityLabel,c);
 								c.gridx = 1;
 								c.gridy = 0;
 								c.ipadx = 0;
@@ -138,11 +269,16 @@ public class CustomerPanel extends JPanel {
 								c.gridx = 1;
 								c.gridy = 2;
 								actionPanel.add(leadSingerField,c);
-								c.gridx = 0;
+								c.gridx = 1;
 								c.gridy = 3;
-								c.gridwidth = 2;
+								actionPanel.add(quantityField,c);
+								c.gridx = 0;
+								c.gridy = 4;
 								c.insets = new Insets(5,0,0,5);
 								actionPanel.add(searchButton,c);
+								c.gridx = 1;
+								c.gridy = 4;
+								actionPanel.add(checkoutButton,c);
 								
 								setLayout(new GridBagLayout());
 								c.gridx = 0;
@@ -393,5 +529,7 @@ public class CustomerPanel extends JPanel {
 		}
 		return false;
 	}
+	
+	
 
 }
