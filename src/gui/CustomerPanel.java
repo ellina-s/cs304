@@ -198,12 +198,30 @@ public class CustomerPanel extends JPanel {
 											int quantity = Integer.parseInt(quantityField.getText());
 											String name = leadSingerField.getText();
 											
-											CustomerTransactions ct = new CustomerTransactions(con);
-											ArrayList<Integer> searchResults = ct.genericSearch(category,title,quantity,name);
+											System.out.println(category);
+											System.out.println(title);
+											System.out.println(quantity);
+											System.out.println(name);
 											
+											CustomerTransactions ct = new CustomerTransactions(con);
+											String[][] data = ct.genericSearch(category,title,quantity,name);
+
+
+											for (int i = 0; i < data.length; i++) {
+												for (int j = 0; j < data[i].length; j++) {
+													System.out.println(data[i][j]);
+												}
+											}
 											
 											for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
 												dtm.removeRow(row);
+											}
+											
+											
+											if (data.length > 0) {
+												for (int i = 0; i < data.length; i++) {
+													dtm.addRow(data[i]);
+												}
 											}
 
 //												Object[] item = {"1","test","test","test","test","test","test","test"};
