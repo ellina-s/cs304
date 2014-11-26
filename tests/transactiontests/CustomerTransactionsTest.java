@@ -473,9 +473,19 @@ public class CustomerTransactionsTest{
 		// when
 		CustomerTransactions customer = new CustomerTransactions(con);
 		//found_upcs = customer.genericSearch("drama", "RandomTestTr", 4, "Maroon5");
-		found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Maroon5"); // good to test out of stock items. No precise if found,
+		//found_upcs = customer.genericSearch("rock", "Story of my life", 4, "Maroon5"); // good to test out of stock items. No precise if found,
 		//found_upcs = customer.genericSearch("drama", "Shine", 2, "Maroon5"); // good to test precise items
 		//found_upcs = customer.genericSearch("pop", "jay", 160, "Dan"); // good to test no items found
+		found_upcs = customer.genericSearch("rock", "RandomTestItem", 160, "Pink"); // good to test 
+		
+		/*
+		100	Elvis
+		100	Only you
+		103	Smashing Pumpkins
+		104	Maroon5
+		105	Ed
+		135	Pink
+		*/
 		
 		if(found_upcs == null){
 			fail();

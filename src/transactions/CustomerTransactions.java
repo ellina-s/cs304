@@ -265,7 +265,7 @@ public class CustomerTransactions{
 		 WHERE name LIKE 'Pink';
 		 */
 		System.out.println("Searching by singer name...");
-		
+
 		singers_upcs = searchSinger(name);
 		if(singers_upcs.size() == 0){
 			System.out.println("No items were found with singer " + name);
@@ -287,9 +287,29 @@ public class CustomerTransactions{
 			}
 		}
 
-		return upcs;
-
 		// STEP 4: Remove duplicates.
+
+		if(upcs.size() == 0){
+			System.out.println("Total arraylist contains no elements.");
+			return null;
+		}
+		
+		for(int j = 0; j < upcs.size(); j++){
+
+			if(j == upcs.size()-1){ // end index
+				if(upcs.get(j).intValue() == upcs.get(0).intValue()){ // compare with start index
+					System.out.println("Duplicates: " + upcs.get(j) + " " + upcs.get(0));
+				}
+			}
+			else{
+				if(upcs.get(j).intValue() == upcs.get(j+1).intValue()){				
+					System.out.println("Duplicates: " + upcs.get(j) + " " + upcs.get(j+1));
+				}
+			}
+		}
+		
+		System.out.println("DONE");
+		return upcs;
 	}
 
 
@@ -694,7 +714,7 @@ public class CustomerTransactions{
 			}
 
 			return upcs_list;
-			
+
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
