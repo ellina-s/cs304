@@ -277,8 +277,8 @@ public class CustomerTransactions{
 			}
 			else{
 
-				//System.out.println("Found item(s) by singer");
-				//System.out.println("----------------------- Generic Search------------------------------------");
+				System.out.println("Found item(s) by singer");
+				//System.out.println("----------------------- Generic Singer Search------------------------------------");
 
 				//for(int i = 0; i < singers_upcs.size(); i++){
 				//System.out.println(singers_upcs.get(i));
@@ -300,6 +300,13 @@ public class CustomerTransactions{
 
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
 		result = populateReturnTable(upcs, table, name);
+
+		//System.out.println("----------------------- Resulting upcs list------------------------------------");
+		//for(int k = 0; k< upcs.size(); k++){
+		//System.out.println(upcs.get(k));
+		//}
+		//System.out.println(" ");
+
 		return dataTransform(result);
 	}
 
@@ -319,13 +326,8 @@ public class CustomerTransactions{
 		String title, category, type, company, name;
 		Statement stmt;
 		ResultSet rs;
+		boolean singerRecorded = false;
 
-		//System.out.println("Table size: " + Integer.toString(table.size()));
-		//System.out.println("Table 0th elem size: " + Integer.toString(table.get(0).size()));
-		
-		
-		
-		
 		String statement = "SELECT * FROM Item Where upc = ";
 
 		try
@@ -338,7 +340,6 @@ public class CustomerTransactions{
 			for(int i = 0; i < upcs.size(); i++) {
 
 				rs = stmt.executeQuery(statement + Integer.toString(upcs.get(i)));
-				//ResultSetMetaData rsmd = rs.getMetaData();
 
 				if(rs.next()) {
 					title = rs.getString("title");
@@ -349,9 +350,6 @@ public class CustomerTransactions{
 					price = rs.getFloat("price");
 					stock = rs.getInt("stock");
 
-					
-					// upc,title,type,category,company,year,price,stock
-					
 					table.get(0).add(Integer.toString(upcs.get(i)));
 					table.get(1).add(title);
 					table.get(2).add(type);
@@ -360,7 +358,6 @@ public class CustomerTransactions{
 					table.get(5).add(Integer.toString(year));
 					table.get(6).add(Float.toString(price));
 					table.get(8).add(Integer.toString(stock));
-
 
 					//System.out.printf("%-20s%-15s%-10s", title,category,stock);
 					//System.out.println("  upc " + upcs.get(i));
@@ -382,34 +379,48 @@ public class CustomerTransactions{
 		{
 			stmt = connection.createStatement();
 
-			//System.out.println("---------------------- POPULATING SINGERs-------------------------------");
+			System.out.println("---------------------- POPULATING SINGERs-------------------------------");
 
 			for(int i = 0; i < upcs.size(); i++) {
 
 				rs = stmt.executeQuery(singerStatement + Integer.toString(upcs.get(i)));
-				//ResultSetMetaData rsmd = rs.getMetaData();
 
 				if(rs.next()) {
 					name = rs.getString("name");
-
-					if(singername.equals(name)){
+					if(singername.equals("")){
+						//System.out.println("Detected emtpy singer string");
 						table.get(7).add(name);
-						//System.out.println("singer name: " + name + " upc " + upcs.get(i));
+						//System.out.println("Recorded singer " + name  +" for " +  upcs.get(i));
 					}
 					else{
+						if(singername.equals(name) || singername.equals(name.toLowerCase())){
+							table.get(7).add(name);
+							//System.out.println("Recorded singer " + name  +" for " +  upcs.get(i));
+							//System.out.println("singer name: " + name + " upc " + upcs.get(i));
+						}
+						else{
 
-						while(rs.next()){
-							String anothername = rs.getString("name");
+							while(rs.next()){
+								String anothername = rs.getString("name");
+								if(singername.equals(anothername) || singername.equals(anothername.toLowerCase())){
+									table.get(7).add(anothername);
+									//System.out.println("Recorded singer " + anothername  +"  for " +  upcs.get(i));
+									singerRecorded = true;
+									//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
+								}
+							}
 
-							if(singername.equals(anothername)){
-								table.get(7).add(anothername);
-								//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
+							if(!singerRecorded){
+								table.get(7).add("N/A"); // if no more singers found, then assign 'N/A"
+								//System.out.println("Recorded singer NA for " +  upcs.get(i) + " (after while loop)");
 							}
 						}
 					}
+
 				}
 				else{
 					table.get(7).add("N/A");
+					//System.out.println("Recorded singer NA for " +  upcs.get(i));
 					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
@@ -429,20 +440,16 @@ public class CustomerTransactions{
 	 * Transforms a 2D array list into 2D string array.
 	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
-
-		//System.out.println(" *** Table size: " + Integer.toString(table.size()));
-		//System.out.println(" *** Table 0th elem size: " + Integer.toString(table.get(0).size()));
-
 		String[][] result = new String[table.get(0).size()][table.size()];
 		for(int i = 0; i <table.size(); i++){
-			for(int j = 0; j <table.get(i).size(); j++){			
+			for(int j = 0; j <table.get(i).size(); j++){
 				result[j][i] = table.get(i).get(j);
 			}
 		}
 		return result;
 	}
-	
-	
+
+
 
 	// TODO
 

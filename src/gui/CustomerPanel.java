@@ -242,7 +242,7 @@ public class CustomerPanel extends JPanel {
 											
 											
 										} catch (NumberFormatException e) {
-											JOptionPane.showMessageDialog(mainFrame,"Quantity must be an integer.");
+											JOptionPane.showMessageDialog(mainFrame,"Please, specify quantity (as integer).");
 										}
 										
 										
