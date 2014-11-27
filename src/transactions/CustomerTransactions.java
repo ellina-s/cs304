@@ -186,7 +186,7 @@ public class CustomerTransactions{
 			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
 			return null;
 		}
-		
+
 		if( name == null){
 			System.err.println("Singer name cannot be null. Please, try again.");
 			return null;
@@ -196,7 +196,7 @@ public class CustomerTransactions{
 
 		System.out.println(" ");
 		System.out.println("Searching for a precise item...");
-		
+
 		precise_found_upcs = preciseSearch(category, title, quantity, name);
 
 		if(precise_found_upcs == null){
@@ -211,7 +211,7 @@ public class CustomerTransactions{
 				//System.out.println("----------------------- Generic Search------------------------------------");
 
 				//for(int i = 0; i < precise_found_upcs.size(); i++){
-					//System.out.println(precise_found_upcs.get(i));
+				//System.out.println(precise_found_upcs.get(i));
 				//}
 				//System.out.println(" ");
 
@@ -242,7 +242,7 @@ public class CustomerTransactions{
 				//System.out.println("----------------------- Generic Search------------------------------------");
 
 				//for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-					//System.out.println(categoryOrTitleUpcs.get(i));
+				//System.out.println(categoryOrTitleUpcs.get(i));
 				//}
 				//System.out.println(" ");
 
@@ -253,7 +253,7 @@ public class CustomerTransactions{
 						upcs.add(categoryOrTitleUpcs.get(i));
 					}
 					//else{
-						//System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
+					//System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
 					//}
 				}
 			}
@@ -281,7 +281,7 @@ public class CustomerTransactions{
 				//System.out.println("----------------------- Generic Search------------------------------------");
 
 				//for(int i = 0; i < singers_upcs.size(); i++){
-					//System.out.println(singers_upcs.get(i));
+				//System.out.println(singers_upcs.get(i));
 				//}
 				//System.out.println(" ");
 
@@ -292,7 +292,7 @@ public class CustomerTransactions{
 						upcs.add(singers_upcs.get(i));
 					}
 					//else{
-						//System.out.println("Contains dulicate "  + singers_upcs.get(i));
+					//System.out.println("Contains dulicate "  + singers_upcs.get(i));
 					//}
 				}
 			}
@@ -372,7 +372,7 @@ public class CustomerTransactions{
 
 				if(rs.next()) {
 					name = rs.getString("name");
-					
+
 					if(singername.equals(name)){
 						table.get(3).add(name);
 						//System.out.println("singer name: " + name + " upc " + upcs.get(i));
@@ -381,7 +381,7 @@ public class CustomerTransactions{
 
 						while(rs.next()){
 							String anothername = rs.getString("name");
-							
+
 							if(singername.equals(anothername)){
 								table.get(3).add(anothername);
 								//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
@@ -410,18 +410,22 @@ public class CustomerTransactions{
 	 * Transforms a 2D array list into 2D string array.
 	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
-		
+
 		//System.out.println(" *** Table 0th item size (number of UPCs): " + table.get(0).size());
 		//System.out.println(" *** Table size: " + table.size());
-		
 		String[][] result = new String[table.get(0).size()][table.size()];
-		for(int i = 0; i < table.get(0).size(); i++) {
-			for(int j = 0; j < table.size(); j++) {
-				result[i][j] = table.get(j).get(i);
-			}
-		}	
-		return result;
+
+		System.out.println(Integer.toString(table.size()));
+		System.out.println(Integer.toString(table.get(0).size()));
+			for(int i = 0; i < table.size(); i++) {
+				for(int j = 0; j < table.get(i).size(); j++) {
+					result[j][i] = table.get(i).get(j);
+				}
+			}	
+			return result;
 	}
+	
+	
 
 
 	// TODO
@@ -464,8 +468,8 @@ public class CustomerTransactions{
 
 			// display column names;
 			//for (int i = 0; i < numCols; i++){
-				// get column name and print it
-				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			// get column name and print it
+			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
 			//}
 			//System.out.println(" ");
 
@@ -558,8 +562,8 @@ public class CustomerTransactions{
 
 			// display column names;
 			//for (int i = 0; i < numCols; i++){
-				// get column name and print it
-				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			// get column name and print it
+			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
 			//}
 			//System.out.println(" ");
 
@@ -650,7 +654,7 @@ public class CustomerTransactions{
 			//int[] formats = {15,15};
 			// display column names;
 			//for (int i = 0; i < numCols; i++){
-				//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
+			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
 			//}
 			//System.out.println(" ");
 
@@ -714,7 +718,7 @@ public class CustomerTransactions{
 		catch (SQLException ex){
 			System.out.println("Singer Search Message: " + ex.getMessage());
 		}
-		
+
 		return upcs_list;
 	}
 
