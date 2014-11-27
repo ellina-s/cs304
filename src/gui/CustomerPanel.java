@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -24,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import tables.Customer;
+import transactions.CustomerSubTransactions;
 import transactions.CustomerTransactions;
 
 import com.mysql.jdbc.Connection;
@@ -45,19 +47,35 @@ public class CustomerPanel extends JPanel {
 	private JButton customerLoginButton = new JButton("Login");
 
 	private GridLayout buttonLayout = new GridLayout(2,1);
+	
+	
 
 
 	
 	private DatabaseConnection ams = DatabaseConnection.getInstance();
 	private Connection con = (Connection) ams.getConnection();
+	
+	private int customerId;
+	
 	private Customer customer = new Customer(con);
 	private String[][] data;
+	private String[][] billData;
+	private JScrollPane billPanel;
+	private JLabel creditCardLabel = new JLabel("Credit Card");
+	private JTextField creditCardField = new JTextField("");
+	private JLabel ccExpiryLabel = new JLabel("Expiry Date (YYYY-MM-DD)");
+	private JTextField ccExpiryField = new JTextField("");
+	private JButton completeButton = new JButton("Complete Purchase");
+	
+	
 	
 	private DefaultTableModel dtm;
+	private DefaultTableModel billdtm;
 
 	private JScrollPane tablePanel;
 	private JPanel actionPanel;
 	private JTable itemTable;
+	private JTable billTable;
 	private JLabel categoryLabel = new JLabel("Category");
 	private JLabel titleLabel = new JLabel("Title");
 	private JLabel leadSingerLabel = new JLabel("Lead Singer");
@@ -76,6 +94,7 @@ public class CustomerPanel extends JPanel {
 	
 	
 	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
+	private String[] billColumnNames = {"title","type","category","company","price","quantity","price","total"};
 
 	public CustomerPanel(JFrame mainFrame_) {
 		mainFrame = mainFrame_;
@@ -98,7 +117,7 @@ public class CustomerPanel extends JPanel {
 					public void actionPerformed(ActionEvent e) {
 						try {
 							CustomerTransactions ct = new CustomerTransactions(con);
-							int customerId = Integer.parseInt(usernameLoginField.getText());
+							customerId = Integer.parseInt(usernameLoginField.getText());
 							String password = String.valueOf(passwordLoginField.getPassword());
 							
 							if (!ct.authenticateCustomer(customerId, password)) {
@@ -207,11 +226,6 @@ public class CustomerPanel extends JPanel {
 											String[][] data = ct.genericSearch(category,title,quantity,name);
 
 
-											for (int i = 0; i < data.length; i++) {
-												for (int j = 0; j < data[i].length; j++) {
-													System.out.println(data[i][j]);
-												}
-											}
 											
 											for (int row = dtm.getRowCount() - 1; row >= 0; row--) {
 												dtm.removeRow(row);
@@ -224,14 +238,6 @@ public class CustomerPanel extends JPanel {
 												}
 											}
 
-//												Object[] item = {"1","test","test","test","test","test","test","test"};
-//												dtm.addRow(item);
-//												Object[] item2 = {"2","test","test","test","test","test","test","test"};
-//												dtm.addRow(item2);
-//												Object[] item3 = {"3","test","test","test","test","test","test","test"};
-//												dtm.addRow(item3);
-//												Object[] item4 = {"4","test","test","test","test","test","test","test"};
-//												dtm.addRow(item4);
 
 											
 											
@@ -247,14 +253,103 @@ public class CustomerPanel extends JPanel {
 								checkoutButton.addActionListener(new ActionListener() {
 									@Override
 									public void actionPerformed(ActionEvent arg0) {
-										for (Object key : upcQuantityTable.keySet()) {
-											String upc = (String) key;
-											upcList.add(Integer.parseInt(upc));
-											quantityList.add((int)upcQuantityTable.get(key));
+										
+										if (upcQuantityTable.isEmpty()) {
+											JOptionPane.showMessageDialog(mainFrame,"Shopping cart is empty!");
+										}
+										else {
+											for (Object key : upcQuantityTable.keySet()) {
+												String upc = (String) key;
+												upcList.add(Integer.parseInt(upc));
+												quantityList.add((int)upcQuantityTable.get(key));
+											}
+											
+											System.out.println(upcList);
+											System.out.println(quantityList);
+											
+											removeAll();
+											
+											CustomerSubTransactions cst = new CustomerSubTransactions(con);
+											
+											billData = cst.produceBill(upcList, quantityList);
+											billdtm = new DefaultTableModel(billData,billColumnNames);
+											billTable = new JTable(billdtm);
+											billPanel = new JScrollPane(billTable);
+											
+											setLayout(new GridBagLayout());
+											GridBagConstraints c = new GridBagConstraints();
+											
+											creditCardField.setColumns(10);
+											ccExpiryField.setColumns(10);
+											
+											completeButton.addActionListener(new ActionListener(){
+												@Override
+												public void actionPerformed(ActionEvent arg0) {
+													try {
+														int cardNum = Integer.parseInt(creditCardField.getText());
+														String expiryDate = ccExpiryField.getText();
+														CustomerSubTransactions cst = new CustomerSubTransactions(con);
+														
+														int year = Calendar.getInstance().get(Calendar.YEAR);
+														int month = Calendar.getInstance().get(Calendar.MONTH);
+														int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+														String purchaseDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(day);
+														
+														
+														String responseString = cst.checkOut(upcList, quantityList, customerId, cardNum, purchaseDate, expiryDate);
+														
+														
+														if (responseString.equals("Credit card passed expiry date") || responseString.equals("Could not purchase")) {
+															JOptionPane.showMessageDialog(mainFrame,responseString);
+														} else {
+															responseString = responseString + "\nClick ok to exit the program.";
+														JOptionPane.showMessageDialog(mainFrame,responseString);
+														System.exit(0);
+														}
+														
+
+
+													} catch (NumberFormatException nfe) {
+														JOptionPane.showMessageDialog(mainFrame,"Credit Card must be an integer.");
+													}
+													
+													
+													
+												}});
+											
+											
+											c.gridx = 0;
+											c.gridy = 0;
+											c.gridwidth = 2;
+											add(billPanel,c);
+											c.gridx = 0;
+											c.gridy = 1;
+											c.gridwidth = 1;
+											add(creditCardLabel,c);
+											c.gridx = 0;
+											c.gridy = 2;
+											add(ccExpiryLabel,c);
+											c.gridx = 1;
+											c.gridy = 1;
+											add(creditCardField,c);
+											c.gridx = 1;
+											c.gridy = 2;
+											add(ccExpiryField,c);
+											c.gridx = 1;
+											c.gridy = 3;
+											add(completeButton,c);
+											
+											
+											mainFrame.revalidate();
+											mainFrame.repaint();
 										}
 										
-										//System.out.println(upcList);
-										//System.out.println(quantityList);
+										
+										
+										
+										
+										
+										
 										
 									}
 									
