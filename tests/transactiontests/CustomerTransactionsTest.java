@@ -395,7 +395,7 @@ public class CustomerTransactionsTest{
 	public void multipleItemSearchTest(){
 
 		System.out.println(" ");
-		System.out.println("***** Precise SEARCH TEST *****");
+		System.out.println("***** Multiple item SEARCH TEST *****");
 
 		// given
 		// Connect to the database
