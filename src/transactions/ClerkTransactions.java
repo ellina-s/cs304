@@ -81,7 +81,7 @@ public class ClerkTransactions {
 		 if(isReturnable && isValidReceipt) {
 			 try {
 				String statement = "SELECT PI.upc, P.card_num, PI.quantity, I.price FROM Purchase P, PurchaseItem PI, Item I WHERE " + 
-						"PI.receiptId = " + Integer.toString(receiptId) + " AND PI.receiptId = PI.receiptId AND PI.upc = I.upc AND PI.upc = ";
+						"PI.receiptId = " + Integer.toString(receiptId) + " AND PI.receiptId = P.receiptId AND PI.upc = I.upc AND PI.upc = ";
 				String statement1 = "SELECT SUM(RI.quantity) quantity FROM ReturnItem RI, Returned R WHERE R.retId = RI.retId AND R.receiptId = " + Integer.toString(receiptId) + " AND RI.upc = ";
 				for(int i = 0; i < upc.size(); i++) {
 					stmt = con.createStatement();
@@ -137,8 +137,8 @@ public class ClerkTransactions {
 			}
 			 if(returnedItem) {
 				 table.get(0).add("");
-				 table.get(1).add("Refunded");
-				 table.get(2).add(Integer.toString(card_num));
+				 table.get(1).add("Refunded to ");
+				 table.get(2).add("card number " + Integer.toString(card_num));
 				 table.get(3).add(Float.toString(sum));
 			 }
 			 else {
