@@ -17,7 +17,7 @@ import com.mysql.jdbc.Connection;
 public class CustomerTransactions{
 
 	private Connection connection;
-	private final static int COL_NUM = 5;
+	private final static int COL_NUM = 9;
 
 	/**
 	 * Constructor.
@@ -314,12 +314,19 @@ public class CustomerTransactions{
 
 		// Step 1. Retrieve the data from the Item table
 
-		int stock;
-		String title, category, name;
+		int stock, year;
+		float price;
+		String title, category, type, company, name;
 		Statement stmt;
 		ResultSet rs;
 
-		String statement = "SELECT title, category, stock FROM Item Where upc = ";
+		//System.out.println("Table size: " + Integer.toString(table.size()));
+		//System.out.println("Table 0th elem size: " + Integer.toString(table.get(0).size()));
+		
+		
+		
+		
+		String statement = "SELECT * FROM Item Where upc = ";
 
 		try
 		{
@@ -335,13 +342,25 @@ public class CustomerTransactions{
 
 				if(rs.next()) {
 					title = rs.getString("title");
+					type = rs.getString("type");
 					category = rs.getString("category");
+					company = rs.getString("company");
+					year = rs.getInt("year");
+					price = rs.getFloat("price");
 					stock = rs.getInt("stock");
 
+					
+					// upc,title,type,category,company,year,price,stock
+					
 					table.get(0).add(Integer.toString(upcs.get(i)));
 					table.get(1).add(title);
-					table.get(2).add(category);
-					table.get(4).add(Integer.toString(stock));
+					table.get(2).add(type);
+					table.get(3).add(category);
+					table.get(4).add(company);
+					table.get(5).add(Integer.toString(year));
+					table.get(6).add(Float.toString(price));
+					table.get(8).add(Integer.toString(stock));
+
 
 					//System.out.printf("%-20s%-15s%-10s", title,category,stock);
 					//System.out.println("  upc " + upcs.get(i));
@@ -374,7 +393,7 @@ public class CustomerTransactions{
 					name = rs.getString("name");
 
 					if(singername.equals(name)){
-						table.get(3).add(name);
+						table.get(7).add(name);
 						//System.out.println("singer name: " + name + " upc " + upcs.get(i));
 					}
 					else{
@@ -383,14 +402,14 @@ public class CustomerTransactions{
 							String anothername = rs.getString("name");
 
 							if(singername.equals(anothername)){
-								table.get(3).add(anothername);
+								table.get(7).add(anothername);
 								//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
 							}
 						}
 					}
 				}
 				else{
-					table.get(3).add("N/A");
+					table.get(7).add("N/A");
 					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
@@ -411,22 +430,19 @@ public class CustomerTransactions{
 	 */
 	private String[][] dataTransform(ArrayList<ArrayList<String>> table) {
 
-		//System.out.println(" *** Table 0th item size (number of UPCs): " + table.get(0).size());
-		//System.out.println(" *** Table size: " + table.size());
-		String[][] result = new String[table.get(0).size()][table.size()];
+		//System.out.println(" *** Table size: " + Integer.toString(table.size()));
+		//System.out.println(" *** Table 0th elem size: " + Integer.toString(table.get(0).size()));
 
-		System.out.println(Integer.toString(table.size()));
-		System.out.println(Integer.toString(table.get(0).size()));
-			for(int i = 0; i < table.size(); i++) {
-				for(int j = 0; j < table.get(i).size(); j++) {
-					result[j][i] = table.get(i).get(j);
-				}
-			}	
-			return result;
+		String[][] result = new String[table.get(0).size()][table.size()];
+		for(int i = 0; i <table.size(); i++){
+			for(int j = 0; j <table.get(i).size(); j++){			
+				result[j][i] = table.get(i).get(j);
+			}
+		}
+		return result;
 	}
 	
 	
-
 
 	// TODO
 
@@ -443,7 +459,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> precise_upcs = new ArrayList<Integer>();
 
 		String statement = "SELECT I.upc, category, title, stock, S.name FROM Item I, LeadSinger S WHERE I.upc = S.upc AND (I.category LIKE '" + category + "' AND I.title LIKE '" + title +"' AND S.name LIKE '" + name +"')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -537,7 +553,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -632,7 +648,7 @@ public class CustomerTransactions{
 		}
 
 		String statement = "SELECT upc, name FROM LeadSinger WHERE (name LIKE '" + name + "')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
