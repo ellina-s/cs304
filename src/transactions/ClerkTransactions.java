@@ -60,12 +60,28 @@ public class ClerkTransactions {
 			table.add(new ArrayList<String>());
 		}
 
+		 boolean isValidReceipt = isValidReceipt(receiptId);
+		 if(!isValidReceipt) {
+			 table.get(0).add("Not a valid receipt");
+			 table.get(1).add("");
+			 table.get(2).add("");
+			 table.get(3).add("");
+			 return dataTransform(table);
+		 }
 		 
 		 boolean isReturnable = isReturnable(receiptId, day);
-		 if(isReturnable) {
+		 if(!isReturnable) {
+			 table.get(0).add("Days passed >= 15");
+			 table.get(1).add(" purchase date");
+			 table.get(2).add("");
+			 table.get(3).add("");
+			 return dataTransform(table);
+		 }
+		 
+		 if(isReturnable && isValidReceipt) {
 			 try {
 				String statement = "SELECT PI.upc, P.card_num, PI.quantity, I.price FROM Purchase P, PurchaseItem PI, Item I WHERE " + 
-						"PI.receiptId = " + Integer.toString(receiptId) + " AND PI.receiptId = PI.receiptId AND PI.upc = I.upc AND PI.upc = ";
+						"PI.receiptId = " + Integer.toString(receiptId) + " AND PI.receiptId = P.receiptId AND PI.upc = I.upc AND PI.upc = ";
 				String statement1 = "SELECT SUM(RI.quantity) quantity FROM ReturnItem RI, Returned R WHERE R.retId = RI.retId AND R.receiptId = " + Integer.toString(receiptId) + " AND RI.upc = ";
 				for(int i = 0; i < upc.size(); i++) {
 					stmt = con.createStatement();
@@ -121,8 +137,8 @@ public class ClerkTransactions {
 			}
 			 if(returnedItem) {
 				 table.get(0).add("");
-				 table.get(1).add("Refunded");
-				 table.get(2).add(Integer.toString(card_num));
+				 table.get(1).add("Refunded to ");
+				 table.get(2).add("card number " + Integer.toString(card_num));
 				 table.get(3).add(Float.toString(sum));
 			 }
 			 else {
@@ -131,15 +147,29 @@ public class ClerkTransactions {
 				 table.get(2).add("");
 				 table.get(3).add("");
 			 }
-			 return dataTransform(table);
 		 }
-		 else {
-			 table.get(0).add("15 days past purchase date");
-			 table.get(1).add("");
-			 table.get(2).add("");
-			 table.get(3).add("");
-			 return dataTransform(table);
+		 
+		 return dataTransform(table);
+	 }
+	 
+	 private boolean isValidReceipt(int receiptId) {
+		 String statement = "SELECT * FROM Purchase P WHERE receiptId = " + Integer.toString(receiptId);
+		 Statement stmt;
+		 ResultSet rs;
+		 boolean isReturnable = false;
+		 
+		 try {
+			 stmt = con.createStatement();
+			 rs = stmt.executeQuery(statement);
+			 isReturnable =  rs.next();
+			 stmt.close();
 		 }
+		 catch (SQLException ex) {
+			 System.out.println("Message: " + ex.getMessage());
+			 isReturnable = false;
+		}
+
+		 return isReturnable;
 	 }
 	 
 	 private boolean isReturnable(int receiptId, String day) {

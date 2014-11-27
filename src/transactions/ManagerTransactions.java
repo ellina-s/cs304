@@ -96,13 +96,14 @@ public class ManagerTransactions{
 			ArrayList<ArrayList<String>> table = null; 
 
 			String company;
+			String title;
 			int stock;
 			int quantity;
 		    	
 		    Statement  stmt;
 		    ResultSet  rs;
 		    	    
-		    String statement = "SELECT I.upc, I.company, I.stock, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
+		    String statement = "SELECT I.upc, I.title, I.company, I.stock, Sum(PI.quantity) units FROM Item I, Purchase P, PurchaseItem PI "
 					+ "WHERE I.upc = PI.upc and P.receiptId = PI.receiptId and P.purchaseDate = "  + "'" + day + "'" + " Group By upc "
 		    		+ "Order by units DESC LIMIT " + Integer.toString(n);
 		    
@@ -131,15 +132,15 @@ public class ManagerTransactions{
 			      // as a string
 
 			      // simplified output formatting; truncation may occur
-				  
+				  title = rs.getString("title");
 			      company = rs.getString("company");
 			      stock = rs.getInt("stock");
 			      quantity = rs.getInt("units");
 			      
-			      //table.get(0).add(Integer.toString(upc));
-			      table.get(0).add(company);
-			      table.get(1).add(Integer.toString(stock));
-			      table.get(2).add(Integer.toString(quantity));
+			      table.get(0).add(title);
+			      table.get(1).add(company);
+			      table.get(2).add(Integer.toString(stock));
+			      table.get(3).add(Integer.toString(quantity));
 			  }
 			  
 			  // close the statement; 
