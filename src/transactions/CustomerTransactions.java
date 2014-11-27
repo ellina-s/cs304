@@ -359,7 +359,7 @@ public class CustomerTransactions{
 					table.get(4).add(company);
 					table.get(5).add(Integer.toString(year));
 					table.get(6).add(Float.toString(price));
-					table.get(7).add(Integer.toString(stock));
+					table.get(8).add(Integer.toString(stock));
 
 
 					//System.out.printf("%-20s%-15s%-10s", title,category,stock);
@@ -393,7 +393,7 @@ public class CustomerTransactions{
 					name = rs.getString("name");
 
 					if(singername.equals(name)){
-						table.get(8).add(name);
+						table.get(7).add(name);
 						//System.out.println("singer name: " + name + " upc " + upcs.get(i));
 					}
 					else{
@@ -402,14 +402,14 @@ public class CustomerTransactions{
 							String anothername = rs.getString("name");
 
 							if(singername.equals(anothername)){
-								table.get(8).add(anothername);
+								table.get(7).add(anothername);
 								//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
 							}
 						}
 					}
 				}
 				else{
-					table.get(8).add("N/A");
+					table.get(7).add("N/A");
 					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
@@ -459,7 +459,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> precise_upcs = new ArrayList<Integer>();
 
 		String statement = "SELECT I.upc, category, title, stock, S.name FROM Item I, LeadSinger S WHERE I.upc = S.upc AND (I.category LIKE '" + category + "' AND I.title LIKE '" + title +"' AND S.name LIKE '" + name +"')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -553,7 +553,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{
@@ -648,7 +648,7 @@ public class CustomerTransactions{
 		}
 
 		String statement = "SELECT upc, name FROM LeadSinger WHERE (name LIKE '" + name + "')";
-		//System.out.println("Attempting: " + statement);
+		System.out.println("Attempting: " + statement);
 
 		try
 		{

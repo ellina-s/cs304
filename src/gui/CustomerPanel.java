@@ -93,7 +93,7 @@ public class CustomerPanel extends JPanel {
 	private ArrayList<Integer> quantityList = new ArrayList<Integer>();
 	
 	
-	private String[] itemColumnNames = {"upc","title","type","category","company","year","price","stock"};
+	private String[] itemColumnNames = {"upc","title","type","category","company","year","price", "singer","stock"};
 	private String[] billColumnNames = {"title","type","category","company","price","quantity","price","total"};
 
 	public CustomerPanel(JFrame mainFrame_) {
