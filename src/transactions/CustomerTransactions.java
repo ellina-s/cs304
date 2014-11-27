@@ -182,12 +182,12 @@ public class CustomerTransactions{
 			table.add(new ArrayList<String>());
 		}
 
-		if(quantity <= 0){
-			System.err.println("Requested quantity cannot be zero or less. Please, try again.");
+		if(quantity < 0){
+			System.err.println("Requested quantity cannot less that zero. Please, try again.");
 			return null;
 		}
 
-		if( name == null){
+		if(name == null){
 			System.err.println("Singer name cannot be null. Please, try again.");
 			return null;
 		}
@@ -326,7 +326,6 @@ public class CustomerTransactions{
 		String title, category, type, company, name;
 		Statement stmt;
 		ResultSet rs;
-		boolean singerRecorded = false;
 
 		String statement = "SELECT * FROM Item Where upc = ";
 
@@ -379,44 +378,13 @@ public class CustomerTransactions{
 		{
 			stmt = connection.createStatement();
 
-			System.out.println("---------------------- POPULATING SINGERs-------------------------------");
+			//System.out.println("---------------------- POPULATING SINGERs-------------------------------");
 
 			for(int i = 0; i < upcs.size(); i++) {
-
 				rs = stmt.executeQuery(singerStatement + Integer.toString(upcs.get(i)));
-
 				if(rs.next()) {
 					name = rs.getString("name");
-					if(singername.equals("")){
-						//System.out.println("Detected emtpy singer string");
-						table.get(7).add(name);
-						//System.out.println("Recorded singer " + name  +" for " +  upcs.get(i));
-					}
-					else{
-						if(singername.equals(name) || singername.equals(name.toLowerCase())){
-							table.get(7).add(name);
-							//System.out.println("Recorded singer " + name  +" for " +  upcs.get(i));
-							//System.out.println("singer name: " + name + " upc " + upcs.get(i));
-						}
-						else{
-
-							while(rs.next()){
-								String anothername = rs.getString("name");
-								if(singername.equals(anothername) || singername.equals(anothername.toLowerCase())){
-									table.get(7).add(anothername);
-									//System.out.println("Recorded singer " + anothername  +"  for " +  upcs.get(i));
-									singerRecorded = true;
-									//System.out.println("singer name: " + anothername + " upc " + upcs.get(i));
-								}
-							}
-
-							if(!singerRecorded){
-								table.get(7).add("N/A"); // if no more singers found, then assign 'N/A"
-								//System.out.println("Recorded singer NA for " +  upcs.get(i) + " (after while loop)");
-							}
-						}
-					}
-
+					table.get(7).add(name);
 				}
 				else{
 					table.get(7).add("N/A");
@@ -424,7 +392,6 @@ public class CustomerTransactions{
 					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
-
 			// close the statement
 			stmt.close();
 		}
@@ -466,7 +433,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> precise_upcs = new ArrayList<Integer>();
 
 		String statement = "SELECT I.upc, category, title, stock, S.name FROM Item I, LeadSinger S WHERE I.upc = S.upc AND (I.category LIKE '" + category + "' AND I.title LIKE '" + title +"' AND S.name LIKE '" + name +"')";
-		System.out.println("Attempting: " + statement);
+		System.out.println("Query: " + statement);
 
 		try
 		{
@@ -560,7 +527,7 @@ public class CustomerTransactions{
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
 		String statement = "SELECT upc, category, title, stock FROM Item WHERE (category LIKE '" + category + "' OR title LIKE '" + title +"')";
-		System.out.println("Attempting: " + statement);
+		System.out.println("Query: " + statement);
 
 		try
 		{
@@ -655,7 +622,7 @@ public class CustomerTransactions{
 		}
 
 		String statement = "SELECT upc, name FROM LeadSinger WHERE (name LIKE '" + name + "')";
-		System.out.println("Attempting: " + statement);
+		System.out.println("Query: " + statement);
 
 		try
 		{
