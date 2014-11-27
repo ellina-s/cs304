@@ -15,9 +15,9 @@ public class CustomerSubTransactions {
 	
 	private int receiptId;
 	
-	private final int MAXDELIVERIES = 1;
+	private final int MAXDELIVERIES = 5;
 	
-	private float sum;
+	private static float sum;
 
 	public CustomerSubTransactions(Connection con){
 		this.con = con;
@@ -58,13 +58,14 @@ public class CustomerSubTransactions {
 		String type;
 		String category;
 		String company;
+		int stock;
 		float price;
 		float sum = 0;
 		
 		Statement stmt;
 		ResultSet rs;
 		
-		String statement = "SELECT I.title, I.type, I.category, I.company, I.price From Item I WHERE I.upc = ";
+		String statement = "SELECT I.title, I.type, I.category, I.company, I.price, I.stock From Item I WHERE I.upc = ";
 		try {
 			stmt = con.createStatement();
 			for(int i = 0; i < upc.size(); i++) {
@@ -75,6 +76,11 @@ public class CustomerSubTransactions {
 					category = rs.getString("category");
 					company = rs.getString("company");
 					price = rs.getFloat("price");
+					stock = rs.getInt("stock");
+					if(quantity.get(i) > stock) {
+						quantity.remove(i);
+						quantity.add(i, stock);
+					}
 					sum += price * quantity.get(i);
 					
 					table.get(0).add(Integer.toString(upc.get(i)));
@@ -97,7 +103,7 @@ public class CustomerSubTransactions {
 			table.get(6).add("Total");
 			table.get(7).add(Float.toString(sum));
 			
-			this.sum = sum;
+			CustomerSubTransactions.sum = sum;
 
 			stmt.close();
 		} catch (SQLException ex)
@@ -165,7 +171,7 @@ public class CustomerSubTransactions {
 			return "Credit card passed expiry date";
 		}
 		
-		return (Float.toString(sum) + " charged to card number " + Integer.toString(card_num) + ".  Expected delivery date is " + expectedDeliveryDate + ".");
+		return (Float.toString(sum) + " charged to card number " + Integer.toString(card_num) + ".  Your receipt ID is " + Integer.toString(receiptId) + ".  Expected delivery date is " + expectedDeliveryDate + ".");
 		
 	}
 	
