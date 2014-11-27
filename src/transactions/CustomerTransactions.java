@@ -61,8 +61,6 @@ public class CustomerTransactions{
 			while(rs.next())
 			{
 				existing_cid = rs.getInt("cid");
-				//System.out.printf("Existing %-15.15s\n", existing_cid);
-
 				if(cid == existing_cid){
 					System.out.println("cid " + cid + " is already in the system. Please, provide a different cid.");
 					stmt.close();
@@ -124,10 +122,7 @@ public class CustomerTransactions{
 			while(rs.next())
 			{
 				existing_cid = rs.getInt("cid");
-				//System.out.printf("Existing %-15.15s  ", existing_cid);
-
 				existing_password = rs.getString("password");
-				//System.out.printf("Ehisting %-15.15s\n", existing_password);
 
 				if(cid == existing_cid && password.equals(existing_password) ){
 					System.out.println("Customer authenticated successfully.");
@@ -207,14 +202,6 @@ public class CustomerTransactions{
 				System.out.println("No precise items were found.");
 			}
 			else{
-				//System.out.println("Found exact item(s) with category, title, and singer name.");
-				//System.out.println("----------------------- Generic Search------------------------------------");
-
-				//for(int i = 0; i < precise_found_upcs.size(); i++){
-				//System.out.println(precise_found_upcs.get(i));
-				//}
-				//System.out.println(" ");
-
 				ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
 				result = populateReturnTable(precise_found_upcs, table, name);
 				return dataTransform(result);
@@ -237,24 +224,12 @@ public class CustomerTransactions{
 				System.out.println("No items were found with category " + category + " or title " + title);
 			}
 			else{
-
-				//System.out.println("Found item(s) with category or title");
-				//System.out.println("----------------------- Generic Search------------------------------------");
-
-				//for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
-				//System.out.println(categoryOrTitleUpcs.get(i));
-				//}
-				//System.out.println(" ");
-
 				// Copy into upcs
 				for(int i = 0; i < categoryOrTitleUpcs.size(); i++){
 
 					if(!upcs.contains(categoryOrTitleUpcs.get(i))){
 						upcs.add(categoryOrTitleUpcs.get(i));
 					}
-					//else{
-					//System.out.println("Contains duplicate "  + categoryOrTitleUpcs.get(i));
-					//}
 				}
 			}
 		}
@@ -276,37 +251,18 @@ public class CustomerTransactions{
 				System.out.println("No items were found with singer " + name);
 			}
 			else{
-
-				System.out.println("Found item(s) by singer");
-				//System.out.println("----------------------- Generic Singer Search------------------------------------");
-
-				//for(int i = 0; i < singers_upcs.size(); i++){
-				//System.out.println(singers_upcs.get(i));
-				//}
-				//System.out.println(" ");
-
 				// Copy into upcs
 				for(int i = 0; i < singers_upcs.size(); i++){
 
 					if(!upcs.contains(singers_upcs.get(i))){
 						upcs.add(singers_upcs.get(i));
 					}
-					//else{
-					//System.out.println("Contains dulicate "  + singers_upcs.get(i));
-					//}
 				}
 			}
 		}
 
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>> ();
 		result = populateReturnTable(upcs, table, name);
-
-		//System.out.println("----------------------- Resulting upcs list------------------------------------");
-		//for(int k = 0; k< upcs.size(); k++){
-		//System.out.println(upcs.get(k));
-		//}
-		//System.out.println(" ");
-
 		return dataTransform(result);
 	}
 
@@ -332,14 +288,9 @@ public class CustomerTransactions{
 		try
 		{
 			stmt = connection.createStatement();
-
-			//System.out.println("---------------------- POPULATING TABLE-------------------------------");
-			//System.out.println("title               category       stock");
-
 			for(int i = 0; i < upcs.size(); i++) {
 
 				rs = stmt.executeQuery(statement + Integer.toString(upcs.get(i)));
-
 				if(rs.next()) {
 					title = rs.getString("title");
 					type = rs.getString("type");
@@ -357,9 +308,6 @@ public class CustomerTransactions{
 					table.get(5).add(Integer.toString(year));
 					table.get(6).add(Float.toString(price));
 					table.get(8).add(Integer.toString(stock));
-
-					//System.out.printf("%-20s%-15s%-10s", title,category,stock);
-					//System.out.println("  upc " + upcs.get(i));
 				}
 			}
 
@@ -378,8 +326,6 @@ public class CustomerTransactions{
 		{
 			stmt = connection.createStatement();
 
-			//System.out.println("---------------------- POPULATING SINGERs-------------------------------");
-
 			for(int i = 0; i < upcs.size(); i++) {
 				rs = stmt.executeQuery(singerStatement + Integer.toString(upcs.get(i)));
 				if(rs.next()) {
@@ -388,8 +334,6 @@ public class CustomerTransactions{
 				}
 				else{
 					table.get(7).add("N/A");
-					//System.out.println("Recorded singer NA for " +  upcs.get(i));
-					//System.out.println(" * No singer found for upc: " +  upcs.get(i));
 				}
 			}
 			// close the statement
@@ -452,44 +396,22 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			//int[] formats = {15,15,15,15,15};
-
-			//System.out.println("-----------------------------------------------------");
-
-			// display column names;
-			//for (int i = 0; i < numCols; i++){
-			// get column name and print it
-			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			//}
-			//System.out.println(" ");
-
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				//System.out.printf("%-15.15s", existing_upc);
-
 				existing_category = rs.getString("category");
-				//System.out.printf("%-15.15s", existing_category);
-
 				existing_title = rs.getString("title");
-				//System.out.printf("%-15.15s", existing_title);
-
 				stock = rs.getInt("stock");
-				//System.out.printf("%-15.15s", stock);
-
 				existing_name = rs.getString("name");
-				//System.out.printf("%-15.15s\n", existing_name);
 
 				if(stock == 0){
 					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
 				}
 				if(quantity <= stock){
-					//System.out.println("Requsted quantity is available");
 					precise_upcs.add(existing_upc);
 				}
 				else{
 					if(stock > 0){
-						//System.out.println("Requsted quantity is not available. Available: " + stock);
 						precise_upcs.add(existing_upc);
 					}
 				}
@@ -546,41 +468,21 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			//int[] formats = {15,15,15,15};
-
-			//System.out.println("-----------------------------------------------------");
-
-			// display column names;
-			//for (int i = 0; i < numCols; i++){
-			// get column name and print it
-			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			//}
-			//System.out.println(" ");
-
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				//System.out.printf("%-15.15s", existing_upc);
-
 				existing_category = rs.getString("category");
-				//System.out.printf("%-15.15s", existing_category);
-
 				existing_title = rs.getString("title");
-				//System.out.printf("%-15.15s", existing_title);
-
 				stock = rs.getInt("stock");
-				//System.out.printf("%-15.15s\n", stock);
 
 				if(stock == 0){
 					System.err.println("Sorry, item " + existing_upc + " is out of stock.");
 				}
 				if(quantity <= stock){
-					//System.out.println("Requsted quantity is available");
 					upcs_list.add(existing_upc);
 				}
 				else{
 					if(stock > 0){
-						//System.out.println("Requsted quantity is not available. Available: " + stock);
 						upcs_list.add(existing_upc);
 					}
 				}
@@ -612,7 +514,6 @@ public class CustomerTransactions{
 
 		int existing_upc;
 		int stock;
-		//String existing_name;
 		ArrayList<Integer> singer_upcs_list = new ArrayList<Integer>();
 		ArrayList<Integer> upcs_list = new ArrayList<Integer>();
 
@@ -641,21 +542,9 @@ public class CustomerTransactions{
 				return null;
 			}
 
-			//int[] formats = {15,15};
-			// display column names;
-			//for (int i = 0; i < numCols; i++){
-			//System.out.printf("%-"+formats[i] +"s", rsmd.getColumnName(i+1));    
-			//}
-			//System.out.println(" ");
-
 			while(rs.next())
 			{
 				existing_upc = rs.getInt("upc");
-				//System.out.printf("%-15.15s", existing_upc);
-
-				//existing_name = rs.getString("name");
-				//System.out.printf("%-15.15s\n", existing_name);
-
 				singer_upcs_list.add(existing_upc);
 			}
 
@@ -689,12 +578,10 @@ public class CustomerTransactions{
 						System.err.println("Sorry, item " + singer_upcs_list.get(i) + " is out of stock.");
 					}
 					if(quantity <= stock){
-						//System.out.println("Requsted quantity is available");
 						upcs_list.add(singer_upcs_list.get(i));
 					}
 					else{
 						if(stock > 0){
-							//System.out.println("Requsted quantity is not available. Available: " + stock);
 							upcs_list.add(singer_upcs_list.get(i));
 						}
 					}
